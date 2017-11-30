@@ -53,10 +53,10 @@ namespace EventSourcingPoc.Data
 
         private void NotifySubscribers(IEvent evt)
         {
-//            dynamic typeAwareEvent = evt; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
+            dynamic typeAwareEvent = evt; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
             foreach(var observer in this.eventObservers)
             {
-                observer.Notify(evt);
+                observer.Notify(typeAwareEvent);
             }
         }
 
