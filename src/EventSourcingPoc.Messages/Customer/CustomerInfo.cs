@@ -1,7 +1,6 @@
 ﻿using System;
-using EventSourcingPoc.Domain.Core;
 
-namespace EventSourcingPoc.Domain
+namespace EventSourcingPoc.Messages.Customers
 {
     public class CustomerInfo
     {

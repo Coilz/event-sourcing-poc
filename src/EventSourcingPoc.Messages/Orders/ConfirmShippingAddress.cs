@@ -2,7 +2,7 @@ using System;
 
 namespace EventSourcingPoc.Messages.Orders
 {
-    public class ConfirmShippingAddress
+    public class ConfirmShippingAddress : ICommand
     {
         public Guid OrderId { get; }
         public Address Address { get; }

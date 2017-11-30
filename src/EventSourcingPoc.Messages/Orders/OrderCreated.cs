@@ -5,13 +5,13 @@ namespace EventSourcingPoc.Messages.Orders
     public class OrderCreated : IEvent
     {
         public Guid OrderId { get; }
-        public Guid ClientId { get; }
+        public Guid CustomerId { get; }
         public OrderItem[] Items { get; }
 
-        public OrderCreated(Guid orderId, Guid clientId, params OrderItem[] items)
+        public OrderCreated(Guid orderId, Guid customerId, params OrderItem[] items)
         {
             this.Items = items;
-            this.ClientId = clientId;
+            this.CustomerId = customerId;
             this.OrderId = orderId;
 
         }
