@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\EventSourcingPoc.Domain\EventSourcingPoc.Domain.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Data\EventSourcingPoc.Data.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.EventProcessing\EventSourcingPoc.EventProcessing.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Messages\EventSourcingPoc.Messages.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
