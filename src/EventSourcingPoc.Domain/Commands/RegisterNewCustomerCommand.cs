@@ -5,18 +5,12 @@ namespace EventSourcingPoc.Domain.Commands
 {
     public class RegisterNewCustomerCommand : EntityCommand
     {
-        public RegisterNewCustomerCommand(Guid entityId, Guid originalVersion, string name, string email, DateTime birthDate)
+        public RegisterNewCustomerCommand(Guid entityId, Guid originalVersion, CustomerInfo info)
             : base(entityId, originalVersion)
         {
-            Name = name;
-            Email = email;
-            BirthDate = birthDate;
+            this.Info = info;
         }
 
-        public string Name { get; }
-
-        public string Email { get; }
-
-        public DateTime BirthDate { get; }
+        public CustomerInfo Info { get; }
     }
 }

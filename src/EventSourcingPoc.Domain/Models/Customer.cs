@@ -1,23 +1,20 @@
 ﻿using System;
 using EventSourcingPoc.Domain.Core;
+using EventSourcingPoc.Domain.Core.Models;
 
 namespace EventSourcingPoc.Domain
 {
-    public class Customer : Entity
+    public class Customer : Aggregate
     {
-        public Customer(Guid id, string name, string email, DateTime birthDate)
+        public Customer(Guid id, CustomerInfo info)
             : base(id)
         {
-            Name = name;
-            Email = email;
-            BirthDate = birthDate;
+            this.Info = info;
         }
 
         // Empty constructor for EF
-        protected Customer() { }
+        protected Customer() : base() { }
 
-        public string Name { get; }
-        public string Email { get; }
-        public DateTime BirthDate { get; }
+        public CustomerInfo Info { get; }
     }
 }

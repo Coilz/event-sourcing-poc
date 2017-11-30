@@ -15,21 +15,21 @@ namespace EventSourcingPoc.Validation
 
         private void ValidateName()
         {
-            RuleFor(c => c.Name)
+            RuleFor(c => c.Info.Name)
                 .NotEmpty().WithMessage("Please ensure you have entered the Name")
                 .Length(2, 150).WithMessage("The Name must have between 2 and 150 characters");
         }
 
         private void ValidateBirthDate()
         {
-            RuleFor(c => c.BirthDate)
+            RuleFor(c => c.Info.BirthDate)
                 .NotEmpty().WithMessage("Please ensure you have entered the birth date")
                 .Must(HaveMinimumAge).WithMessage("The customer must have 18 years or more");
         }
 
         private void ValidateEmail()
         {
-            RuleFor(c => c.Email)
+            RuleFor(c => c.Info.Email)
                 .NotEmpty().WithMessage("Please ensure you have entered the email")
                 .EmailAddress().WithMessage("The email must be a valid email address");
         }
