@@ -12,11 +12,11 @@ namespace EventSourcingPoc.EventProcessing
         , IEventHandler<CartEmptied>
         , IEventHandler<CartCheckedOut>
     {
-        private readonly IShoppingCartReadModelRepository _readModelStore;
+        private readonly IShoppingCartReadModelRepository _readModelRepository;
 
-        public ShoppingCartEventHandler(IShoppingCartReadModelRepository readModelStore)
+        public ShoppingCartEventHandler(IShoppingCartReadModelRepository readModelRepository)
         {
-            _readModelStore = readModelStore;
+            _readModelRepository = readModelRepository;
         }
 
         public void Handle(CartCreated evt)
@@ -26,12 +26,12 @@ namespace EventSourcingPoc.EventProcessing
                 CustomerId = evt.CustomerId,
                 Id = evt.CartId
             };
-            _readModelStore.SaveCart(newCart);
+            _readModelRepository.SaveCart(newCart);
         }
 
         public void Handle(ProductAddedToCart evt)
         {
-            var cart = _readModelStore.GetCartById(evt.CartId);
+            var cart = _readModelRepository.GetCartById(evt.CartId);
             var product = cart.Items.FirstOrDefault(x => x.ProductId == evt.ProductId);
             if (product == null)
                 cart.Items.Add(new ShoppingCartItemReadModel
@@ -42,26 +42,26 @@ namespace EventSourcingPoc.EventProcessing
             else
                 product.Price = evt.Price;
 
-            _readModelStore.SaveCart(cart);
+            _readModelRepository.SaveCart(cart);
         }
 
         public void Handle(ProductRemovedFromCart evt)
         {
-            var cart = _readModelStore.GetCartById(evt.CartId);
+            var cart = _readModelRepository.GetCartById(evt.CartId);
             cart.Items.RemoveAll(x => x.ProductId == evt.ProductId);
-            _readModelStore.SaveCart(cart);
+            _readModelRepository.SaveCart(cart);
         }
 
         public void Handle(CartEmptied evt)
         {
-            var cart = _readModelStore.GetCartById(evt.CartId);
+            var cart = _readModelRepository.GetCartById(evt.CartId);
             cart.Items.Clear();
-            _readModelStore.SaveCart(cart);
+            _readModelRepository.SaveCart(cart);
         }
 
         public void Handle(CartCheckedOut evt)
         {
-            _readModelStore.RemoveCart(evt.CartId);
+            _readModelRepository.RemoveCart(evt.CartId);
         }
     }
 }

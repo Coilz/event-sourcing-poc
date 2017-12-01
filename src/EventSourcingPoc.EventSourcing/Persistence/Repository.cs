@@ -25,11 +25,11 @@ namespace EventSourcingPoc.EventSourcing.Persistence
 
         public void Save(params EventStream[] streamItems)
         {
-            var newEvents = streamItems
-                .Select(item => 
+            var eventStoreStreams = streamItems
+                .Select(item =>
                     new EventStoreStream(item.StreamIdentifier, item.GetUncommitedChanges()));
 
-            _eventStore.Save(newEvents);
+            _eventStore.Save(eventStoreStreams);
 
             foreach (var item in streamItems)
             {

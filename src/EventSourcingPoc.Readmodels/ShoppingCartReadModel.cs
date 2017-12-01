@@ -10,7 +10,7 @@ namespace EventSourcingPoc.Readmodels
             Items = new List<ShoppingCartItemReadModel>();
         }
 
-        public List<ShoppingCartItemReadModel> Items { get; }
+        public List<ShoppingCartItemReadModel> Items { get; } // TODO: Change to IEnumerable
         public Guid Id { get; set; }
         public Guid CustomerId { get; set; }
     }

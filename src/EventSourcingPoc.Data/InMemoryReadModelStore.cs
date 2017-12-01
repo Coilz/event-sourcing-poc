@@ -5,33 +5,33 @@ using EventSourcingPoc.Readmodels;
 
 namespace EventSourcingPoc.Data
 {
-    public class InMemoryReadModelStore : IShoppingCartReadModelRepository
+    public class InMemoryReadModelStore : IReadModelStore<ShoppingCartReadModel>
     {
         private readonly Dictionary<Guid, ShoppingCartReadModel> _carts = new Dictionary<Guid, ShoppingCartReadModel>();
 
-        public ShoppingCartReadModel GetCartById(Guid id)
+        public IEnumerable<ShoppingCartReadModel> GetAll()
+        {
+            return _carts.Values;
+        }
+
+        public ShoppingCartReadModel Get(Guid id)
         {
             return _carts[id];
         }
 
-        public bool HasCart(Guid customerId)
+        public void Save(ShoppingCartReadModel model)
         {
-            return _carts.Any(cart => cart.Value.CustomerId == customerId);
-        }
-
-        public void SaveCart(ShoppingCartReadModel cart)
-        {
-            if (_carts.ContainsKey(cart.Id))
-                _carts[cart.Id] = cart;
+            if (_carts.ContainsKey(model.Id))
+                _carts[model.Id] = model;
             else
-                _carts.Add(cart.Id, cart);
+                _carts.Add(model.Id, model);
         }
 
-        public void RemoveCart(Guid cartId)
+        public void Remove(Guid id)
         {
-            if (_carts.ContainsKey(cartId))
+            if (_carts.ContainsKey(id))
             {
-                _carts.Remove(cartId);
+                _carts.Remove(id);
             }
         }
     }

@@ -3,6 +3,7 @@ using EventSourcingPoc.Data;
 using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
+using EventSourcingPoc.Readmodels;
 
 namespace EventSourcingPoc.Application
 {
@@ -18,24 +19,26 @@ namespace EventSourcingPoc.Application
             var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
 
             var readModelStore = new InMemoryReadModelStore();
-            var eventHandlerFactory = new EventHandlerFactory(repositoryProvider, commandDispatcher, readModelStore);
+            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider = () => new ShoppingCartReadModelRepository(readModelStore);
+
+            var eventHandlerFactory = new EventHandlerFactory(repositoryProvider, commandDispatcher, readModelRepositoryProvider);
             var eventDispatcher = new EventDispatcher(eventHandlerFactory);
             var eventProcessor = new EventProcessor(eventBus, eventDispatcher);
 
-            return new PretendApplication(readModelStore, commandDispatcher);
+            return new PretendApplication(readModelRepositoryProvider(), commandDispatcher);
         }
 
         public class PretendApplication
         {
             private readonly CommandDispatcher _dispatcher;
 
-            public PretendApplication(InMemoryReadModelStore readModelStore, CommandDispatcher dispatcher)
+            public PretendApplication(IShoppingCartReadModelRepository readModelRepository, CommandDispatcher dispatcher)
             {
-                ReadModelStore = readModelStore;
+                ReadModelRepository = readModelRepository;
                 _dispatcher = dispatcher;
             }
 
-            public InMemoryReadModelStore ReadModelStore { get; }
+            public IShoppingCartReadModelRepository ReadModelRepository { get; }
 
             public void Send<TCommand>(TCommand cmd)
                 where TCommand : ICommand

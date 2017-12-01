@@ -18,18 +18,18 @@ namespace EventSourcingPoc.EventProcessing
         public EventHandlerFactory(
             Func<IRepository> repositoryProvider,
             ICommandDispatcher dispatcher,
-            IShoppingCartReadModelRepository readModelStore)
+            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider)
         {
-            RegisterHandlerFactories(repositoryProvider, dispatcher, readModelStore);
+            RegisterHandlerFactories(repositoryProvider, dispatcher, readModelRepositoryProvider);
         }
 
         private void RegisterHandlerFactories(
             Func<IRepository> repositoryProvider,
             ICommandDispatcher dispatcher,
-            IShoppingCartReadModelRepository readModelStore)
+            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider)
         {
             RegisterHandlerFactoryWithTypes(
-                () => new ShoppingCartEventHandler(readModelStore),
+                () => new ShoppingCartEventHandler(readModelRepositoryProvider()),
                 typeof(CartCreated),
                 typeof(ProductAddedToCart),
                 typeof(ProductRemovedFromCart),

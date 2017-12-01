@@ -28,9 +28,9 @@ namespace EventSourcingPoc.Data
             throw new EventStreamNotFoundException(streamId);
         }
 
-        public void Save(IEnumerable<EventStoreStream> newEvents)
+        public void Save(IEnumerable<EventStoreStream> eventStoreStreams)
         {
-            foreach (var eventStoreStream in newEvents)
+            foreach (var eventStoreStream in eventStoreStreams)
             {
                 PersistEvents(eventStoreStream);
                 DispatchEvents(eventStoreStream.Events);
@@ -54,9 +54,9 @@ namespace EventSourcingPoc.Data
 
         private void DispatchEvents(IEnumerable<IEvent> newEvents)
         {
-            foreach (var evt in newEvents)
+            foreach (var newEvent in newEvents)
             {
-                _eventBus.NotifySubscribers(evt);
+                _eventBus.NotifySubscribers(newEvent);
             }
         }
     }
