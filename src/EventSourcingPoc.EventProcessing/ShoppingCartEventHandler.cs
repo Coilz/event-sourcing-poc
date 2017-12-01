@@ -32,19 +32,16 @@ namespace EventSourcingPoc.EventProcessing
         public void Handle(ProductAddedToCart evt)
         {
             var cart = _db.GetCartById(evt.CartId);
-            var product = Enumerable.FirstOrDefault<ShoppingCartItemReadModel>(cart.Items, x => x.ProductId == evt.ProductId);
-            if (product != null)
-            {
-                product.Price = evt.Price;
-            }
-            else
-            {
+            var product = cart.Items.FirstOrDefault(x => x.ProductId == evt.ProductId);
+            if (product == null)
                 cart.Items.Add(new ShoppingCartItemReadModel
                 {
                     Price = evt.Price,
                     ProductId = evt.ProductId
                 });
-            }
+            else
+                product.Price = evt.Price;
+
             _db.SaveCart(cart);
         }
 
