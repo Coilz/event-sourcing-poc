@@ -10,40 +10,40 @@ namespace EventSourcingPoc.Data
 {
     public class InMemoryEventStore : IEventStore
     {
-        private readonly Dictionary<string, IEnumerable<IEvent>> store = new Dictionary<string, IEnumerable<IEvent>>();
+        private readonly Dictionary<string, IEnumerable<IEvent>> _store = new Dictionary<string, IEnumerable<IEvent>>();
 
-        private readonly List<IEventObserver> eventObservers = new List<IEventObserver>();
+        private readonly List<IEventObserver> _eventObservers = new List<IEventObserver>();
 
         public IEnumerable<IEvent> GetByStreamId(StreamIdentifier streamId)
         {
-            if (store.ContainsKey(streamId.Value))
+            if (_store.ContainsKey(streamId.Value))
             {
-                return store[streamId.Value];
+                return _store[streamId.Value];
             }
             throw new EventStreamNotFoundException(streamId);
         }
 
-        public void Save(List<EventStoreStream> newEvents)
+        public void Save(IEnumerable<EventStoreStream> newEvents)
         {
             foreach (var eventStoreStream in newEvents)
             {
-                this.PersistEvents(eventStoreStream);
-                this.DispatchEvents(eventStoreStream.Events);
+                PersistEvents(eventStoreStream);
+                DispatchEvents(eventStoreStream.Events);
             }
         }
 
         private void PersistEvents(EventStoreStream eventStoreStream)
         {
-            if(store.ContainsKey(eventStoreStream.Id))
+            if(_store.ContainsKey(eventStoreStream.Id.Value))
             {
-                var currentEvents = store[eventStoreStream.Id].ToList();
+                var currentEvents = _store[eventStoreStream.Id.Value].ToList();
                 currentEvents.AddRange(eventStoreStream.Events);
 
-                store[eventStoreStream.Id] = currentEvents;
+                _store[eventStoreStream.Id.Value] = currentEvents;
             }
             else
             {
-                store.Add(eventStoreStream.Id, eventStoreStream.Events);
+                _store.Add(eventStoreStream.Id.Value, eventStoreStream.Events);
             }
         }
 
@@ -58,7 +58,7 @@ namespace EventSourcingPoc.Data
         private void NotifySubscribers(IEvent evt)
         {
             dynamic typeAwareEvent = evt; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
-            foreach(var observer in this.eventObservers)
+            foreach(var observer in _eventObservers)
             {
                 observer.Notify(typeAwareEvent);
             }
@@ -66,13 +66,13 @@ namespace EventSourcingPoc.Data
 
         public Action Subscribe(IEventObserver observer)
         {
-            this.eventObservers.Add(observer);
-            return () => this.Unsubscribe(observer);
+            _eventObservers.Add(observer);
+            return () => Unsubscribe(observer);
         }
 
         private void Unsubscribe(IEventObserver observer)
         {
-            eventObservers.Remove(observer);
+            _eventObservers.Remove(observer);
         }
     }
 }

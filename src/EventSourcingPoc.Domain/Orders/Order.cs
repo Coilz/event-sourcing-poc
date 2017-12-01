@@ -1,83 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EventSourcingPoc.EventSourcing.Domain;
-using EventSourcingPoc.Messages.Orders;
-using EventSourcingPoc.Messages.Shipping;
 
 namespace EventSourcingPoc.Domain.Orders
 {
+    using EventSourcing.Domain;
+    using Messages;
+    using Messages.Orders;
+
     public class Order : Aggregate
     {
-        protected override void RegisterAppliers()
-        {
-            this.RegisterApplier<OrderCreated>(this.Apply);
-            this.RegisterApplier<PaymentReceived>(this.Apply);
-            this.RegisterApplier<ShippingAddressConfirmed>(this.Apply);
-            this.RegisterApplier<OrderCompleted>(this.Apply);
-        }
-
-        private bool paidFor;
-        private bool shippingAddressProvided;
-        private bool completed;
+        private bool _paidFor;
+        private bool _shippingAddressProvided;
+        private bool _completed;
 
         public static Order Create(Guid orderId, Guid customerId, IEnumerable<OrderItem> items)
         {
             return new Order(orderId, customerId, items);
         }
 
+        public Order() { }
         private Order(Guid orderId, Guid customerId, IEnumerable<OrderItem> items)
         {
-            this.ApplyChanges(new OrderCreated(orderId, customerId, items.ToArray()));
-        }
-
-        public Order()
-        {
+            ApplyChanges(new OrderCreated(orderId, customerId, items.ToArray()));
         }
 
         private void Apply(OrderCreated evt)
         {
-            this.id = evt.OrderId;
+            id = evt.OrderId;
         }
 
         public void ProvideShippingAddress(Address address)
         {
-            if(!this.shippingAddressProvided && !this.completed)
+            if (_shippingAddressProvided || _completed) return;
+
+            ApplyChanges(new ShippingAddressConfirmed(id, address));
+        }
+
+        public void Pay()
+        {
+            if (_paidFor || _completed) return;
+
+            ApplyChanges(new PaymentReceived(id));
+        }
+
+        public void CompleteOrder()
+        {
+            if (!_paidFor || !_shippingAddressProvided) throw new CannotCompleteOrderException();
+
+            ApplyChanges(new OrderCompleted(id));
+        }
+
+        protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
+        {
+            get
             {
-                this.ApplyChanges(new ShippingAddressConfirmed(this.id, address));
+                yield return CreateApplier<OrderCreated>(Apply);
+                yield return CreateApplier<PaymentReceived>(Apply);
+                yield return CreateApplier<ShippingAddressConfirmed>(Apply);
+                yield return CreateApplier<OrderCompleted>(Apply);
             }
         }
 
         private void Apply(ShippingAddressConfirmed evt)
         {
-            this.shippingAddressProvided = true;
+            _shippingAddressProvided = true;
         }
 
-        public void Pay()
+        private void Apply(PaymentReceived evt)
         {
-            if (!this.paidFor && !this.completed)
-            {
-                this.ApplyChanges(new PaymentReceived(this.id));
-            }
-        }
-
-        public void Apply(PaymentReceived evt)
-        {
-            this.paidFor = true;
-        }
-
-        public void CompleteOrder()
-        {
-            if(!this.paidFor || !this.shippingAddressProvided)
-            {
-                throw new CannotCompleteOrderException();
-            }
-            this.ApplyChanges(new OrderCompleted(this.id));
+            _paidFor = true;
         }
 
         private void Apply(OrderCompleted evt)
         {
-            this.completed = true;
+            _completed = true;
         }
     }
 }

@@ -3,21 +3,16 @@ using EventSourcingPoc.EventSourcing.Exceptions;
 
 namespace EventSourcingPoc.EventSourcing.Domain
 {
-    public class StreamIdentifier
+    public struct StreamIdentifier
     {
         public StreamIdentifier(string name, Guid id)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new StreamIdentifierException("StreamIdentifier Name Required");
-            }
-            if(id == null || id == Guid.Empty)
-            {
-                throw new StreamIdentifierException("StreamIdentifier Id Required");
-            }
-            this.Value = string.Format("{0}-{1}", name, id.ToString());
+            if (string.IsNullOrWhiteSpace(name)) throw new StreamIdentifierException("StreamIdentifier Name Required");
+            if(id == Guid.Empty) throw new StreamIdentifierException("StreamIdentifier Id Required");
+
+            Value = $"{name}-{id}";
         }
 
-        public string Value { get; private set; }
+        public string Value { get; }
     }
 }

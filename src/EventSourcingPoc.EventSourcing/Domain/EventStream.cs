@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 using EventSourcingPoc.EventSourcing.Exceptions;
 using EventSourcingPoc.Messages;
 
@@ -7,69 +8,66 @@ namespace EventSourcingPoc.EventSourcing.Domain
 {
     public abstract class EventStream
     {
-        private readonly List<IEvent> changes;
-        protected Dictionary<Type, Action<IEvent>> eventAppliers;
+        private readonly List<IEvent> _changes;
+        private readonly Lazy<Dictionary<Type, Action<IEvent>>> _eventAppliers;
 
         protected EventStream()
         {
-            this.changes = new List<IEvent>();
-            this.eventAppliers = new Dictionary<Type, Action<IEvent>>();
-            this.RegisterAppliers();
+            _changes = new List<IEvent>();
+            _eventAppliers = new Lazy<Dictionary<Type, Action<IEvent>>>(() => 
+                EventAppliers.ToDictionary(pair => 
+                    pair.Key,
+                    pair => pair.Value));
         }
 
-        protected abstract void RegisterAppliers();
-
-        protected void RegisterApplier<TEvent>(Action<TEvent> applier) where TEvent : IEvent
-        {
-            this.eventAppliers.Add(typeof(TEvent), (x) => applier((TEvent)x));
-        }
+        protected abstract IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers { get; }
 
         protected Guid id { get; set; }
 
-        public string Name { get { return this.GetType().Name; } }
+        public string Name => GetType().Name;
 
         protected void ApplyChanges(IEvent evt)
         {
-            this.Apply(evt);
-            this.changes.Add(evt);
+            Apply(evt);
+            _changes.Add(evt);
         }
 
-        public StreamIdentifier StreamIdentifier
-        {
-            get
-            {
-                return new StreamIdentifier(this.Name, this.id);
-            }
-        }
+        public StreamIdentifier StreamIdentifier => new StreamIdentifier(Name, id);
 
         private void Apply(IEvent evt)
         {
             var evtType = evt.GetType();
-            if (!this.eventAppliers.ContainsKey(evtType))
+            if (!_eventAppliers.Value.ContainsKey(evtType))
             {
                 throw new NoEventApplyMethodRegisteredException(evt, this);
             }
-            this.eventAppliers[evtType](evt);
+            _eventAppliers.Value[evtType](evt);
         }
 
         public void LoadFromHistory(IEnumerable<IEvent> history)
         {
             foreach(var evt in history)
             {
-                this.Apply(evt);
+                Apply(evt);
             }
         }
 
         public IEnumerable<IEvent> GetUncommitedChanges()
         {
-            return this.changes.AsReadOnly();
+            return _changes.AsReadOnly();
         }
 
         public void Commit()
         {
-            this.changes.Clear();
+            _changes.Clear();
         }
 
-        protected void NoStateChange<T>(T evt) where T : IEvent { }
+        protected static KeyValuePair<Type, Action<IEvent>> CreateApplier<TEvent>(Action<TEvent> applier)
+            where TEvent : IEvent
+        {
+            return new KeyValuePair<Type, Action<IEvent>>(
+                typeof(TEvent), 
+                x => applier((TEvent)x));
+        }
     }
 }

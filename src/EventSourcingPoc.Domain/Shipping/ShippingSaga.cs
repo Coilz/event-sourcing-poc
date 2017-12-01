@@ -1,21 +1,16 @@
 ﻿using System;
-using EventSourcingPoc.EventSourcing.Domain;
-using EventSourcingPoc.EventSourcing.Handlers;
-using EventSourcingPoc.Messages.Orders;
-using EventSourcingPoc.Messages.Shipping;
+using System.Collections.Generic;
 
 namespace EventSourcingPoc.Domain.Shipping
 {
+    using EventSourcing.Domain;
+    using EventSourcing.Handlers;
+    using Messages;
+    using Messages.Orders;
+    using Messages.Shipping;
+
     public class ShippingSaga : Saga
     {
-        protected override void RegisterAppliers()
-        {
-            RegisterApplier<StartedShippingProcess>(this.Apply);
-            RegisterApplier<PaymentConfirmed>(this.Apply);
-            RegisterApplier<AddressConfirmed>(this.Apply);
-            RegisterApplier<OrderDelivered>(this.Apply);
-        }
-
         private enum Status
         {
             Started,
@@ -25,75 +20,82 @@ namespace EventSourcingPoc.Domain.Shipping
             Complete
         }
 
-        private Status status = Status.Started;
-
-        public ShippingSaga() { }
+        private Status _status = Status.Started;
 
         public static ShippingSaga Create(Guid orderId)
         {
             return new ShippingSaga(orderId);
         }
 
+        public ShippingSaga() {}
         private ShippingSaga(Guid orderId)
         {
             ApplyChanges(new StartedShippingProcess(orderId));
         }
 
-        private void Apply(StartedShippingProcess evt)
+        protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
         {
-            this.id = evt.OrderId;
+            get
+            {
+                yield return CreateApplier<StartedShippingProcess>(Apply);
+                yield return CreateApplier<PaymentConfirmed>(Apply);
+                yield return CreateApplier<AddressConfirmed>(Apply);
+                yield return CreateApplier<OrderDelivered>(Apply);
+            }
         }
 
         public void ConfirmPayment(ICommandDispatcher dispatcher)
         {
-            if (AwaitingPayment())
-            {
-                ApplyChanges(new PaymentConfirmed(this.id));
-                CompleteIfPossible(dispatcher);
-            }
-        }
+            if (!AwaitingPayment()) return;
 
-        private bool AwaitingPayment()
-        {
-            return this.status == Status.Started || this.status == Status.AddressReceived;
-        }
-
-        private void Apply(PaymentConfirmed evt)
-        {
-            status = status == Status.AddressReceived ? Status.ReadyToComplete : Status.PaymentReceived;
+            ApplyChanges(new PaymentConfirmed(id));
+            CompleteIfPossible(dispatcher);
         }
 
         public void ConfirmAddress(ICommandDispatcher dispatcher)
         {
-            if (AwaitingAddress())
-            {
-                ApplyChanges(new AddressConfirmed(this.id));
-                CompleteIfPossible(dispatcher);
-            }
+            if (!AwaitingAddress()) return;
+
+            ApplyChanges(new AddressConfirmed(id));
+            CompleteIfPossible(dispatcher);
+        }
+
+        private void Apply(StartedShippingProcess evt)
+        {
+            id = evt.OrderId;
+        }
+
+        private void Apply(PaymentConfirmed evt)
+        {
+            _status = _status == Status.AddressReceived ? Status.ReadyToComplete : Status.PaymentReceived;
+        }
+
+        private bool AwaitingPayment()
+        {
+            return _status == Status.Started || _status == Status.AddressReceived;
         }
 
         private bool AwaitingAddress()
         {
-            return this.status == Status.Started || this.status == Status.PaymentReceived;
+            return _status == Status.Started || _status == Status.PaymentReceived;
         }
 
         private void Apply(AddressConfirmed evt)
         {
-            status = status == Status.PaymentReceived ? Status.ReadyToComplete : Status.AddressReceived;
+            _status = _status == Status.PaymentReceived ? Status.ReadyToComplete : Status.AddressReceived;
         }
 
         private void CompleteIfPossible(ICommandDispatcher dispatcher)
         {
-            if(status == Status.ReadyToComplete)
-            {
-                ApplyChanges(new OrderDelivered(this.id));
-                dispatcher.Send(new CompleteOrder(this.id)); //todo this is wierd should do it after events have been persisted
-            }
+            if (_status != Status.ReadyToComplete) return;
+
+            ApplyChanges(new OrderDelivered(id));
+            dispatcher.Send(new CompleteOrder(id)); //todo this is wierd should do it after events have been persisted
         }
 
         private void Apply(OrderDelivered obj)
         {
-            status = Status.Complete;
+            _status = Status.Complete;
         }
     }
 }

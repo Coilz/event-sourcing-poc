@@ -1,5 +1,4 @@
-﻿using System;
-using EventSourcingPoc.Data;
+﻿using EventSourcingPoc.Data;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 
@@ -7,18 +6,17 @@ namespace EventSourcingPoc.EventProcessing
 {
     public class EventProcessor : IEventObserver
     {
-        private readonly IEventDispatcher dispatcher;
-        private Action unsubscribe;
+        private readonly IEventDispatcher _dispatcher;
 
         public EventProcessor(InMemoryEventStore store, IEventDispatcher dispatcher)
         {
-            this.dispatcher = dispatcher;
-            this.unsubscribe = store.Subscribe(this);
+            _dispatcher = dispatcher;
+            store.Subscribe(this);
         }
 
         public void Notify<TEvent>(TEvent evt) where TEvent : IEvent
         {
-            dispatcher.Send(evt);
+            _dispatcher.Send(evt);
         }
     }
 }

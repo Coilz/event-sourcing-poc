@@ -9,11 +9,11 @@ namespace EventSourcingPoc.EventSourcing.Persistence
     {
         public EventStoreStream(StreamIdentifier identifier, IEnumerable<IEvent> events)
         {
-            this.Id = identifier.Value;
-            this.Events = events.ToList();
+            Id = identifier;
+            Events = events.ToList();
         }
 
         public IEnumerable<IEvent> Events { get; }
-        public string Id { get; }
+        public StreamIdentifier Id { get; }
     }
 }

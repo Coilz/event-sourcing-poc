@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using EventSourcingPoc.EventSourcing.Domain;
-using EventSourcingPoc.Messages.Customers;
+using EventSourcingPoc.Messages;
 
-namespace EventSourcingPoc.Domain
+namespace EventSourcingPoc.Domain.Customers
 {
     public class Customer : Aggregate
     {
-        protected override void RegisterAppliers()
-        {
-        }
+        protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers { get; }
     }
 }

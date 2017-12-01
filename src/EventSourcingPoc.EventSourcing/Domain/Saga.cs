@@ -5,16 +5,16 @@ namespace EventSourcingPoc.EventSourcing.Domain
 {
     public abstract class Saga : EventStream
     {
-        private readonly List<ICommand> unpublishedCommands;
+        private readonly List<ICommand> _unpublishedCommands;
 
         protected Saga()
         {
-            this.unpublishedCommands = new List<ICommand>();
+            _unpublishedCommands = new List<ICommand>();
         }
 
         protected void Publish(ICommand command)
         {
-            this.unpublishedCommands.Add(command);
+            _unpublishedCommands.Add(command);
         }
     }
 }
