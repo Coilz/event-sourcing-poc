@@ -1,11 +1,11 @@
 ﻿using System;
-using EventSourcingPoc.EventSourcing;
-using EventSourcingPoc.EventSourcing.Handlers;
-using EventSourcingPoc.EventSourcing.Persistence;
-using EventSourcingPoc.Messages.Store;
 
 namespace EventSourcingPoc.Domain.Store
 {
+    using EventSourcing.Handlers;
+    using EventSourcing.Persistence;
+    using Messages.Store;
+
     public class ShoppingCartHandler
         : ICommandHandler<CreateNewCart>
         , ICommandHandler<AddProductToCart>
@@ -13,43 +13,43 @@ namespace EventSourcingPoc.Domain.Store
         , ICommandHandler<EmptyCart>
         , ICommandHandler<Checkout>
     {
-        private readonly IRepository repo;
+        private readonly IRepository _repo;
         public ShoppingCartHandler(IRepository repo)
         {
-            this.repo = repo;
+            _repo = repo;
         }
         public void Handle(CreateNewCart cmd)
         {
-            this.repo.Save(ShoppingCart.Create(cmd.CartId, cmd.CustomerId));
+            _repo.Save(ShoppingCart.Create(cmd.CartId, cmd.CustomerId));
         }
 
         public void Handle(AddProductToCart cmd)
         {
-            Execute(cmd.CartId, (cart) => cart.AddProduct(cmd.ProductId, cmd.Price));
+            Execute(cmd.CartId, cart => cart.AddProduct(cmd.ProductId, cmd.Price));
         }
 
         public void Handle(RemoveProductFromCart cmd)
         {
-            Execute(cmd.CartId, (cart) => cart.RemoveProduct(cmd.ProductId));
+            Execute(cmd.CartId, cart => cart.RemoveProduct(cmd.ProductId));
         }
 
         public void Handle(EmptyCart cmd)
         {
-            Execute(cmd.CartId, (cart) => cart.Empty());
+            Execute(cmd.CartId, cart => cart.Empty());
         }
 
         public void Handle(Checkout cmd)
         {
-            var cart = this.repo.GetById<ShoppingCart>(cmd.CartId);
+            var cart = _repo.GetById<ShoppingCart>(cmd.CartId);
             var order = cart.Checkout();
-            this.repo.Save(cart, order);
+            _repo.Save(cart, order);
         }
 
         private void Execute(Guid id, Action<ShoppingCart> action)
         {
-            var cart = this.repo.GetById<ShoppingCart>(id);
+            var cart = _repo.GetById<ShoppingCart>(id);
             action(cart);
-            this.repo.Save(cart);
+            _repo.Save(cart);
         }
     }
 }
