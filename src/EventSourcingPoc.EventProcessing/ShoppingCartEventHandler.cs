@@ -21,11 +21,7 @@ namespace EventSourcingPoc.EventProcessing
 
         public void Handle(CartCreated evt)
         {
-            var newCart = new ShoppingCartReadModel
-            {
-                CustomerId = evt.CustomerId,
-                Id = evt.CartId
-            };
+            var newCart = new ShoppingCartReadModel(evt.CartId, evt.CustomerId);
             _readModelRepository.SaveCart(newCart);
         }
 
@@ -34,11 +30,15 @@ namespace EventSourcingPoc.EventProcessing
             var cart = _readModelRepository.GetCartById(evt.CartId);
             var product = cart.Items.FirstOrDefault(x => x.ProductId == evt.ProductId);
             if (product == null)
-                cart.Items.Add(new ShoppingCartItemReadModel
+            {
+                var cartItems = cart.Items.ToList();
+                cartItems.Add(new ShoppingCartItemReadModel
                 {
                     Price = evt.Price,
                     ProductId = evt.ProductId
                 });
+                cart = new ShoppingCartReadModel(cart, cartItems);
+            }
             else
                 product.Price = evt.Price;
 
@@ -48,14 +48,15 @@ namespace EventSourcingPoc.EventProcessing
         public void Handle(ProductRemovedFromCart evt)
         {
             var cart = _readModelRepository.GetCartById(evt.CartId);
-            cart.Items.RemoveAll(x => x.ProductId == evt.ProductId);
+            var cartItems = cart.Items.Where(item => item.ProductId != evt.ProductId);
+            cart = new ShoppingCartReadModel(cart, cartItems);
             _readModelRepository.SaveCart(cart);
         }
 
         public void Handle(CartEmptied evt)
         {
             var cart = _readModelRepository.GetCartById(evt.CartId);
-            cart.Items.Clear();
+            cart = new ShoppingCartReadModel(cart);
             _readModelRepository.SaveCart(cart);
         }
 

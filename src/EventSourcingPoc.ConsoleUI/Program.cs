@@ -2,6 +2,7 @@
 using EventSourcingPoc.Application;
 using EventSourcingPoc.Messages.Store;
 using EventSourcingPoc.Messages.Orders;
+using System.Linq;
 
 namespace EventSourcingPoc.ConsoleUI
 {
@@ -29,7 +30,7 @@ namespace EventSourcingPoc.ConsoleUI
                 Console.WriteLine($"Add product to cart {cartId}.");
 
                 var cartModel = app.ReadModelRepository.GetCartById(cartId);
-                Console.WriteLine($"Customer {cartModel.CustomerId} has cart {cartModel.Id} with {cartModel.Items.Count} items.");
+                Console.WriteLine($"Customer {cartModel.CustomerId} has cart {cartModel.Id} with {cartModel.Items.Count()} items.");
 
                 app.Send(new Checkout(cartId));
                 Console.WriteLine($"Checkout cart {cartId}.");

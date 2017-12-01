@@ -1,6 +1,7 @@
 ﻿using System;
 using EventSourcingPoc.Data;
 using EventSourcingPoc.EventProcessing;
+using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
 using EventSourcingPoc.Readmodels;
@@ -30,9 +31,9 @@ namespace EventSourcingPoc.Application
 
         public class PretendApplication
         {
-            private readonly CommandDispatcher _dispatcher;
+            private readonly ICommandDispatcher _dispatcher;
 
-            public PretendApplication(IShoppingCartReadModelRepository readModelRepository, CommandDispatcher dispatcher)
+            public PretendApplication(IShoppingCartReadModelRepository readModelRepository, ICommandDispatcher dispatcher)
             {
                 ReadModelRepository = readModelRepository;
                 _dispatcher = dispatcher;
