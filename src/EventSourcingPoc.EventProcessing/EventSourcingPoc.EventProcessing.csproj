@@ -8,9 +8,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp">
-      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.0.0\ref\netcoreapp2.0\Microsoft.CSharp.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -5,10 +5,6 @@
     <ProjectReference Include="..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Readmodels\EventSourcingPoc.Readmodels.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
-    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
-  </ItemGroup>
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
