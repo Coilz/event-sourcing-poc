@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EventSourcingPoc.EventSourcing.Domain;
 using EventSourcingPoc.EventSourcing.Exceptions;
 using EventSourcingPoc.EventSourcing.Persistence;
@@ -9,7 +10,7 @@ namespace EventSourcingPoc.Data
 {
     public class InMemoryEventStore : IEventStore
     {
-        private readonly Dictionary<string, List<IEvent>> store = new Dictionary<string, List<IEvent>>();
+        private readonly Dictionary<string, IEnumerable<IEvent>> store = new Dictionary<string, IEnumerable<IEvent>>();
 
         private readonly List<IEventObserver> eventObservers = new List<IEventObserver>();
 
@@ -17,7 +18,7 @@ namespace EventSourcingPoc.Data
         {
             if (store.ContainsKey(streamId.Value))
             {
-                return store[streamId.Value].AsReadOnly();
+                return store[streamId.Value];
             }
             throw new EventStreamNotFoundException(streamId);
         }
@@ -35,7 +36,10 @@ namespace EventSourcingPoc.Data
         {
             if(store.ContainsKey(eventStoreStream.Id))
             {
-                store[eventStoreStream.Id].AddRange(eventStoreStream.Events);
+                var currentEvents = store[eventStoreStream.Id].ToList();
+                currentEvents.AddRange(eventStoreStream.Events);
+
+                store[eventStoreStream.Id] = currentEvents;
             }
             else
             {

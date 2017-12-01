@@ -13,7 +13,7 @@ namespace EventSourcingPoc.EventSourcing.Persistence
             this.Events = events.ToList();
         }
 
-        public List<IEvent> Events { get; private set; }
-        public string Id { get; private set; }
+        public IEnumerable<IEvent> Events { get; }
+        public string Id { get; }
     }
 }

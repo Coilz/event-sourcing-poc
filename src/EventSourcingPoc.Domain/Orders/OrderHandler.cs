@@ -7,8 +7,8 @@ namespace EventSourcingPoc.Domain.Orders
 {
     public class OrderHandler
         : ICommandHandler<PayForOrder>
-          , ICommandHandler<ConfirmShippingAddress>
-          , ICommandHandler<CompleteOrder>
+        , ICommandHandler<ConfirmShippingAddress>
+        , ICommandHandler<CompleteOrder>
     {
         private readonly IRepository repository;
 
