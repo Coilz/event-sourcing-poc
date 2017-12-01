@@ -6,7 +6,7 @@ namespace EventSourcingPoc.Domain.Store
     using EventSourcing.Persistence;
     using Messages.Store;
 
-    public class ShoppingCartHandler
+    public class ShoppingCartCommandHandler // TODO: Move to a processing kind of project
         : ICommandHandler<CreateNewCart>
         , ICommandHandler<AddProductToCart>
         , ICommandHandler<RemoveProductFromCart>
@@ -14,7 +14,7 @@ namespace EventSourcingPoc.Domain.Store
         , ICommandHandler<Checkout>
     {
         private readonly IRepository _repository;
-        public ShoppingCartHandler(IRepository repository)
+        public ShoppingCartCommandHandler(IRepository repository)
         {
             _repository = repository;
         }

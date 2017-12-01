@@ -4,14 +4,14 @@ using EventSourcingPoc.Messages.Orders;
 
 namespace EventSourcingPoc.Domain.Orders
 {
-    public class OrderHandler
+    public class OrderCommandHandler // TODO: Move to a processing kind of project
         : ICommandHandler<PayForOrder>
         , ICommandHandler<ConfirmShippingAddress>
         , ICommandHandler<CompleteOrder>
     {
         private readonly IRepository _repository;
 
-        public OrderHandler(IRepository repository)
+        public OrderCommandHandler(IRepository repository)
         {
             _repository = repository;
         }

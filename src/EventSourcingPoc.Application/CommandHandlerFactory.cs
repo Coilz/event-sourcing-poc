@@ -19,11 +19,11 @@ namespace EventSourcingPoc.Application
         public CommandHandlerFactory(Func<IRepository> repositoryProvider)
         {
             RegisterHandlerFactoryWithTypes(
-                () => new ShoppingCartHandler(repositoryProvider()),
+                () => new ShoppingCartCommandHandler(repositoryProvider()),
                 typeof(CreateNewCart), typeof(AddProductToCart), typeof(RemoveProductFromCart), typeof(EmptyCart), typeof(Checkout));
 
             RegisterHandlerFactoryWithTypes(
-                () => new OrderHandler(repositoryProvider()),
+                () => new OrderCommandHandler(repositoryProvider()),
                 typeof(PayForOrder), typeof(ConfirmShippingAddress), typeof(CompleteOrder));
         }
 
