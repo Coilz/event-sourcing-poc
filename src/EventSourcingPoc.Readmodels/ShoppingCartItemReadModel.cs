@@ -4,7 +4,13 @@ namespace EventSourcingPoc.Readmodels
 {
     public class ShoppingCartItemReadModel
     {
-        public Guid ProductId { get; set; }
-        public decimal Price { get; set; }
+        public ShoppingCartItemReadModel(Guid productId, decimal price)
+        {
+            ProductId = productId;
+            Price = price;
+
+        }
+        public Guid ProductId { get; }
+        public decimal Price { get; }
     }
 }

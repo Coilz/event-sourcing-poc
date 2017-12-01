@@ -1,9 +1,10 @@
+using System;
 using System.Linq;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages.Store;
 using EventSourcingPoc.Readmodels;
 
-namespace EventSourcingPoc.EventProcessing
+namespace EventSourcingPoc.Readmodels
 {
     public class ShoppingCartEventHandler
         : IEventHandler<CartCreated>
@@ -27,42 +28,43 @@ namespace EventSourcingPoc.EventProcessing
 
         public void Handle(ProductAddedToCart evt)
         {
-            var cart = _readModelRepository.GetCartById(evt.CartId);
-            var product = cart.Items.FirstOrDefault(x => x.ProductId == evt.ProductId);
-            if (product == null)
+            ExecuteSave(evt.CartId, cart =>
             {
-                var cartItems = cart.Items.ToList();
-                cartItems.Add(new ShoppingCartItemReadModel
-                {
-                    Price = evt.Price,
-                    ProductId = evt.ProductId
-                });
-                cart = new ShoppingCartReadModel(cart, cartItems);
-            }
-            else
-                product.Price = evt.Price;
+                var cartItems = cart.Items
+                    .Where(x => x.ProductId != evt.ProductId)
+                    .ToList();
+                var cartItem = new ShoppingCartItemReadModel(evt.ProductId, evt.Price);
 
-            _readModelRepository.SaveCart(cart);
+                cartItems.Add(cartItem);
+
+                return new ShoppingCartReadModel(cart, cartItems);
+            });
         }
 
         public void Handle(ProductRemovedFromCart evt)
         {
-            var cart = _readModelRepository.GetCartById(evt.CartId);
-            var cartItems = cart.Items.Where(item => item.ProductId != evt.ProductId);
-            cart = new ShoppingCartReadModel(cart, cartItems);
-            _readModelRepository.SaveCart(cart);
+            ExecuteSave(evt.CartId, cart =>
+            {
+                var cartItems = cart.Items.Where(item => item.ProductId != evt.ProductId);
+                return new ShoppingCartReadModel(cart, cartItems);
+            });
         }
 
         public void Handle(CartEmptied evt)
         {
-            var cart = _readModelRepository.GetCartById(evt.CartId);
-            cart = new ShoppingCartReadModel(cart);
-            _readModelRepository.SaveCart(cart);
+            ExecuteSave(evt.CartId, cart => new ShoppingCartReadModel(cart));
         }
 
         public void Handle(CartCheckedOut evt)
         {
             _readModelRepository.RemoveCart(evt.CartId);
+        }
+
+        private void ExecuteSave(Guid id, Func<ShoppingCartReadModel, ShoppingCartReadModel> transformation)
+        {
+            var cart = _readModelRepository.GetCartById(id);
+            var updatedCart = transformation(cart);
+            _readModelRepository.SaveCart(updatedCart);
         }
     }
 }

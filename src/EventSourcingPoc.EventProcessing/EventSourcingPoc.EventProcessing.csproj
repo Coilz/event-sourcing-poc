@@ -4,7 +4,6 @@
     <ProjectReference Include="..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Messages\EventSourcingPoc.Messages.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Domain\EventSourcingPoc.Domain.csproj" />
-    <ProjectReference Include="..\EventSourcingPoc.Readmodels\EventSourcingPoc.Readmodels.csproj" />
   </ItemGroup>
 
   <ItemGroup>

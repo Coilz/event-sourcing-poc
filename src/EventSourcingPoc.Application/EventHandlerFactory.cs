@@ -8,8 +8,9 @@ using System.Linq;
 using EventSourcingPoc.Messages.Orders;
 using EventSourcingPoc.Messages.Store;
 using EventSourcingPoc.Readmodels;
+using EventSourcingPoc.EventProcessing;
 
-namespace EventSourcingPoc.EventProcessing
+namespace EventSourcingPoc.Application
 {
     public class EventHandlerFactory : IEventHandlerFactory
     {
