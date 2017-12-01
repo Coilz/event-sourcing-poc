@@ -13,7 +13,7 @@ namespace EventSourcingPoc.EventProcessing
         }
         public void Send<TEvent>(TEvent evt) where TEvent : IEvent
         {
-            var handlers = this.factory.Resolve(evt);
+            var handlers = this.factory.Resolve<TEvent>();
             foreach (var eventHandler in handlers)
             {
                 eventHandler.Handle(evt);

@@ -52,9 +52,10 @@ namespace EventSourcingPoc.Application
             }
         }
 
-        public IEnumerable<IEventHandler<TEvent>> Resolve<TEvent>(TEvent evt) where TEvent : IEvent
+        public IEnumerable<IEventHandler<TEvent>> Resolve<TEvent>()
+            where TEvent : IEvent
         {
-            var evtType = evt.GetType();
+            var evtType = typeof(TEvent);
             if (_handlerFactories.ContainsKey(evtType))
             {
                 var factories = _handlerFactories[evtType];

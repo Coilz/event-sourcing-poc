@@ -20,11 +20,17 @@ namespace EventSourcingPoc.Application
         {
             RegisterHandlerFactoryWithTypes(
                 () => new ShoppingCartCommandHandler(repositoryProvider()),
-                typeof(CreateNewCart), typeof(AddProductToCart), typeof(RemoveProductFromCart), typeof(EmptyCart), typeof(Checkout));
+                typeof(CreateNewCart),
+                typeof(AddProductToCart),
+                typeof(RemoveProductFromCart),
+                typeof(EmptyCart),
+                typeof(Checkout));
 
             RegisterHandlerFactoryWithTypes(
                 () => new OrderCommandHandler(repositoryProvider()),
-                typeof(PayForOrder), typeof(ConfirmShippingAddress), typeof(CompleteOrder));
+                typeof(PayForOrder),
+                typeof(ConfirmShippingAddress),
+                typeof(CompleteOrder));
         }
 
         private void RegisterHandlerFactoryWithTypes(Func<IHandler> handler, params Type[] types)
