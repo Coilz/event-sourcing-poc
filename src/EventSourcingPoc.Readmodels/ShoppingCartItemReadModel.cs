@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace EventSourcingPoc.Data.MongoDb.ReadModels
+namespace EventSourcingPoc.Readmodels
 {
     public class ShoppingCartItemReadModel
     {
         public Guid ProductId { get; set; }
-        public Decimal Price { get; set; }
+        public decimal Price { get; set; }
     }
 }

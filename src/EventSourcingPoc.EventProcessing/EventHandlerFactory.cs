@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EventSourcingPoc.Data.MongoDb;
 using EventSourcingPoc.Domain.Shipping;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
@@ -8,6 +7,7 @@ using EventSourcingPoc.Messages;
 using System.Linq;
 using EventSourcingPoc.Messages.Orders;
 using EventSourcingPoc.Messages.Store;
+using EventSourcingPoc.Readmodels;
 
 namespace EventSourcingPoc.EventProcessing
 {
@@ -15,12 +15,12 @@ namespace EventSourcingPoc.EventProcessing
     {
         private readonly Dictionary<Type, List<Func<IHandler>>> handlerFactories = new Dictionary<Type, List<Func<IHandler>>>();
 
-        public EventHandlerFactory(IEventStore eventStore, ICommandDispatcher dispatcher, MongoDb mongo)
+        public EventHandlerFactory(IEventStore eventStore, ICommandDispatcher dispatcher, IShoppingCartReadModelRepository mongo)
         {
             RegisterHandlerFactories(eventStore,dispatcher,mongo);
         }
 
-        private void RegisterHandlerFactories(IEventStore eventStore, ICommandDispatcher dispatcher, MongoDb mongo)
+        private void RegisterHandlerFactories(IEventStore eventStore, ICommandDispatcher dispatcher, IShoppingCartReadModelRepository mongo)
         {
             this.RegisterHandlerFactoryWithTypes(
                 () => new ShoppingCartEventHandler(mongo),

@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.EventSourcing.Domain;
 using EventSourcingPoc.EventSourcing.Exceptions;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EventSourcingPoc.Data
 {
     public class InMemoryEventStore : IEventStore
     {
+        private readonly IEventBus _eventBus;
         private readonly Dictionary<string, IEnumerable<IEvent>> _store = new Dictionary<string, IEnumerable<IEvent>>();
 
-        private readonly List<IEventObserver> _eventObservers = new List<IEventObserver>();
+        public InMemoryEventStore(IEventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
 
         public IEnumerable<IEvent> GetByStreamId(StreamIdentifier streamId)
         {
@@ -51,28 +55,8 @@ namespace EventSourcingPoc.Data
         {
             foreach (var evt in newEvents)
             {
-                NotifySubscribers(evt);
+                _eventBus.NotifySubscribers(evt);
             }
-        }
-
-        private void NotifySubscribers(IEvent evt)
-        {
-            dynamic typeAwareEvent = evt; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
-            foreach(var observer in _eventObservers)
-            {
-                observer.Notify(typeAwareEvent);
-            }
-        }
-
-        public Action Subscribe(IEventObserver observer)
-        {
-            _eventObservers.Add(observer);
-            return () => Unsubscribe(observer);
-        }
-
-        private void Unsubscribe(IEventObserver observer)
-        {
-            _eventObservers.Remove(observer);
         }
     }
 }

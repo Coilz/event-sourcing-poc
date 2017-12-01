@@ -1,5 +1,4 @@
 ﻿using EventSourcingPoc.Data;
-using EventSourcingPoc.Data.MongoDb;
 using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.Messages;
 
@@ -9,32 +8,34 @@ namespace EventSourcingPoc.Application
     {
         public static PretendApplication Bootstrap()
         {
-            var store = new InMemoryEventStore();
+            var eventBus = new EventBus();
+            var store = new InMemoryEventStore(eventBus);
             var handlerFactory = new CommandHandlerFactory(store);
             var dispatcher = new CommandDispatcher(handlerFactory);
 
-            var mongoDb = new MongoDb();
-            var eventHandlerFactory = new EventHandlerFactory(store, dispatcher, mongoDb);
+            var readModelStore = new InMemoryReadModelStore();
+            var eventHandlerFactory = new EventHandlerFactory(store, dispatcher, readModelStore);
             var eventDispatcher = new EventDispatcher(eventHandlerFactory);
-            var eventProcessor = new EventProcessor(store, eventDispatcher);
+            var eventProcessor = new EventProcessor(eventBus, eventDispatcher);
 
-            return new PretendApplication(mongoDb, dispatcher);
+            return new PretendApplication(readModelStore, dispatcher);
         }
 
         public class PretendApplication
         {
-            public PretendApplication(MongoDb mongoDb, CommandDispatcher dispatcher)
+            private readonly CommandDispatcher _dispatcher;
+
+            public PretendApplication(InMemoryReadModelStore readModelStore, CommandDispatcher dispatcher)
             {
-                this.MongoDb = mongoDb;
-                this.dispatcher = dispatcher;
+                ReadModelStore = readModelStore;
+                _dispatcher = dispatcher;
             }
 
-            private readonly CommandDispatcher dispatcher;
-            public MongoDb MongoDb { get; private set; }
+            public InMemoryReadModelStore ReadModelStore { get; }
 
             public void Send<TCommand>(TCommand cmd) where TCommand : ICommand
             {
-                dispatcher.Send(cmd);
+                _dispatcher.Send(cmd);
             }
         }
     }

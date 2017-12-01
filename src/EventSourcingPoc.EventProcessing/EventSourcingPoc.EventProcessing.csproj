@@ -2,9 +2,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
-    <ProjectReference Include="..\EventSourcingPoc.Data\EventSourcingPoc.Data.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Messages\EventSourcingPoc.Messages.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Domain\EventSourcingPoc.Domain.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Readmodels\EventSourcingPoc.Readmodels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.0.0\ref\netcoreapp2.0\Microsoft.CSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <PropertyGroup>

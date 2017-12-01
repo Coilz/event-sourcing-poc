@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EventSourcingPoc.Data.MongoDb.ReadModels
+namespace EventSourcingPoc.Readmodels
 {
     public class ShoppingCartReadModel
     {
         public ShoppingCartReadModel()
         {
-            this.Items = new List<ShoppingCartItemReadModel>();
+            Items = new List<ShoppingCartItemReadModel>();
         }
-        public List<ShoppingCartItemReadModel> Items { get; private set; }
+
+        public List<ShoppingCartItemReadModel> Items { get; }
         public Guid Id { get; set; }
         public Guid CustomerId { get; set; }
     }

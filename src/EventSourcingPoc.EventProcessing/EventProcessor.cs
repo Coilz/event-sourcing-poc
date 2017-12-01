@@ -1,5 +1,4 @@
-﻿using EventSourcingPoc.Data;
-using EventSourcingPoc.EventSourcing.Handlers;
+﻿using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.EventProcessing
@@ -8,10 +7,10 @@ namespace EventSourcingPoc.EventProcessing
     {
         private readonly IEventDispatcher _dispatcher;
 
-        public EventProcessor(InMemoryEventStore store, IEventDispatcher dispatcher)
+        public EventProcessor(IEventBus eventBus, IEventDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-            store.Subscribe(this);
+            eventBus.Subscribe(this);
         }
 
         public void Notify<TEvent>(TEvent evt) where TEvent : IEvent

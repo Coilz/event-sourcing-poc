@@ -1,6 +1,6 @@
 ﻿using EventSourcingPoc.Messages;
 
-namespace EventSourcingPoc.Data
+namespace EventSourcingPoc.EventProcessing
 {
     public interface IEventObserver
     {

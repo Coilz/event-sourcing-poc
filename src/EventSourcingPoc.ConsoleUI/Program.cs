@@ -16,7 +16,7 @@ namespace EventSourcingPoc.ConsoleUI
             {
                 var app = Bootstrapper.Bootstrap();
 
-                if(!app.MongoDb.HasCart(customerId))
+                if (!app.ReadModelStore.HasCart(customerId))
                 {
                     app.Send(new CreateNewCart(cartId, customerId));
                     Console.WriteLine($"Create cart {cartId} for customer {customerId}.");
@@ -28,11 +28,11 @@ namespace EventSourcingPoc.ConsoleUI
                 app.Send(new AddProductToCart(cartId, Guid.NewGuid(), 10));
                 Console.WriteLine($"Add product to cart {cartId}.");
 
-                var cartModel = app.MongoDb.GetCartById(cartId);
+                var cartModel = app.ReadModelStore.GetCartById(cartId);
 
                 app.Send(new Checkout(cartId));
                 Console.WriteLine($"Checkout cart {cartId}.");
-                var hasCartBeenRemovedAfterCheckout = app.MongoDb.HasCart(customerId);
+                var hasCartBeenRemovedAfterCheckout = app.ReadModelStore.HasCart(customerId);
 
                 var orderId = cartId;
                 app.Send(new ConfirmShippingAddress(orderId, new Address("My Home")));
@@ -40,12 +40,16 @@ namespace EventSourcingPoc.ConsoleUI
 
                 app.Send(new PayForOrder(orderId));
                 Console.WriteLine($"Pay for order {orderId}.");
-
-
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+
+            finally
+            {
+                Console.WriteLine("Hit enter to exit");
+                Console.ReadLine();
             }
         }
     }
