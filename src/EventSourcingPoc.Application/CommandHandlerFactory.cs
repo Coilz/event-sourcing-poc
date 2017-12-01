@@ -16,16 +16,14 @@ namespace EventSourcingPoc.Application
     {
         private readonly Dictionary<Type, Func<IHandler>> _handlerFactories = new Dictionary<Type, Func<IHandler>>();
 
-        public CommandHandlerFactory(IEventStore eventStore)
+        public CommandHandlerFactory(Func<IRepository> repositoryProvider)
         {
-            IRepository NewTransientRepo() => new Repository(eventStore);
-
             RegisterHandlerFactoryWithTypes(
-                () => new ShoppingCartHandler(NewTransientRepo()),
+                () => new ShoppingCartHandler(repositoryProvider()),
                 typeof(CreateNewCart), typeof(AddProductToCart), typeof(RemoveProductFromCart), typeof(EmptyCart), typeof(Checkout));
 
             RegisterHandlerFactoryWithTypes(
-                () => new OrderHandler(NewTransientRepo()),
+                () => new OrderHandler(repositoryProvider()),
                 typeof(PayForOrder), typeof(ConfirmShippingAddress), typeof(CompleteOrder));
         }
 

@@ -5,15 +5,16 @@ namespace EventSourcingPoc.Application
 {
     public class CommandDispatcher : ICommandDispatcher
     {
-        private readonly ICommandHandlerFactory factory;
+        private readonly ICommandHandlerFactory _factory;
 
         public CommandDispatcher(ICommandHandlerFactory factory)
         {
-            this.factory = factory;
+            _factory = factory;
         }
-        public void Send<TCommand>(TCommand command) where TCommand : ICommand
+        public void Send<TCommand>(TCommand command)
+            where TCommand : ICommand
         {
-            var handler = this.factory.Resolve<TCommand>();
+            var handler = _factory.Resolve<TCommand>();
             handler.Handle(command);
         }
     }

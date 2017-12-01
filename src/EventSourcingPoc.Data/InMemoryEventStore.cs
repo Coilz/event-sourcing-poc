@@ -24,6 +24,7 @@ namespace EventSourcingPoc.Data
             {
                 return _store[streamId.Value];
             }
+
             throw new EventStreamNotFoundException(streamId);
         }
 

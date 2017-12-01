@@ -9,33 +9,33 @@ namespace EventSourcingPoc.Domain.Shipping
         , IEventHandler<PaymentReceived>
         , IEventHandler<ShippingAddressConfirmed>
     {
-        private readonly IRepository repo;
-        private readonly ICommandDispatcher dispatcher;
+        private readonly IRepository _repository;
+        private readonly ICommandDispatcher _dispatcher;
 
-        public OrderEventHandler(IRepository repo, ICommandDispatcher dispatcher)
+        public OrderEventHandler(IRepository repository, ICommandDispatcher dispatcher)
         {
-            this.repo = repo;
-            this.dispatcher = dispatcher;
+            _repository = repository;
+            _dispatcher = dispatcher;
         }
 
         public void Handle(OrderCreated evt)
         {
             var saga = ShippingSaga.Create(evt.OrderId);
-            repo.Save(saga);
+            _repository.Save(saga);
         }
 
         public void Handle(PaymentReceived evt)
         {
-            var saga = this.repo.GetById<ShippingSaga>(evt.OrderId);
-            saga.ConfirmPayment(dispatcher);
-            this.repo.Save(saga);
+            var saga = _repository.GetById<ShippingSaga>(evt.OrderId);
+            saga.ConfirmPayment(_dispatcher);
+            _repository.Save(saga);
         }
 
         public void Handle(ShippingAddressConfirmed evt)
         {
-            var saga = this.repo.GetById<ShippingSaga>(evt.OrderId);
-            saga.ConfirmAddress(dispatcher);
-            this.repo.Save(saga);
+            var saga = _repository.GetById<ShippingSaga>(evt.OrderId);
+            saga.ConfirmAddress(_dispatcher);
+            _repository.Save(saga);
         }
     }
 }

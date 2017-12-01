@@ -16,7 +16,7 @@ namespace EventSourcingPoc.Data
 
         public bool HasCart(Guid customerId)
         {
-            return Enumerable.Any<ShoppingCartReadModel>(_carts.Values, x => x.CustomerId == customerId);
+            return _carts.Any(cart => cart.Value.CustomerId == customerId);
         }
 
         public void SaveCart(ShoppingCartReadModel cart)

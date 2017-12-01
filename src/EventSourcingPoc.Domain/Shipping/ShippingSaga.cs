@@ -90,7 +90,7 @@ namespace EventSourcingPoc.Domain.Shipping
             if (_status != Status.ReadyToComplete) return;
 
             ApplyChanges(new OrderDelivered(id));
-            dispatcher.Send(new CompleteOrder(id)); //todo this is wierd should do it after events have been persisted
+            dispatcher.Send(new CompleteOrder(id)); // TODO: this is wierd should do it after events have been persisted
         }
 
         private void Apply(OrderDelivered obj)

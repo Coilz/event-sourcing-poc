@@ -13,40 +13,53 @@ namespace EventSourcingPoc.EventProcessing
 {
     public class EventHandlerFactory : IEventHandlerFactory
     {
-        private readonly Dictionary<Type, List<Func<IHandler>>> handlerFactories = new Dictionary<Type, List<Func<IHandler>>>();
+        private readonly Dictionary<Type, List<Func<IHandler>>> _handlerFactories = new Dictionary<Type, List<Func<IHandler>>>();
 
-        public EventHandlerFactory(IEventStore eventStore, ICommandDispatcher dispatcher, IShoppingCartReadModelRepository mongo)
+        public EventHandlerFactory(
+            Func<IRepository> repositoryProvider,
+            ICommandDispatcher dispatcher,
+            IShoppingCartReadModelRepository readModelStore)
         {
-            RegisterHandlerFactories(eventStore,dispatcher,mongo);
+            RegisterHandlerFactories(repositoryProvider, dispatcher, readModelStore);
         }
 
-        private void RegisterHandlerFactories(IEventStore eventStore, ICommandDispatcher dispatcher, IShoppingCartReadModelRepository mongo)
+        private void RegisterHandlerFactories(
+            Func<IRepository> repositoryProvider,
+            ICommandDispatcher dispatcher,
+            IShoppingCartReadModelRepository readModelStore)
         {
-            this.RegisterHandlerFactoryWithTypes(
-                () => new ShoppingCartEventHandler(mongo),
-                typeof(CartCreated), typeof(ProductAddedToCart), typeof(ProductRemovedFromCart), typeof(CartEmptied), typeof(CartCheckedOut));
+            RegisterHandlerFactoryWithTypes(
+                () => new ShoppingCartEventHandler(readModelStore),
+                typeof(CartCreated),
+                typeof(ProductAddedToCart),
+                typeof(ProductRemovedFromCart),
+                typeof(CartEmptied),
+                typeof(CartCheckedOut));
 
-            this.RegisterHandlerFactoryWithTypes(
-                () => new OrderEventHandler(new Repository(eventStore), dispatcher),
-                typeof(OrderCreated), typeof(PaymentReceived), typeof(ShippingAddressConfirmed));
+            RegisterHandlerFactoryWithTypes(
+                () => new OrderEventHandler(repositoryProvider(), dispatcher),
+                typeof(OrderCreated),
+                typeof(PaymentReceived),
+                typeof(ShippingAddressConfirmed));
         }
 
         private void RegisterHandlerFactoryWithTypes(Func<IHandler> handler, params Type[] types)
         {
             foreach (var type in types)
             {
-                this.handlerFactories.Add(type, new List<Func<IHandler>> { handler });
+                _handlerFactories.Add(type, new List<Func<IHandler>> { handler });
             }
         }
 
         public IEnumerable<IEventHandler<TEvent>> Resolve<TEvent>(TEvent evt) where TEvent : IEvent
         {
             var evtType = evt.GetType();
-            if (this.handlerFactories.ContainsKey(evtType))
+            if (_handlerFactories.ContainsKey(evtType))
             {
-                var factories = this.handlerFactories[evtType];
+                var factories = _handlerFactories[evtType];
                 return factories.Select(h => (IEventHandler<TEvent>)h());
             }
+
             return new List<IEventHandler<TEvent>>();
         }
     }

@@ -1,5 +1,7 @@
-﻿using EventSourcingPoc.Data;
+﻿using System;
+using EventSourcingPoc.Data;
 using EventSourcingPoc.EventProcessing;
+using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Application
@@ -10,15 +12,17 @@ namespace EventSourcingPoc.Application
         {
             var eventBus = new EventBus();
             var store = new InMemoryEventStore(eventBus);
-            var handlerFactory = new CommandHandlerFactory(store);
-            var dispatcher = new CommandDispatcher(handlerFactory);
+            Func<IRepository> repositoryProvider = () => new Repository(store);
+
+            var commandHandlerFactory = new CommandHandlerFactory(repositoryProvider);
+            var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
 
             var readModelStore = new InMemoryReadModelStore();
-            var eventHandlerFactory = new EventHandlerFactory(store, dispatcher, readModelStore);
+            var eventHandlerFactory = new EventHandlerFactory(repositoryProvider, commandDispatcher, readModelStore);
             var eventDispatcher = new EventDispatcher(eventHandlerFactory);
             var eventProcessor = new EventProcessor(eventBus, eventDispatcher);
 
-            return new PretendApplication(readModelStore, dispatcher);
+            return new PretendApplication(readModelStore, commandDispatcher);
         }
 
         public class PretendApplication
@@ -33,7 +37,8 @@ namespace EventSourcingPoc.Application
 
             public InMemoryReadModelStore ReadModelStore { get; }
 
-            public void Send<TCommand>(TCommand cmd) where TCommand : ICommand
+            public void Send<TCommand>(TCommand cmd)
+                where TCommand : ICommand
             {
                 _dispatcher.Send(cmd);
             }

@@ -13,14 +13,14 @@ namespace EventSourcingPoc.Domain.Store
         , ICommandHandler<EmptyCart>
         , ICommandHandler<Checkout>
     {
-        private readonly IRepository _repo;
-        public ShoppingCartHandler(IRepository repo)
+        private readonly IRepository _repository;
+        public ShoppingCartHandler(IRepository repository)
         {
-            _repo = repo;
+            _repository = repository;
         }
         public void Handle(CreateNewCart cmd)
         {
-            _repo.Save(ShoppingCart.Create(cmd.CartId, cmd.CustomerId));
+            _repository.Save(ShoppingCart.Create(cmd.CartId, cmd.CustomerId));
         }
 
         public void Handle(AddProductToCart cmd)
@@ -40,16 +40,16 @@ namespace EventSourcingPoc.Domain.Store
 
         public void Handle(Checkout cmd)
         {
-            var cart = _repo.GetById<ShoppingCart>(cmd.CartId);
+            var cart = _repository.GetById<ShoppingCart>(cmd.CartId);
             var order = cart.Checkout();
-            _repo.Save(cart, order);
+            _repository.Save(cart, order);
         }
 
         private void Execute(Guid id, Action<ShoppingCart> action)
         {
-            var cart = _repo.GetById<ShoppingCart>(id);
+            var cart = _repository.GetById<ShoppingCart>(id);
             action(cart);
-            _repo.Save(cart);
+            _repository.Save(cart);
         }
     }
 }
