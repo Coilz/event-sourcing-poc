@@ -30,7 +30,7 @@ namespace EventSourcingPoc.Domain.Shipping
         public ShippingSaga() {}
         private ShippingSaga(Guid orderId)
         {
-            ApplyChanges(new StartedShippingProcess(orderId));
+            ApplyChanges(new ShippingProcessStarted(orderId));
         }
 
         public void ConfirmPayment()
@@ -58,7 +58,7 @@ namespace EventSourcingPoc.Domain.Shipping
         {
             get
             {
-                yield return CreateApplier<StartedShippingProcess>(Apply);
+                yield return CreateApplier<ShippingProcessStarted>(Apply);
                 yield return CreateApplier<PaymentConfirmed>(Apply);
                 yield return CreateApplier<AddressConfirmed>(Apply);
                 yield return CreateApplier<OrderDelivered>(Apply);
@@ -75,7 +75,7 @@ namespace EventSourcingPoc.Domain.Shipping
             return _status == Status.Started || _status == Status.PaymentReceived;
         }
 
-        private void Apply(StartedShippingProcess evt)
+        private void Apply(ShippingProcessStarted evt)
         {
             id = evt.OrderId;
         }

@@ -2,10 +2,10 @@ using System;
 
 namespace EventSourcingPoc.Messages.Shipping
 {
-    public class StartedShippingProcess : IEvent
+    public class ShippingProcessStarted : IEvent
     {
         public Guid OrderId { get; }
-        public StartedShippingProcess(Guid orderId)
+        public ShippingProcessStarted(Guid orderId)
         {
             this.OrderId = orderId;
         }

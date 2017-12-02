@@ -58,7 +58,7 @@ namespace EventSourcingPoc.Application
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
                 typeof(ShippingAddressConfirmed),
-                typeof(StartedShippingProcess),
+                typeof(ShippingProcessStarted),
                 typeof(OrderDelivered),
                 typeof(OrderCompleted));
         }

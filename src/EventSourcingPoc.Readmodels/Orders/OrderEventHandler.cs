@@ -10,7 +10,7 @@ namespace EventSourcingPoc.Readmodels.Orders
         : IEventHandler<OrderCreated>
         , IEventHandler<PaymentReceived>
         , IEventHandler<ShippingAddressConfirmed>
-        , IEventHandler<StartedShippingProcess>
+        , IEventHandler<ShippingProcessStarted>
         , IEventHandler<OrderDelivered>
         , IEventHandler<OrderCompleted>
     {
@@ -46,7 +46,7 @@ namespace EventSourcingPoc.Readmodels.Orders
             });
         }
 
-        public void Handle(StartedShippingProcess @event)
+        public void Handle(ShippingProcessStarted @event)
         {
             ExecuteSave(@event.OrderId, model =>
             {
