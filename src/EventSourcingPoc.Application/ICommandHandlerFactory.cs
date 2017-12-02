@@ -5,6 +5,7 @@ namespace EventSourcingPoc.Application
 {
     public interface ICommandHandlerFactory
     {
-        ICommandHandler<TCommand> Resolve<TCommand>() where TCommand : ICommand;
+        ICommandHandler<TCommand> Resolve<TCommand>()
+            where TCommand : ICommand;
     }
 }

@@ -6,11 +6,13 @@ namespace EventSourcingPoc.Messages.Orders
     {
         public Guid ProductId { get; }
         public decimal Price { get; }
+        public int Quantity { get; }
 
-        public OrderItem(Guid productId, decimal price)
+        public OrderItem(Guid productId, decimal price, int quantity)
         {
-            this.Price = price;
-            this.ProductId = productId;
+            Price = price;
+            ProductId = productId;
+            Quantity = quantity;
         }
     }
 }

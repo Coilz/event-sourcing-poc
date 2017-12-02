@@ -30,9 +30,7 @@ namespace EventSourcingPoc.Readmodels
         {
             ExecuteSave(evt.CartId, cart =>
             {
-                var cartItems = cart.Items
-                    .Where(x => x.ProductId != evt.ProductId)
-                    .ToList();
+                var cartItems = cart.Items.ToList();
                 var cartItem = new ShoppingCartItemReadModel(evt.ProductId, evt.Price);
 
                 cartItems.Add(cartItem);
@@ -45,7 +43,9 @@ namespace EventSourcingPoc.Readmodels
         {
             ExecuteSave(evt.CartId, cart =>
             {
-                var cartItems = cart.Items.Where(item => item.ProductId != evt.ProductId);
+                var productItems = cart.Items.Where(item => item.ProductId == evt.ProductId);
+                var cartItems = cart.Items.Concat(productItems.Skip(1));
+
                 return new ShoppingCartReadModel(cart, cartItems);
             });
         }

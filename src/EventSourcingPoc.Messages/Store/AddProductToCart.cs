@@ -12,7 +12,6 @@ namespace EventSourcingPoc.Messages.Store
             this.ProductId = productId;
             this.CartId = cartId;
             this.Price = price;
-
         }
     }
 }

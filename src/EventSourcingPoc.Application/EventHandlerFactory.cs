@@ -48,18 +48,22 @@ namespace EventSourcingPoc.Application
         {
             foreach (var type in types)
             {
-                _handlerFactories.Add(type, new List<Func<IHandler>> { handler });
+                var handlers = new List<Func<IHandler>> { handler };
+                if (_handlerFactories.ContainsKey(type))
+                    handlers.AddRange(_handlerFactories[type]);
+
+                _handlerFactories[type] = handlers;
             }
         }
 
         public IEnumerable<IEventHandler<TEvent>> Resolve<TEvent>()
             where TEvent : IEvent
         {
-            var evtType = typeof(TEvent);
-            if (_handlerFactories.ContainsKey(evtType))
+            var eventType = typeof(TEvent);
+            if (_handlerFactories.ContainsKey(eventType))
             {
-                var factories = _handlerFactories[evtType];
-                return factories.Select(h => (IEventHandler<TEvent>)h());
+                return _handlerFactories[eventType]
+                    .Select(handler => (IEventHandler<TEvent>)handler());
             }
 
             return new List<IEventHandler<TEvent>>();

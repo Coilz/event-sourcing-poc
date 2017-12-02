@@ -8,7 +8,6 @@ namespace EventSourcingPoc.Readmodels
         {
             ProductId = productId;
             Price = price;
-
         }
         public Guid ProductId { get; }
         public decimal Price { get; }

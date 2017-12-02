@@ -12,7 +12,7 @@ namespace EventSourcingPoc.Domain.Store
 
     public class ShoppingCart : Aggregate
     {
-        private readonly Dictionary<Guid, decimal> _products = new Dictionary<Guid, decimal>();
+        private readonly List<ShoppingCartItem> _shoppingCartItems = new List<ShoppingCartItem>();
         private bool _checkedOut;
         private Guid _customerId;
 
@@ -31,20 +31,14 @@ namespace EventSourcingPoc.Domain.Store
         {
             if (_checkedOut) throw new CartAlreadyCheckedOutException();
 
-            if (!_products.ContainsKey(productId))
-            {
-                ApplyChanges(new ProductAddedToCart(id, productId, price));
-            }
+            ApplyChanges(new ProductAddedToCart(id, productId, price));
         }
 
         public void RemoveProduct(Guid productId)
         {
             if (_checkedOut) throw new CartAlreadyCheckedOutException();
 
-            if (_products.ContainsKey(productId))
-            {
-                ApplyChanges(new ProductRemovedFromCart(id, productId));
-            }
+            ApplyChanges(new ProductRemovedFromCart(id, productId));
         }
 
         public void Empty()
@@ -56,10 +50,15 @@ namespace EventSourcingPoc.Domain.Store
 
         public EventStream Checkout()
         {
-            if (_products.Count == 0) throw new CannotCheckoutEmptyCartException();
+            if (_shoppingCartItems.Count == 0) throw new CannotCheckoutEmptyCartException();
 
             ApplyChanges(new CartCheckedOut(id));
-            return Order.Create(id, _customerId, _products.Select(x => new OrderItem(x.Key, x.Value)));
+
+            var orderItems = _shoppingCartItems // TODO: Should creating an order be here?
+                .Select(item =>
+                    new OrderItem(item.ProductId, item.Price, item.Quantity));
+
+            return Order.Create(id, _customerId, orderItems);
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
@@ -82,17 +81,29 @@ namespace EventSourcingPoc.Domain.Store
 
         private void Apply(ProductAddedToCart evt)
         {
-            _products.Add(evt.ProductId, evt.Price);
+            var item = _shoppingCartItems.SingleOrDefault(sci => sci.ProductId == evt.ProductId);
+            if (item == null)
+                _shoppingCartItems.Add(
+                    new ShoppingCartItem(evt.ProductId, evt.Price, 1));
+            else
+                item.AddItems(1);
         }
 
         private void Apply(ProductRemovedFromCart evt)
         {
-            _products.Remove(evt.ProductId);
+            var item = _shoppingCartItems.SingleOrDefault(sci => sci.ProductId == evt.ProductId);
+
+            if (item == null) return;
+
+            if (item.Quantity > 1)
+                item.RemoveItems(1);
+            else
+                _shoppingCartItems.Remove(item);
         }
 
         private void Apply(CartEmptied evt)
         {
-            _products.Clear();
+            _shoppingCartItems.Clear();
         }
 
         private void Apply(CartCheckedOut evt)
