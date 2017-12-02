@@ -17,7 +17,7 @@ namespace EventSourcingPoc.Readmodels
         }
 
         public ShoppingCartReadModel(Guid id, Guid customerId)
-            : this(id, customerId, new List<ShoppingCartItemReadModel>())
+            : this(id, customerId, Enumerable.Empty<ShoppingCartItemReadModel>())
         {
         }
 

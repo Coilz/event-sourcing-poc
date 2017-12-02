@@ -66,7 +66,7 @@ namespace EventSourcingPoc.Application
                     .Select(handler => (IEventHandler<TEvent>)handler());
             }
 
-            return new List<IEventHandler<TEvent>>();
+            return Enumerable.Empty<IEventHandler<TEvent>>();
         }
     }
 }
