@@ -33,17 +33,6 @@ namespace EventSourcingPoc.Domain.Shipping
             ApplyChanges(new StartedShippingProcess(orderId));
         }
 
-        protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
-        {
-            get
-            {
-                yield return CreateApplier<StartedShippingProcess>(Apply);
-                yield return CreateApplier<PaymentConfirmed>(Apply);
-                yield return CreateApplier<AddressConfirmed>(Apply);
-                yield return CreateApplier<OrderDelivered>(Apply);
-            }
-        }
-
         public void ConfirmPayment(ICommandDispatcher dispatcher)
         {
             if (!AwaitingPayment()) return;
@@ -60,14 +49,15 @@ namespace EventSourcingPoc.Domain.Shipping
             CompleteIfPossible(dispatcher);
         }
 
-        private void Apply(StartedShippingProcess evt)
+        protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
         {
-            id = evt.OrderId;
-        }
-
-        private void Apply(PaymentConfirmed evt)
-        {
-            _status = _status == Status.AddressReceived ? Status.ReadyToComplete : Status.PaymentReceived;
+            get
+            {
+                yield return CreateApplier<StartedShippingProcess>(Apply);
+                yield return CreateApplier<PaymentConfirmed>(Apply);
+                yield return CreateApplier<AddressConfirmed>(Apply);
+                yield return CreateApplier<OrderDelivered>(Apply);
+            }
         }
 
         private bool AwaitingPayment()
@@ -80,17 +70,27 @@ namespace EventSourcingPoc.Domain.Shipping
             return _status == Status.Started || _status == Status.PaymentReceived;
         }
 
-        private void Apply(AddressConfirmed evt)
-        {
-            _status = _status == Status.PaymentReceived ? Status.ReadyToComplete : Status.AddressReceived;
-        }
-
         private void CompleteIfPossible(ICommandDispatcher dispatcher)
         {
             if (_status != Status.ReadyToComplete) return;
 
             ApplyChanges(new OrderDelivered(id));
             dispatcher.Send(new CompleteOrder(id)); // TODO: this is wierd should do it after events have been persisted
+        }
+
+        private void Apply(StartedShippingProcess evt)
+        {
+            id = evt.OrderId;
+        }
+
+        private void Apply(PaymentConfirmed evt)
+        {
+            _status = _status == Status.AddressReceived ? Status.ReadyToComplete : Status.PaymentReceived;
+        }
+
+        private void Apply(AddressConfirmed evt)
+        {
+            _status = _status == Status.PaymentReceived ? Status.ReadyToComplete : Status.AddressReceived;
         }
 
         private void Apply(OrderDelivered obj)

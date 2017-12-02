@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
+using EventSourcingPoc.Domain.Orders;
 using EventSourcingPoc.Domain.Store;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
+using EventSourcingPoc.Messages.Orders;
 using EventSourcingPoc.Messages.Store;
 
 namespace EventSourcingPoc.CommandProcessing
@@ -41,8 +44,15 @@ namespace EventSourcingPoc.CommandProcessing
         public void Handle(Checkout cmd)
         {
             var cart = _repository.GetById<ShoppingCart>(cmd.CartId);
-            var order = cart.Checkout();
-            _repository.Save(cart, order);
+            cart.Checkout();
+            _repository.Save(cart);
+
+            var orderItems = cart.ShoppingCartItems
+                .Select(item =>
+                    new OrderItem(item.ProductId, item.Price, item.Quantity));
+
+            var order = Order.Create(cmd.CartId, cart.CustomerId, orderItems);
+            _repository.Save(order);
         }
 
         private void Execute(Guid id, Action<ShoppingCart> action)

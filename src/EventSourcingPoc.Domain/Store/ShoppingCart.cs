@@ -4,28 +4,29 @@ using System.Linq;
 
 namespace EventSourcingPoc.Domain.Store
 {
-    using Orders;
     using EventSourcing.Domain;
     using Messages;
-    using Messages.Orders;
     using Messages.Store;
 
     public class ShoppingCart : Aggregate
     {
-        private readonly List<ShoppingCartItem> _shoppingCartItems = new List<ShoppingCartItem>();
-        private bool _checkedOut;
-        private Guid _customerId;
-
         public static ShoppingCart Create(Guid cartId, Guid customerId)
         {
             return new ShoppingCart(cartId, customerId);
         }
+
+        private readonly List<ShoppingCartItem> _shoppingCartItems = new List<ShoppingCartItem>();
+        private bool _checkedOut;
+        private Guid _customerId;
 
         public ShoppingCart() {}
         private ShoppingCart(Guid cartId, Guid customerId)
         {
             ApplyChanges(new CartCreated(cartId, customerId));
         }
+
+        public Guid CustomerId => _customerId;
+        public IEnumerable<ShoppingCartItem> ShoppingCartItems => _shoppingCartItems.AsReadOnly();
 
         public void AddProduct(Guid productId, decimal price)
         {
@@ -48,17 +49,11 @@ namespace EventSourcingPoc.Domain.Store
             ApplyChanges(new CartEmptied(id));
         }
 
-        public EventStream Checkout()
+        public void Checkout()
         {
             if (_shoppingCartItems.Count == 0) throw new CannotCheckoutEmptyCartException();
 
             ApplyChanges(new CartCheckedOut(id));
-
-            var orderItems = _shoppingCartItems // TODO: Should creating an order be here?
-                .Select(item =>
-                    new OrderItem(item.ProductId, item.Price, item.Quantity));
-
-            return Order.Create(id, _customerId, orderItems);
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
