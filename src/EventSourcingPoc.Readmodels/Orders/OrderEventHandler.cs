@@ -2,6 +2,7 @@ using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages.Orders;
 using System;
 using System.Linq;
+using EventSourcingPoc.Messages.Shipping;
 
 namespace EventSourcingPoc.Readmodels.Orders
 {
@@ -9,6 +10,8 @@ namespace EventSourcingPoc.Readmodels.Orders
         : IEventHandler<OrderCreated>
         , IEventHandler<PaymentReceived>
         , IEventHandler<ShippingAddressConfirmed>
+        , IEventHandler<StartedShippingProcess>
+        , IEventHandler<OrderDelivered>
         , IEventHandler<OrderCompleted>
     {
         private readonly IOrderReadModelRepository _repository;
@@ -43,11 +46,29 @@ namespace EventSourcingPoc.Readmodels.Orders
             });
         }
 
-        public void Handle(OrderCompleted @event)
+        public void Handle(StartedShippingProcess @event)
         {
             ExecuteSave(@event.OrderId, model =>
             {
                 model.Ship();
+                return model;
+            });
+        }
+
+        public void Handle(OrderDelivered @event)
+        {
+            ExecuteSave(@event.OrderId, model =>
+            {
+                model.Deliver();
+                return model;
+            });
+        }
+
+        public void Handle(OrderCompleted @event)
+        {
+            ExecuteSave(@event.OrderId, model =>
+            {
+                model.Complete();
                 return model;
             });
         }

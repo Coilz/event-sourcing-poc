@@ -9,6 +9,7 @@ using EventSourcingPoc.Readmodels.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EventSourcingPoc.Messages.Shipping;
 
 namespace EventSourcingPoc.Application
 {
@@ -47,13 +48,18 @@ namespace EventSourcingPoc.Application
                 () => new EventProcessing.OrderEventHandler(repositoryProvider(), dispatcher),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
-                typeof(ShippingAddressConfirmed));
+                typeof(ShippingAddressConfirmed),
+                typeof(PaymentConfirmed),
+                typeof(AddressConfirmed),
+                typeof(OrderDelivered));
 
             RegisterHandlerFactoryWithTypes(
                 () => new Readmodels.Orders.OrderEventHandler(orderReadModelRepositoryProvider()),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
                 typeof(ShippingAddressConfirmed),
+                typeof(StartedShippingProcess),
+                typeof(OrderDelivered),
                 typeof(OrderCompleted));
         }
 

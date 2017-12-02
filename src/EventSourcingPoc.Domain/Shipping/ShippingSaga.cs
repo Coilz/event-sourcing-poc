@@ -33,20 +33,25 @@ namespace EventSourcingPoc.Domain.Shipping
             ApplyChanges(new StartedShippingProcess(orderId));
         }
 
-        public void ConfirmPayment(ICommandDispatcher dispatcher) // TODO: Do we need the ICommandDispatcher?
+        public void ConfirmPayment()
         {
             if (!AwaitingPayment()) return;
 
             ApplyChanges(new PaymentConfirmed(id));
-            CompleteIfPossible(dispatcher);
         }
 
-        public void ConfirmAddress(ICommandDispatcher dispatcher) // TODO: Do we need the ICommandDispatcher?
+        public void ConfirmAddress()
         {
             if (!AwaitingAddress()) return;
 
             ApplyChanges(new AddressConfirmed(id));
-            CompleteIfPossible(dispatcher);
+        }
+
+        public void CompleteIfPossible()
+        {
+            if (_status != Status.ReadyToComplete) return;
+
+            ApplyChanges(new OrderDelivered(id));
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
@@ -68,14 +73,6 @@ namespace EventSourcingPoc.Domain.Shipping
         private bool AwaitingAddress()
         {
             return _status == Status.Started || _status == Status.PaymentReceived;
-        }
-
-        private void CompleteIfPossible(ICommandDispatcher dispatcher)
-        {
-            if (_status != Status.ReadyToComplete) return;
-
-            ApplyChanges(new OrderDelivered(id));
-            dispatcher.Send(new CompleteOrder(id)); // TODO: this is wierd should do it after events have been persisted
         }
 
         private void Apply(StartedShippingProcess evt)

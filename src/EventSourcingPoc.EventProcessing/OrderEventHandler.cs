@@ -2,6 +2,7 @@ using EventSourcingPoc.Domain.Shipping;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages.Orders;
+using EventSourcingPoc.Messages.Shipping;
 
 namespace EventSourcingPoc.EventProcessing
 {
@@ -9,6 +10,9 @@ namespace EventSourcingPoc.EventProcessing
         : IEventHandler<OrderCreated>
         , IEventHandler<PaymentReceived>
         , IEventHandler<ShippingAddressConfirmed>
+        , IEventHandler<PaymentConfirmed>
+        , IEventHandler<AddressConfirmed>
+        , IEventHandler<OrderDelivered>
     {
         private readonly IRepository _repository;
         private readonly ICommandDispatcher _dispatcher;
@@ -28,15 +32,34 @@ namespace EventSourcingPoc.EventProcessing
         public void Handle(PaymentReceived @event)
         {
             var saga = _repository.GetById<ShippingSaga>(@event.OrderId);
-            saga.ConfirmPayment(_dispatcher);
+            saga.ConfirmPayment();
             _repository.Save(saga);
         }
 
         public void Handle(ShippingAddressConfirmed @event)
         {
             var saga = _repository.GetById<ShippingSaga>(@event.OrderId);
-            saga.ConfirmAddress(_dispatcher);
+            saga.ConfirmAddress();
             _repository.Save(saga);
+        }
+
+        public void Handle(PaymentConfirmed @event)
+        {
+            var saga = _repository.GetById<ShippingSaga>(@event.OrderId);
+            saga.CompleteIfPossible();
+            _repository.Save(saga);
+        }
+
+        public void Handle(AddressConfirmed @event)
+        {
+            var saga = _repository.GetById<ShippingSaga>(@event.OrderId);
+            saga.CompleteIfPossible();
+            _repository.Save(saga);
+        }
+
+        public void Handle(OrderDelivered @event)
+        {
+            _dispatcher.Send(new CompleteOrder(@event.OrderId));
         }
     }
 }

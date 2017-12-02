@@ -8,7 +8,6 @@ namespace EventSourcingPoc.Messages.Shipping
         public StartedShippingProcess(Guid orderId)
         {
             this.OrderId = orderId;
-
         }
     }
 }
