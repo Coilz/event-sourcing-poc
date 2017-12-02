@@ -33,7 +33,7 @@ namespace EventSourcingPoc.Domain.Shipping
             ApplyChanges(new StartedShippingProcess(orderId));
         }
 
-        public void ConfirmPayment(ICommandDispatcher dispatcher)
+        public void ConfirmPayment(ICommandDispatcher dispatcher) // TODO: Do we need the ICommandDispatcher?
         {
             if (!AwaitingPayment()) return;
 
@@ -41,7 +41,7 @@ namespace EventSourcingPoc.Domain.Shipping
             CompleteIfPossible(dispatcher);
         }
 
-        public void ConfirmAddress(ICommandDispatcher dispatcher)
+        public void ConfirmAddress(ICommandDispatcher dispatcher) // TODO: Do we need the ICommandDispatcher?
         {
             if (!AwaitingAddress()) return;
 

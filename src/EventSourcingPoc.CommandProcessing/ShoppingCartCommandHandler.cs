@@ -43,16 +43,7 @@ namespace EventSourcingPoc.CommandProcessing
 
         public void Handle(Checkout cmd)
         {
-            var cart = _repository.GetById<ShoppingCart>(cmd.CartId);
-            cart.Checkout();
-            _repository.Save(cart);
-
-            var orderItems = cart.ShoppingCartItems
-                .Select(item =>
-                    new OrderItem(item.ProductId, item.Price, item.Quantity));
-
-            var order = Order.Create(cmd.CartId, cart.CustomerId, orderItems);
-            _repository.Save(order);
+            Execute(cmd.CartId, cart => cart.Checkout());
         }
 
         private void Execute(Guid id, Action<ShoppingCart> action)

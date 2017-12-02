@@ -30,11 +30,15 @@ namespace EventSourcingPoc.Application
             Func<IShoppingCartReadModelRepository> readModelRepositoryProvider)
         {
             RegisterHandlerFactoryWithTypes(
-                () => new ShoppingCartEventHandler(readModelRepositoryProvider()),
+                () => new Readmodels.ShoppingCartEventHandler(readModelRepositoryProvider()),
                 typeof(CartCreated),
                 typeof(ProductAddedToCart),
                 typeof(ProductRemovedFromCart),
                 typeof(CartEmptied),
+                typeof(CartCheckedOut));
+
+            RegisterHandlerFactoryWithTypes(
+                () => new EventProcessing.ShoppingCartEventHandler(repositoryProvider()),
                 typeof(CartCheckedOut));
 
             RegisterHandlerFactoryWithTypes(
