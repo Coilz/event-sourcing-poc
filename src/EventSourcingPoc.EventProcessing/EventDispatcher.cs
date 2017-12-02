@@ -5,15 +5,16 @@ namespace EventSourcingPoc.EventProcessing
 {
     public class EventDispatcher : IEventDispatcher
     {
-        private readonly IEventHandlerFactory factory;
+        private readonly IEventHandlerFactory _factory;
 
         public EventDispatcher(IEventHandlerFactory factory)
         {
-            this.factory = factory;
+            _factory = factory;
         }
-        public void Send<TEvent>(TEvent evt) where TEvent : IEvent
+        public void Send<TEvent>(TEvent evt)
+            where TEvent : IEvent
         {
-            var handlers = this.factory.Resolve<TEvent>();
+            var handlers = _factory.Resolve<TEvent>();
             foreach (var eventHandler in handlers)
             {
                 eventHandler.Handle(evt);

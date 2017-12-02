@@ -3,7 +3,7 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Application
 {
-    public class CommandDispatcher : ICommandDispatcher
+    public class CommandDispatcher : ICommandDispatcher // TODO: move to CommandProcessing
     {
         private readonly ICommandHandlerFactory _factory;
 

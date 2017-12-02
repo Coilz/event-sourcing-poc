@@ -4,7 +4,7 @@ using EventSourcingPoc.Messages.Orders;
 
 namespace EventSourcingPoc.Domain.Orders
 {
-    public class OrderCommandHandler // TODO: Move to a processing kind of project
+    public class OrderCommandHandler // TODO: Move from Domain to CommandProcessing
         : ICommandHandler<PayForOrder>
         , ICommandHandler<ConfirmShippingAddress>
         , ICommandHandler<CompleteOrder>

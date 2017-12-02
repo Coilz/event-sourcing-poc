@@ -4,7 +4,7 @@ using EventSourcingPoc.Messages.Orders;
 
 namespace EventSourcingPoc.Domain.Shipping
 {
-    public class OrderEventHandler
+    public class OrderEventHandler // TODO: Move from Domain to EventPorcessing, if possible
         : IEventHandler<OrderCreated>
         , IEventHandler<PaymentReceived>
         , IEventHandler<ShippingAddressConfirmed>
