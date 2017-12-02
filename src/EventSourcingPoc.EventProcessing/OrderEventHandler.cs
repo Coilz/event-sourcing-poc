@@ -1,10 +1,11 @@
+using EventSourcingPoc.Domain.Shipping;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages.Orders;
 
-namespace EventSourcingPoc.Domain.Shipping
+namespace EventSourcingPoc.EventProcessing
 {
-    public class OrderEventHandler // TODO: Move from Domain to EventPorcessing, if possible
+    public class OrderEventHandler
         : IEventHandler<OrderCreated>
         , IEventHandler<PaymentReceived>
         , IEventHandler<ShippingAddressConfirmed>
