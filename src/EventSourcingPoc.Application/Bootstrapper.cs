@@ -13,13 +13,13 @@ namespace EventSourcingPoc.Application
         public static PretendApplication Bootstrap()
         {
             var eventBus = new EventBus();
-            var store = new InMemoryEventStore(eventBus);
+            var store = InMemoryEventStore.GetInstance(eventBus);
             Func<IRepository> repositoryProvider = () => new Repository(store);
 
             var commandHandlerFactory = new CommandHandlerFactory(repositoryProvider);
             var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
 
-            var readModelStore = new InMemoryReadModelStore();
+            var readModelStore = InMemoryReadModelStore.GetInstance();
             Func<IShoppingCartReadModelRepository> readModelRepositoryProvider = () => new ShoppingCartReadModelRepository(readModelStore);
 
             var eventHandlerFactory = new EventHandlerFactory(repositoryProvider, commandDispatcher, readModelRepositoryProvider);

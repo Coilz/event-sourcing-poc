@@ -5,24 +5,34 @@ using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Concurrent;
+using System;
 
 namespace EventSourcingPoc.Data
 {
     public class InMemoryEventStore : IEventStore
     {
+        private static IEventStore _instance;
         private readonly IEventBus _eventBus;
-        private readonly Dictionary<string, IEnumerable<IEvent>> _store = new Dictionary<string, IEnumerable<IEvent>>();
+        private readonly ConcurrentDictionary<string, IEnumerable<IEvent>> _store = new ConcurrentDictionary<string, IEnumerable<IEvent>>();
 
-        public InMemoryEventStore(IEventBus eventBus)
+        public static IEventStore GetInstance(IEventBus eventBus)
+        {
+            if (_instance == null) _instance = new InMemoryEventStore(eventBus);
+
+            return _instance;
+        }
+
+        private InMemoryEventStore(IEventBus eventBus)
         {
             _eventBus = eventBus;
         }
 
         public IEnumerable<IEvent> GetByStreamId(StreamIdentifier streamId)
         {
-            if (_store.ContainsKey(streamId.Value))
+            if (_store.TryGetValue(streamId.Value, out var value))
             {
-                return _store[streamId.Value];
+                return value;
             }
 
             throw new EventStreamNotFoundException(streamId);
@@ -39,17 +49,17 @@ namespace EventSourcingPoc.Data
 
         private void PersistEvents(EventStoreStream eventStoreStream)
         {
-            if(_store.ContainsKey(eventStoreStream.Id.Value))
+            if (_store.TryAdd(eventStoreStream.Id.Value, eventStoreStream.Events)) return;
+            if (_store.TryGetValue(eventStoreStream.Id.Value, out var value))
             {
-                var currentEvents = _store[eventStoreStream.Id.Value].ToList();
-                currentEvents.AddRange(eventStoreStream.Events);
+                var currentEvents = value
+                    .ToList()
+                    .Concat(eventStoreStream.Events);
 
-                _store[eventStoreStream.Id.Value] = currentEvents;
+                if (_store.TryUpdate(eventStoreStream.Id.Value, currentEvents, value)) return;
             }
-            else
-            {
-                _store.Add(eventStoreStream.Id.Value, eventStoreStream.Events);
-            }
+
+            throw new InvalidOperationException("Persisting events failed.");
         }
 
         private void DispatchEvents(IEnumerable<IEvent> newEvents)
