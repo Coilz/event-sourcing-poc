@@ -22,28 +22,36 @@ namespace EventSourcingPoc.Application
             var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
 
             var shoppingCartStore = InMemoryReadModelStore<ShoppingCartReadModel>.GetInstance();
-            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider = () => new ShoppingCartReadModelRepository(shoppingCartStore);
+            Func<IShoppingCartReadModelRepository> shoppingCartReadModelRepositoryProvider = () => new ShoppingCartReadModelRepository(shoppingCartStore);
             var orderStore = InMemoryReadModelStore<OrderReadModel>.GetInstance();
             Func<IOrderReadModelRepository> orderReadModelRepositoryProvider = () => new OrderReadModelRepository(orderStore);
 
-            var eventHandlerFactory = new EventHandlerFactory(repositoryProvider, commandDispatcher, readModelRepositoryProvider, orderReadModelRepositoryProvider);
+            var eventHandlerFactory = new EventHandlerFactory(repositoryProvider, commandDispatcher, shoppingCartReadModelRepositoryProvider, orderReadModelRepositoryProvider);
             var eventDispatcher = new EventDispatcher(eventHandlerFactory);
             var eventProcessor = new EventProcessor(eventBus, eventDispatcher);
 
-            return new PretendApplication(readModelRepositoryProvider(), commandDispatcher);
+            return new PretendApplication(
+                shoppingCartReadModelRepositoryProvider(),
+                orderReadModelRepositoryProvider(),
+                commandDispatcher);
         }
 
         public class PretendApplication
         {
             private readonly ICommandDispatcher _dispatcher;
 
-            public PretendApplication(IShoppingCartReadModelRepository readModelRepository, ICommandDispatcher dispatcher)
+            public PretendApplication(
+                IShoppingCartReadModelRepository shoppingCartReadModelRepository,
+                IOrderReadModelRepository orderReadModelRepository,
+                ICommandDispatcher dispatcher)
             {
-                ReadModelRepository = readModelRepository;
+                ShoppingCartReadModelRepository = shoppingCartReadModelRepository;
+                OrderReadModelRepository = orderReadModelRepository;
                 _dispatcher = dispatcher;
             }
 
-            public IShoppingCartReadModelRepository ReadModelRepository { get; }
+            public IShoppingCartReadModelRepository ShoppingCartReadModelRepository { get; }
+            public IOrderReadModelRepository OrderReadModelRepository { get; }
 
             public void Send<TCommand>(TCommand cmd)
                 where TCommand : ICommand

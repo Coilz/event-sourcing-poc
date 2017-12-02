@@ -2,11 +2,8 @@
 
 namespace EventSourcingPoc.Readmodels.Store
 {
-    public interface IShoppingCartReadModelRepository
+    public interface IShoppingCartReadModelRepository : IReadModelRepository<ShoppingCartReadModel>
     {
-        ShoppingCartReadModel Get(Guid id);
         bool HasCart(Guid customerId);
-        void Save(ShoppingCartReadModel cart);
-        void Remove(Guid cartId);
     }
 }

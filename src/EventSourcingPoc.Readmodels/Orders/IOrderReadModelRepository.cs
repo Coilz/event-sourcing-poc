@@ -4,11 +4,8 @@ using System.Text;
 
 namespace EventSourcingPoc.Readmodels.Orders
 {
-    public interface IOrderReadModelRepository
+    public interface IOrderReadModelRepository : IReadModelRepository<OrderReadModel>
     {
-        OrderReadModel Get(Guid id);
         bool HasOrder(Guid customerId);
-        void Save(OrderReadModel model);
-        void Remove(Guid id);
     }
 }

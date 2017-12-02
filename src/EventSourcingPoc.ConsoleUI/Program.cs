@@ -40,7 +40,7 @@ namespace EventSourcingPoc.ConsoleUI
 
         void Start()
         {
-            if (!_app.ReadModelRepository.HasCart(_customerId))
+            if (!_app.ShoppingCartReadModelRepository.HasCart(_customerId))
             {
                 CreateNewCart(_cartId, _customerId);
             }
@@ -57,9 +57,13 @@ namespace EventSourcingPoc.ConsoleUI
 
             Checkout(_cartId);
             ShowCustomer(_customerId);
+            ShowOrder(_cartId);
 
             ConfirmShippingAddress(_cartId);
+            ShowOrder(_cartId);
+
             PayForOrder(_cartId);
+            ShowOrder(_cartId);
         }
 
         void CreateNewCart(Guid cartId, Guid customerId)
@@ -76,8 +80,8 @@ namespace EventSourcingPoc.ConsoleUI
 
         void ShowCart(Guid cartId)
         {
-            var cartModel = _app.ReadModelRepository.Get(cartId);
-            Console.WriteLine($"Customer {cartModel.CustomerId} has cart {cartModel.Id} with {cartModel.Items.Count()} items.");
+            var model = _app.ShoppingCartReadModelRepository.Get(cartId);
+            Console.WriteLine($"Customer {model.CustomerId} has cart {model.Id} with {model.Items.Count()} items.");
         }
 
         void Checkout(Guid cartId)
@@ -88,7 +92,7 @@ namespace EventSourcingPoc.ConsoleUI
 
         void ShowCustomer(Guid customerId)
         {
-            var hasCartBeenRemovedAfterCheckout = _app.ReadModelRepository.HasCart(customerId);
+            var hasCartBeenRemovedAfterCheckout = _app.ShoppingCartReadModelRepository.HasCart(customerId);
             Console.WriteLine($"Customer {customerId} has cart: {hasCartBeenRemovedAfterCheckout}.");
         }
 
@@ -96,6 +100,13 @@ namespace EventSourcingPoc.ConsoleUI
         {
             _app.Send(new ConfirmShippingAddress(orderId, new Address("My Home")));
             Console.WriteLine($"Confirm shipping order {orderId}.");
+        }
+
+        void ShowOrder(Guid orderId)
+        {
+            var model = _app.OrderReadModelRepository.Get(orderId);
+            Console.WriteLine($"Customer {model.CustomerId} has order {model.Id} with {model.Items.Count()} items.");
+            Console.WriteLine($"Order {model.Id} with status {model.Status}.");
         }
 
         void PayForOrder(Guid orderId)
