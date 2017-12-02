@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\EventSourcingPoc.CommandProcessing\EventSourcingPoc.CommandProcessing.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Domain\EventSourcingPoc.Domain.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Data\EventSourcingPoc.Data.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.EventProcessing\EventSourcingPoc.EventProcessing.csproj" />

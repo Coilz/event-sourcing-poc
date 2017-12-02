@@ -1,12 +1,12 @@
 ﻿using System;
+using EventSourcingPoc.Domain.Store;
+using EventSourcingPoc.EventSourcing.Handlers;
+using EventSourcingPoc.EventSourcing.Persistence;
+using EventSourcingPoc.Messages.Store;
 
-namespace EventSourcingPoc.Domain.Store
+namespace EventSourcingPoc.CommandProcessing
 {
-    using EventSourcing.Handlers;
-    using EventSourcing.Persistence;
-    using Messages.Store;
-
-    public class ShoppingCartCommandHandler // TODO: Move to a processing kind of project
+    public class ShoppingCartCommandHandler
         : ICommandHandler<CreateNewCart>
         , ICommandHandler<AddProductToCart>
         , ICommandHandler<RemoveProductFromCart>

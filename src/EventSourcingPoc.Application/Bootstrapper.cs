@@ -1,4 +1,5 @@
 ﻿using System;
+using EventSourcingPoc.CommandProcessing;
 using EventSourcingPoc.Data;
 using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.EventSourcing.Handlers;

@@ -1,10 +1,11 @@
+using EventSourcingPoc.Domain.Orders;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages.Orders;
 
-namespace EventSourcingPoc.Domain.Orders
+namespace EventSourcingPoc.CommandProcessing
 {
-    public class OrderCommandHandler // TODO: Move from Domain to CommandProcessing
+    public class OrderCommandHandler
         : ICommandHandler<PayForOrder>
         , ICommandHandler<ConfirmShippingAddress>
         , ICommandHandler<CompleteOrder>

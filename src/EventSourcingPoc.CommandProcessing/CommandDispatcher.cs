@@ -1,9 +1,9 @@
 ﻿using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 
-namespace EventSourcingPoc.Application
+namespace EventSourcingPoc.CommandProcessing
 {
-    public class CommandDispatcher : ICommandDispatcher // TODO: move to CommandProcessing
+    public class CommandDispatcher : ICommandDispatcher
     {
         private readonly ICommandHandlerFactory _factory;
 

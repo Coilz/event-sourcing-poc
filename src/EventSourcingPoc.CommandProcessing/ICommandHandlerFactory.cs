@@ -1,9 +1,9 @@
 ﻿using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 
-namespace EventSourcingPoc.Application
+namespace EventSourcingPoc.CommandProcessing
 {
-    public interface ICommandHandlerFactory // TODO: Move to CommandProcessing
+    public interface ICommandHandlerFactory
     {
         ICommandHandler<TCommand> Resolve<TCommand>()
             where TCommand : ICommand;
