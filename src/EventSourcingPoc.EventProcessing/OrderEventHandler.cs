@@ -19,22 +19,22 @@ namespace EventSourcingPoc.EventProcessing
             _dispatcher = dispatcher;
         }
 
-        public void Handle(OrderCreated evt)
+        public void Handle(OrderCreated @event)
         {
-            var saga = ShippingSaga.Create(evt.OrderId);
+            var saga = ShippingSaga.Create(@event.OrderId);
             _repository.Save(saga);
         }
 
-        public void Handle(PaymentReceived evt)
+        public void Handle(PaymentReceived @event)
         {
-            var saga = _repository.GetById<ShippingSaga>(evt.OrderId);
+            var saga = _repository.GetById<ShippingSaga>(@event.OrderId);
             saga.ConfirmPayment(_dispatcher);
             _repository.Save(saga);
         }
 
-        public void Handle(ShippingAddressConfirmed evt)
+        public void Handle(ShippingAddressConfirmed @event)
         {
-            var saga = _repository.GetById<ShippingSaga>(evt.OrderId);
+            var saga = _repository.GetById<ShippingSaga>(@event.OrderId);
             saga.ConfirmAddress(_dispatcher);
             _repository.Save(saga);
         }

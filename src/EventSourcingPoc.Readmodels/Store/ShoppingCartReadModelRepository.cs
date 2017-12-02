@@ -10,7 +10,7 @@ namespace EventSourcingPoc.Readmodels.Store
         {
             _store = store;
         }
-        public ShoppingCartReadModel GetCartById(Guid id)
+        public ShoppingCartReadModel Get(Guid id)
         {
             return _store.Get(id);
         }
@@ -22,12 +22,12 @@ namespace EventSourcingPoc.Readmodels.Store
             return Enumerable.Any(carts, cart => cart.CustomerId == customerId);
         }
 
-        public void RemoveCart(Guid id)
+        public void Remove(Guid id)
         {
             _store.Remove(id);
         }
 
-        public void SaveCart(ShoppingCartReadModel cart)
+        public void Save(ShoppingCartReadModel cart)
         {
             _store.Save(cart);
         }

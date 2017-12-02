@@ -18,9 +18,7 @@ namespace EventSourcingPoc.Data
 
         public static IEventStore GetInstance(IEventBus eventBus)
         {
-            if (_instance == null) _instance = new InMemoryEventStore(eventBus);
-
-            return _instance;
+            return _instance ?? (_instance = new InMemoryEventStore(eventBus));
         }
 
         private InMemoryEventStore(IEventBus eventBus)

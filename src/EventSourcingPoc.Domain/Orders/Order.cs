@@ -25,11 +25,6 @@ namespace EventSourcingPoc.Domain.Orders
             ApplyChanges(new OrderCreated(orderId, customerId, items.ToArray()));
         }
 
-        private void Apply(OrderCreated evt)
-        {
-            id = evt.OrderId;
-        }
-
         public void ProvideShippingAddress(Address address)
         {
             if (_shippingAddressProvided || _completed) return;
@@ -60,6 +55,11 @@ namespace EventSourcingPoc.Domain.Orders
                 yield return CreateApplier<ShippingAddressConfirmed>(Apply);
                 yield return CreateApplier<OrderCompleted>(Apply);
             }
+        }
+
+        private void Apply(OrderCreated evt)
+        {
+            id = evt.OrderId;
         }
 
         private void Apply(ShippingAddressConfirmed evt)

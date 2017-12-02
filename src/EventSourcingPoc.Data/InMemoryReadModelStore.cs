@@ -1,44 +1,41 @@
-﻿using System;
+﻿using EventSourcingPoc.Readmodels;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using EventSourcingPoc.Readmodels;
 
 namespace EventSourcingPoc.Data
 {
-    public class InMemoryReadModelStore : IReadModelStore<ShoppingCartReadModel>
+    public class InMemoryReadModelStore<T> : IReadModelStore<T>
+        where T : IReadModel
     {
-        private static IReadModelStore<ShoppingCartReadModel> _instance;
-        private readonly ConcurrentDictionary<Guid, ShoppingCartReadModel> _carts = new ConcurrentDictionary<Guid, ShoppingCartReadModel>();
+        private static IReadModelStore<T> _instance;
+        private readonly ConcurrentDictionary<Guid, T> _carts = new ConcurrentDictionary<Guid, T>();
 
-        public static IReadModelStore<ShoppingCartReadModel> GetInstance()
+        public static IReadModelStore<T> GetInstance()
         {
-            if (_instance == null) _instance = new InMemoryReadModelStore();
+            if (_instance == null) _instance = new InMemoryReadModelStore<T>();
 
             return _instance;
         }
 
         private InMemoryReadModelStore() {}
 
-        public IEnumerable<ShoppingCartReadModel> GetAll()
+        public IEnumerable<T> GetAll()
         {
             return _carts.Values;
         }
 
-        public ShoppingCartReadModel Get(Guid id)
+        public T Get(Guid id)
         {
             if (_carts.TryGetValue(id, out var value)) return value;
 
-            throw new InvalidOperationException($"ShoppingCartReadModel {id} not found");
+            throw new InvalidOperationException($"Model {id} not found");
         }
 
-        public void Save(ShoppingCartReadModel model)
+        public void Save(T model)
         {
             if (_carts.TryAdd(model.Id, model)) return;
-            if (_carts.TryGetValue(model.Id, out var value))
-            {
-                if (_carts.TryUpdate(model.Id, model, value)) return;
-            }
+            if (_carts.TryGetValue(model.Id, out var value) && _carts.TryUpdate(model.Id, model, value)) return;
 
             throw new InvalidOperationException("Persisting readModel failed.");
         }

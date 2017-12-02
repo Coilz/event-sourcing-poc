@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using EventSourcingPoc.Domain.Shipping;
+﻿using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
-using System.Linq;
 using EventSourcingPoc.Messages.Orders;
 using EventSourcingPoc.Messages.Store;
-using EventSourcingPoc.Readmodels;
-using EventSourcingPoc.EventProcessing;
+using EventSourcingPoc.Readmodels.Store;
+using EventSourcingPoc.Readmodels.Orders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EventSourcingPoc.Application
 {
@@ -19,18 +19,20 @@ namespace EventSourcingPoc.Application
         public EventHandlerFactory(
             Func<IRepository> repositoryProvider,
             ICommandDispatcher dispatcher,
-            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider)
+            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider,
+            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider)
         {
-            RegisterHandlerFactories(repositoryProvider, dispatcher, readModelRepositoryProvider);
+            RegisterHandlerFactories(repositoryProvider, dispatcher, readModelRepositoryProvider, orderReadModelRepositoryProvider);
         }
 
         private void RegisterHandlerFactories(
             Func<IRepository> repositoryProvider,
             ICommandDispatcher dispatcher,
-            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider)
+            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider,
+            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider)
         {
             RegisterHandlerFactoryWithTypes(
-                () => new Readmodels.ShoppingCartEventHandler(readModelRepositoryProvider()),
+                () => new Readmodels.Store.ShoppingCartEventHandler(readModelRepositoryProvider()),
                 typeof(CartCreated),
                 typeof(ProductAddedToCart),
                 typeof(ProductRemovedFromCart),
@@ -42,10 +44,17 @@ namespace EventSourcingPoc.Application
                 typeof(CartCheckedOut));
 
             RegisterHandlerFactoryWithTypes(
-                () => new OrderEventHandler(repositoryProvider(), dispatcher),
+                () => new EventProcessing.OrderEventHandler(repositoryProvider(), dispatcher),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
                 typeof(ShippingAddressConfirmed));
+
+            RegisterHandlerFactoryWithTypes(
+                () => new Readmodels.Orders.OrderEventHandler(orderReadModelRepositoryProvider()),
+                typeof(OrderCreated),
+                typeof(PaymentReceived),
+                typeof(ShippingAddressConfirmed),
+                typeof(OrderCompleted));
         }
 
         private void RegisterHandlerFactoryWithTypes(Func<IHandler> handler, params Type[] types)

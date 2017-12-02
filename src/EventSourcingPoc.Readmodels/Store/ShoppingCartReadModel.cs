@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EventSourcingPoc.Readmodels
+namespace EventSourcingPoc.Readmodels.Store
 {
-    public class ShoppingCartReadModel
+    public class ShoppingCartReadModel : IReadModel
     {
         public ShoppingCartReadModel(ShoppingCartReadModel cart)
             : this(cart.Id, cart.CustomerId)

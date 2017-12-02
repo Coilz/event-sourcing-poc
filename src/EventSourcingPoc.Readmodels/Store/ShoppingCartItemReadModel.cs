@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EventSourcingPoc.Readmodels
+namespace EventSourcingPoc.Readmodels.Store
 {
     public class ShoppingCartItemReadModel
     {

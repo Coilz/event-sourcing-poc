@@ -76,7 +76,7 @@ namespace EventSourcingPoc.ConsoleUI
 
         void ShowCart(Guid cartId)
         {
-            var cartModel = _app.ReadModelRepository.GetCartById(cartId);
+            var cartModel = _app.ReadModelRepository.Get(cartId);
             Console.WriteLine($"Customer {cartModel.CustomerId} has cart {cartModel.Id} with {cartModel.Items.Count()} items.");
         }
 

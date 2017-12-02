@@ -1,11 +1,12 @@
-﻿using System;
-using EventSourcingPoc.CommandProcessing;
+﻿using EventSourcingPoc.CommandProcessing;
 using EventSourcingPoc.Data;
 using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
-using EventSourcingPoc.Readmodels;
+using EventSourcingPoc.Readmodels.Store;
+using System;
+using EventSourcingPoc.Readmodels.Orders;
 
 namespace EventSourcingPoc.Application
 {
@@ -20,10 +21,12 @@ namespace EventSourcingPoc.Application
             var commandHandlerFactory = new CommandHandlerFactory(repositoryProvider);
             var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
 
-            var readModelStore = InMemoryReadModelStore.GetInstance();
-            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider = () => new ShoppingCartReadModelRepository(readModelStore);
+            var shoppingCartStore = InMemoryReadModelStore<ShoppingCartReadModel>.GetInstance();
+            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider = () => new ShoppingCartReadModelRepository(shoppingCartStore);
+            var orderStore = InMemoryReadModelStore<OrderReadModel>.GetInstance();
+            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider = () => new OrderReadModelRepository(orderStore);
 
-            var eventHandlerFactory = new EventHandlerFactory(repositoryProvider, commandDispatcher, readModelRepositoryProvider);
+            var eventHandlerFactory = new EventHandlerFactory(repositoryProvider, commandDispatcher, readModelRepositoryProvider, orderReadModelRepositoryProvider);
             var eventDispatcher = new EventDispatcher(eventHandlerFactory);
             var eventProcessor = new EventProcessor(eventBus, eventDispatcher);
 
