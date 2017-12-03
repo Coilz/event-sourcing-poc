@@ -94,9 +94,10 @@ namespace EventSourcingPoc.Domain.Shipping
                 : Status.AddressReceived;
         }
 
-        private void Apply(OrderDelivered obj)
+        private void Apply(OrderDelivered evt)
         {
             _status = Status.Complete;
+            Queue(new CompleteOrder(evt.OrderId));
         }
     }
 }

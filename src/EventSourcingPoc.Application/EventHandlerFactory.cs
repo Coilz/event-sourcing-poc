@@ -19,18 +19,23 @@ namespace EventSourcingPoc.Application
 
         public EventHandlerFactory(
             Func<IRepository> repositoryProvider,
-            ICommandDispatcher dispatcher,
             Func<IShoppingCartReadModelRepository> readModelRepositoryProvider,
-            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider)
+            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider,
+            ICommandDispatcher commandDispatcher
+)
         {
-            RegisterHandlerFactories(repositoryProvider, dispatcher, readModelRepositoryProvider, orderReadModelRepositoryProvider);
+            RegisterHandlerFactories(
+                repositoryProvider,
+                readModelRepositoryProvider,
+                orderReadModelRepositoryProvider,
+                commandDispatcher);
         }
 
         private void RegisterHandlerFactories(
             Func<IRepository> repositoryProvider,
-            ICommandDispatcher dispatcher,
             Func<IShoppingCartReadModelRepository> readModelRepositoryProvider,
-            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider)
+            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider,
+            ICommandDispatcher commandDispatcher)
         {
             RegisterHandlerFactoryWithTypes(
                 () => new Readmodels.Store.ShoppingCartEventHandler(readModelRepositoryProvider()),
@@ -45,7 +50,7 @@ namespace EventSourcingPoc.Application
                 typeof(CartCheckedOut));
 
             RegisterHandlerFactoryWithTypes(
-                () => new EventProcessing.OrderEventHandler(repositoryProvider(), dispatcher),
+                () => new EventProcessing.ShippingEventHandler(repositoryProvider(), commandDispatcher),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
                 typeof(ShippingAddressConfirmed),

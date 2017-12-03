@@ -9,6 +9,7 @@ namespace EventSourcingPoc.Application
     using EventSourcing.Exceptions;
     using EventSourcing.Handlers;
     using EventSourcing.Persistence;
+    using EventSourcingPoc.Messages.Customers;
     using Messages;
     using Messages.Orders;
     using Messages.Store;
@@ -19,6 +20,12 @@ namespace EventSourcingPoc.Application
 
         public CommandHandlerFactory(Func<IRepository> repositoryProvider)
         {
+            RegisterHandlerFactoryWithTypes(
+                () => new CustomerCommandHandler(repositoryProvider()),
+                typeof(CreateNewCustomer),
+                typeof(UpdateCustomer),
+                typeof(RemoveCustomer));
+
             RegisterHandlerFactoryWithTypes(
                 () => new ShoppingCartCommandHandler(repositoryProvider()),
                 typeof(CreateNewCart),

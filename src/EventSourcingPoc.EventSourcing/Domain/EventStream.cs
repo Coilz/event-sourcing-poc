@@ -39,7 +39,7 @@ namespace EventSourcingPoc.EventSourcing.Domain
             return _changes.AsReadOnly();
         }
 
-        public void Commit()
+        public void MarkChangesAsCommitted()
         {
             _changes.Clear();
         }

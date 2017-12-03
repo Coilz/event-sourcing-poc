@@ -2,12 +2,12 @@ using System;
 using EventSourcingPoc.EventSourcing.Domain;
 using EventSourcingPoc.EventSourcing.Persistence;
 
-namespace EventSourcingPoc.CommandProcessing
+namespace EventSourcingPoc.EventProcessing
 {
-    public abstract class CommandHandler<T>
+    public abstract class EventHandler<T>
         where T : EventStream, new()
     {
-        public CommandHandler(IRepository repository)
+        public EventHandler(IRepository repository)
         {
             Repository = repository;
         }

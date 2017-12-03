@@ -15,19 +15,19 @@ namespace EventSourcingPoc.CommandProcessing
             : base(repository)
         {}
 
-        public void Handle(PayForOrder cmd)
+        public void Handle(PayForOrder command)
         {
-            Execute(cmd.OrderId, order => order.Pay());
+            Execute(command.OrderId, order => order.Pay());
         }
 
-        public void Handle(ConfirmShippingAddress cmd)
+        public void Handle(ConfirmShippingAddress command)
         {
-            Execute(cmd.OrderId, order => order.ProvideShippingAddress(cmd.Address));
+            Execute(command.OrderId, order => order.ProvideShippingAddress(command.Address));
         }
 
-        public void Handle(CompleteOrder cmd)
+        public void Handle(CompleteOrder command)
         {
-            Execute(cmd.OrderId, order => order.CompleteOrder());
+            Execute(command.OrderId, order => order.CompleteOrder());
         }
     }
 }

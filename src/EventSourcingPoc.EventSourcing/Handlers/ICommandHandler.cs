@@ -2,8 +2,9 @@
 
 namespace EventSourcingPoc.EventSourcing.Handlers
 {
-    public interface ICommandHandler<in TCommand> : IHandler where TCommand : ICommand
+    public interface ICommandHandler<in TCommand> : IHandler
+        where TCommand : ICommand
     {
-        void Handle(TCommand cmd);
+        void Handle(TCommand command);
     }
 }

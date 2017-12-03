@@ -33,7 +33,7 @@ namespace EventSourcingPoc.EventSourcing.Persistence
 
             foreach (var item in streamItems)
             {
-                item.Commit();
+                item.MarkChangesAsCommitted();
             }
         }
     }

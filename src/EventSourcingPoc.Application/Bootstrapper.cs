@@ -14,19 +14,27 @@ namespace EventSourcingPoc.Application
     {
         public static PretendApplication Bootstrap()
         {
-            var eventBus = new EventBus();
-            var store = InMemoryEventStore.GetInstance(eventBus);
-            Func<IRepository> repositoryProvider = () => new Repository(store);
+            var eventBus = EventBus.GetInstance();
+
+            var eventStore = InMemoryEventStore.GetInstance(eventBus);
+            Func<IRepository> repositoryProvider = () => new Repository(eventStore);
+
+            var shoppingCartStore = InMemoryReadModelStore<ShoppingCartReadModel>.GetInstance();
+            Func<IShoppingCartReadModelRepository> shoppingCartReadModelRepositoryProvider = () =>
+                new ShoppingCartReadModelRepository(shoppingCartStore);
+
+            var orderStore = InMemoryReadModelStore<OrderReadModel>.GetInstance();
+            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider = () =>
+                new OrderReadModelRepository(orderStore);
 
             var commandHandlerFactory = new CommandHandlerFactory(repositoryProvider);
             var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
 
-            var shoppingCartStore = InMemoryReadModelStore<ShoppingCartReadModel>.GetInstance();
-            Func<IShoppingCartReadModelRepository> shoppingCartReadModelRepositoryProvider = () => new ShoppingCartReadModelRepository(shoppingCartStore);
-            var orderStore = InMemoryReadModelStore<OrderReadModel>.GetInstance();
-            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider = () => new OrderReadModelRepository(orderStore);
-
-            var eventHandlerFactory = new EventHandlerFactory(repositoryProvider, commandDispatcher, shoppingCartReadModelRepositoryProvider, orderReadModelRepositoryProvider);
+            var eventHandlerFactory = new EventHandlerFactory(
+                repositoryProvider,
+                shoppingCartReadModelRepositoryProvider,
+                orderReadModelRepositoryProvider,
+                commandDispatcher);
             var eventDispatcher = new EventDispatcher(eventHandlerFactory);
             var eventProcessor = new EventProcessor(eventBus, eventDispatcher);
 
@@ -38,16 +46,16 @@ namespace EventSourcingPoc.Application
 
         public class PretendApplication
         {
-            private readonly ICommandDispatcher _dispatcher;
+            private readonly ICommandDispatcher _commandDispatcher;
 
             public PretendApplication(
                 IShoppingCartReadModelRepository shoppingCartReadModelRepository,
                 IOrderReadModelRepository orderReadModelRepository,
-                ICommandDispatcher dispatcher)
+                ICommandDispatcher commandDispatcher)
             {
                 ShoppingCartReadModelRepository = shoppingCartReadModelRepository;
                 OrderReadModelRepository = orderReadModelRepository;
-                _dispatcher = dispatcher;
+                _commandDispatcher = commandDispatcher;
             }
 
             public IShoppingCartReadModelRepository ShoppingCartReadModelRepository { get; }
@@ -56,7 +64,7 @@ namespace EventSourcingPoc.Application
             public void Send<TCommand>(TCommand cmd)
                 where TCommand : ICommand
             {
-                _dispatcher.Send(cmd);
+                _commandDispatcher.Send(cmd);
             }
         }
     }

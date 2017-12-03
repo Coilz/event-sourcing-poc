@@ -6,7 +6,14 @@ namespace EventSourcingPoc.EventProcessing
 {
     public class EventBus : IEventBus
     {
+        private static IEventBus _instance;
+        public static IEventBus GetInstance()
+        {
+            return _instance ?? (_instance = new EventBus());
+        }
+
         private readonly List<IEventObserver> _eventObservers = new List<IEventObserver>();
+        private EventBus() {}
 
         public Action Subscribe(IEventObserver observer)
         {
