@@ -5,14 +5,14 @@ namespace EventSourcingPoc.Messages.Customers
 {
     public class UpdateCustomer : ICommand
     {
-        public Guid EntityId { get; }
+        public Guid CustomerId { get; }
         public Guid OriginalVersion { get; }
         public CustomerInfo Info { get; }
-        public UpdateCustomer(Guid entityId, Guid originalVersion, CustomerInfo info)
+        public UpdateCustomer(Guid id, Guid originalVersion, CustomerInfo info)
         {
             this.Info = info;
             this.OriginalVersion = originalVersion;
-            this.EntityId = entityId;
+            this.CustomerId = id;
         }
     }
 }

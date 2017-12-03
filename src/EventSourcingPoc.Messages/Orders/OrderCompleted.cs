@@ -7,8 +7,7 @@ namespace EventSourcingPoc.Messages.Orders
         public Guid OrderId { get; }
         public OrderCompleted(Guid orderId)
         {
-            this.OrderId = orderId;
-
+            OrderId = orderId;
         }
     }
 }

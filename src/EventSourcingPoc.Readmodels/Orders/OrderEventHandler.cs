@@ -30,54 +30,34 @@ namespace EventSourcingPoc.Readmodels.Orders
 
         public void Handle(PaymentReceived @event)
         {
-            ExecuteSave(@event.OrderId, model =>
-            {
-                model.Pay();
-                return model;
-            });
+            ExecuteSave(@event.OrderId, model => model.Pay());
         }
 
         public void Handle(ShippingAddressConfirmed @event)
         {
-            ExecuteSave(@event.OrderId, model =>
-            {
-                model.ConfirmShippingAddress();
-                return model;
-            });
+            ExecuteSave(@event.OrderId, model => model.ConfirmShippingAddress());
         }
 
         public void Handle(ShippingProcessStarted @event)
         {
-            ExecuteSave(@event.OrderId, model =>
-            {
-                model.Ship();
-                return model;
-            });
+            ExecuteSave(@event.OrderId, model => model.Ship());
         }
 
         public void Handle(OrderDelivered @event)
         {
-            ExecuteSave(@event.OrderId, model =>
-            {
-                model.Deliver();
-                return model;
-            });
+            ExecuteSave(@event.OrderId, model => model.Deliver());
         }
 
         public void Handle(OrderCompleted @event)
         {
-            ExecuteSave(@event.OrderId, model =>
-            {
-                model.Complete();
-                return model;
-            });
+            ExecuteSave(@event.OrderId, model => model.Complete());
         }
 
-        private void ExecuteSave(Guid id, Func<OrderReadModel, OrderReadModel> transformation)
+        private void ExecuteSave(Guid id, Action<OrderReadModel> action)
         {
             var model = _repository.Get(id);
-            var updatedModel = transformation(model);
-            _repository.Save(updatedModel);
+            action(model);
+            _repository.Save(model);
         }
     }
 }

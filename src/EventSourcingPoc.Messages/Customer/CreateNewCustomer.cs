@@ -3,14 +3,14 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Messages.Customers
 {
-    public class CustomerEmailUpdated : IEvent
+    public class CreateNewCustomer : ICommand
     {
         public Guid CustomerId { get; }
-        public string Email { get; }
-        public CustomerEmailUpdated(Guid id, string email)
+        public CustomerInfo Info { get; }
+        public CreateNewCustomer(Guid id, CustomerInfo info)
         {
-            Email = email;
             CustomerId = id;
+            Info = info;
         }
     }
 }

@@ -5,12 +5,12 @@ namespace EventSourcingPoc.Messages.Customers
 {
     public class RemoveCustomer : ICommand
     {
-        public Guid EntityId { get; }
+        public Guid CustomerId { get; }
         public Guid OriginalVersion { get; }
-        public RemoveCustomer(Guid entityId, Guid originalVersion)
+        public RemoveCustomer(Guid id, Guid originalVersion)
         {
-            this.OriginalVersion = originalVersion;
-            this.EntityId = entityId;
+            CustomerId = id;
+            OriginalVersion = originalVersion;
         }
     }
 }

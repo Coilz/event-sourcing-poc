@@ -6,36 +6,28 @@ using EventSourcingPoc.Messages.Orders;
 namespace EventSourcingPoc.CommandProcessing
 {
     public class OrderCommandHandler
-        : ICommandHandler<PayForOrder>
+        : CommandHandler<Order>
+        , ICommandHandler<PayForOrder>
         , ICommandHandler<ConfirmShippingAddress>
         , ICommandHandler<CompleteOrder>
     {
-        private readonly IRepository _repository;
-
         public OrderCommandHandler(IRepository repository)
-        {
-            _repository = repository;
-        }
+            : base(repository)
+        {}
 
         public void Handle(PayForOrder cmd)
         {
-            var order = _repository.GetById<Order>(cmd.OrderId);
-            order.Pay();
-            _repository.Save(order);
+            Execute(cmd.OrderId, order => order.Pay());
         }
 
         public void Handle(ConfirmShippingAddress cmd)
         {
-            var order = _repository.GetById<Order>(cmd.OrderId);
-            order.ProvideShippingAddress(cmd.Address);
-            _repository.Save(order);
+            Execute(cmd.OrderId, order => order.ProvideShippingAddress(cmd.Address));
         }
 
         public void Handle(CompleteOrder cmd)
         {
-            var order = _repository.GetById<Order>(cmd.OrderId);
-            order.CompleteOrder();
-            _repository.Save(order);
+            Execute(cmd.OrderId, order => order.CompleteOrder());
         }
     }
 }

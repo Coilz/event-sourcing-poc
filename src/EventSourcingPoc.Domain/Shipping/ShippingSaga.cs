@@ -82,12 +82,16 @@ namespace EventSourcingPoc.Domain.Shipping
 
         private void Apply(PaymentConfirmed evt)
         {
-            _status = _status == Status.AddressReceived ? Status.ReadyToComplete : Status.PaymentReceived;
+            _status = _status == Status.AddressReceived
+                ? Status.ReadyToComplete
+                : Status.PaymentReceived;
         }
 
         private void Apply(AddressConfirmed evt)
         {
-            _status = _status == Status.PaymentReceived ? Status.ReadyToComplete : Status.AddressReceived;
+            _status = _status == Status.PaymentReceived
+                ? Status.ReadyToComplete
+                : Status.AddressReceived;
         }
 
         private void Apply(OrderDelivered obj)

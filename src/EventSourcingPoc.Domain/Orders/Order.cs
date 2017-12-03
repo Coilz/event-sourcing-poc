@@ -14,15 +14,15 @@ namespace EventSourcingPoc.Domain.Orders
         private bool _shippingAddressProvided;
         private bool _completed;
 
-        public static Order Create(Guid orderId, Guid customerId, IEnumerable<OrderItem> items)
+        public static Order Create(Guid id, Guid customerId, IEnumerable<OrderItem> items)
         {
-            return new Order(orderId, customerId, items);
+            return new Order(id, customerId, items);
         }
 
         public Order() { }
-        private Order(Guid orderId, Guid customerId, IEnumerable<OrderItem> items)
+        private Order(Guid id, Guid customerId, IEnumerable<OrderItem> items)
         {
-            ApplyChanges(new OrderCreated(orderId, customerId, items.ToArray()));
+            ApplyChanges(new OrderCreated(id, customerId, items.ToArray()));
         }
 
         public void ProvideShippingAddress(Address address)
