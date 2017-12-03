@@ -2,7 +2,7 @@
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 
-namespace EventSourcingPoc.EventProcessing
+namespace EventSourcingPoc.EventSourcing
 {
     public class EventProcessor : IEventObserver
     {

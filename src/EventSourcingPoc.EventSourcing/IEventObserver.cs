@@ -1,8 +1,8 @@
 ﻿using EventSourcingPoc.Messages;
 
-namespace EventSourcingPoc.EventProcessing
+namespace EventSourcingPoc.EventSourcing
 {
-    public interface IEventObserver // TODO: move to EventSourcing
+    public interface IEventObserver
     {
         void Notify<TEvent>(TEvent evt) where TEvent : IEvent;
     }

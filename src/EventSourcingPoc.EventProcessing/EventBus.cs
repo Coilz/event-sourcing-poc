@@ -1,4 +1,5 @@
-﻿using EventSourcingPoc.Messages;
+﻿using EventSourcingPoc.EventSourcing;
+using EventSourcingPoc.Messages;
 using System;
 using System.Collections.Generic;
 

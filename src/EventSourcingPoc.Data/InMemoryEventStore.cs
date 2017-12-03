@@ -1,12 +1,12 @@
-﻿using EventSourcingPoc.EventProcessing;
+﻿using EventSourcingPoc.EventSourcing;
 using EventSourcingPoc.EventSourcing.Domain;
 using EventSourcingPoc.EventSourcing.Exceptions;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Concurrent;
-using System;
 
 namespace EventSourcingPoc.Data
 {

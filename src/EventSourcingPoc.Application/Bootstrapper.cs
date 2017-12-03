@@ -1,12 +1,13 @@
 ﻿using EventSourcingPoc.CommandProcessing;
 using EventSourcingPoc.Data;
 using EventSourcingPoc.EventProcessing;
+using EventSourcingPoc.EventSourcing;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
+using EventSourcingPoc.Readmodels.Orders;
 using EventSourcingPoc.Readmodels.Store;
 using System;
-using EventSourcingPoc.Readmodels.Orders;
 
 namespace EventSourcingPoc.Application
 {
