@@ -17,8 +17,8 @@ namespace EventSourcingPoc.Application
         {
             var eventBus = EventBus.GetInstance();
 
-            var eventStore = InMemoryEventStore.GetInstance(eventBus);
-            Func<IRepository> repositoryProvider = () => new Repository(eventStore);
+            var eventStore = InMemoryEventStore.GetInstance();
+            Func<IRepository> repositoryProvider = () => new AggregateRepository(eventStore, eventBus);
 
             var shoppingCartStore = InMemoryReadModelStore<ShoppingCartReadModel>.GetInstance();
             Func<IShoppingCartReadModelRepository> shoppingCartReadModelRepositoryProvider = () =>

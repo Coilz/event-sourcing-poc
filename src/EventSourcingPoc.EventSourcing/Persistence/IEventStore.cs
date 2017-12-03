@@ -7,6 +7,7 @@ namespace EventSourcingPoc.EventSourcing.Persistence
     public interface IEventStore
     {
         IEnumerable<IEvent> GetByStreamId(StreamIdentifier streamId);
-        void Save(IEnumerable<EventStoreStream> newEvents);
+        void Save(EventStoreStream eventStoreStream);
+        void Save(IEnumerable<EventStoreStream> eventStoreStreams);
     }
 }

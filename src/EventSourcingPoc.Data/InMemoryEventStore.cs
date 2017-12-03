@@ -13,17 +13,15 @@ namespace EventSourcingPoc.Data
     public class InMemoryEventStore : IEventStore
     {
         private static IEventStore _instance;
-        private readonly IEventBus _eventBus;
         private readonly ConcurrentDictionary<string, IEnumerable<IEvent>> _store = new ConcurrentDictionary<string, IEnumerable<IEvent>>();
 
-        public static IEventStore GetInstance(IEventBus eventBus)
+        public static IEventStore GetInstance()
         {
-            return _instance ?? (_instance = new InMemoryEventStore(eventBus));
+            return _instance ?? (_instance = new InMemoryEventStore());
         }
 
-        private InMemoryEventStore(IEventBus eventBus)
+        private InMemoryEventStore()
         {
-            _eventBus = eventBus;
         }
 
         public IEnumerable<IEvent> GetByStreamId(StreamIdentifier streamId)
@@ -36,16 +34,7 @@ namespace EventSourcingPoc.Data
             throw new EventStreamNotFoundException(streamId);
         }
 
-        public void Save(IEnumerable<EventStoreStream> eventStoreStreams)
-        {
-            foreach (var eventStoreStream in eventStoreStreams)
-            {
-                PersistEvents(eventStoreStream);
-                DispatchEvents(eventStoreStream.Events);
-            }
-        }
-
-        private void PersistEvents(EventStoreStream eventStoreStream)
+        public void Save(EventStoreStream eventStoreStream)
         {
             if (_store.TryAdd(eventStoreStream.Id.Value, eventStoreStream.Events)) return;
             if (_store.TryGetValue(eventStoreStream.Id.Value, out var value))
@@ -60,11 +49,11 @@ namespace EventSourcingPoc.Data
             throw new InvalidOperationException("Persisting events failed.");
         }
 
-        private void DispatchEvents(IEnumerable<IEvent> newEvents)
+        public void Save(IEnumerable<EventStoreStream> eventStoreStreams)
         {
-            foreach (var newEvent in newEvents)
+            foreach (var eventStoreStream in eventStoreStreams)
             {
-                _eventBus.NotifySubscribers(newEvent);
+                Save(eventStoreStream);
             }
         }
     }
