@@ -1,6 +1,6 @@
 ﻿namespace EventSourcingPoc.EventSourcing.Domain
 {
-    public abstract class Aggregate : EventStream
+    public abstract class AggregateRoot : EventStream
     {
     }
 }

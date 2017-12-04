@@ -1,4 +1,3 @@
-using System;
 using EventSourcingPoc.Domain.Shipping;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
@@ -14,14 +13,10 @@ namespace EventSourcingPoc.EventProcessing
         , IEventHandler<ShippingAddressConfirmed>
         , IEventHandler<PaymentConfirmed>
         , IEventHandler<AddressConfirmed>
-        , IEventHandler<OrderDelivered>
     {
-        private readonly ICommandDispatcher _commandDispatcher;
-
-        public ShippingEventHandler(IRepository repository, ICommandDispatcher commandDispatcher)
+        public ShippingEventHandler(IRepository repository)
             : base(repository)
         {
-            _commandDispatcher = commandDispatcher;
         }
 
         public void Handle(OrderCreated @event)
@@ -48,11 +43,6 @@ namespace EventSourcingPoc.EventProcessing
         public void Handle(AddressConfirmed @event)
         {
             Execute(@event.OrderId, shippingSaga => shippingSaga.CompleteIfPossible());
-        }
-
-        public void Handle(OrderDelivered @event)
-        {
-            _commandDispatcher.Send(new CompleteOrder(@event.OrderId)); // TODO: This belongs in the saga
         }
     }
 }

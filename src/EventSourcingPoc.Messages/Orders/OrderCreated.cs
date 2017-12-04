@@ -10,10 +10,9 @@ namespace EventSourcingPoc.Messages.Orders
 
         public OrderCreated(Guid orderId, Guid customerId, params OrderItem[] items)
         {
-            this.Items = items;
-            this.CustomerId = customerId;
-            this.OrderId = orderId;
-
+            Items = items;
+            CustomerId = customerId;
+            OrderId = orderId;
         }
     }
 }

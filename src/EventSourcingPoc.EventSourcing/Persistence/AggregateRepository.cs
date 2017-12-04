@@ -35,9 +35,9 @@ namespace EventSourcingPoc.EventSourcing.Persistence
             }
         }
 
-        protected virtual void Save(EventStream eventStream)
+        private void Save(EventStream eventStream)
         {
-            var events = eventStream.GetUncommitedChanges();
+            var events = eventStream.GetUncommitedChanges().ToList();
             StoreEvents(eventStream.StreamIdentifier, events);
             PublishEvents(events);
             eventStream.MarkChangesAsCommitted();

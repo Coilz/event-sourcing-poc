@@ -6,7 +6,7 @@ using EventSourcingPoc.Messages.Customers;
 
 namespace EventSourcingPoc.Domain.Customers
 {
-    public class Customer : Aggregate
+    public class Customer : AggregateRoot
     {
         public static Customer Create(Guid id, CustomerInfo customerInfo)
         {

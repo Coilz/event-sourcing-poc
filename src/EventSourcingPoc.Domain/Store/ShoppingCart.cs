@@ -8,7 +8,7 @@ namespace EventSourcingPoc.Domain.Store
     using Messages;
     using Messages.Store;
 
-    public class ShoppingCart : Aggregate
+    public class ShoppingCart : AggregateRoot
     {
         public static ShoppingCart Create(Guid cartId, Guid customerId)
         {

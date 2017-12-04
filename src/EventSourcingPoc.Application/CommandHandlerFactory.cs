@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using EventSourcingPoc.CommandProcessing;
 
 namespace EventSourcingPoc.Application
 {
-    using Domain.Orders;
-    using Domain.Store;
+    using CommandProcessing;
     using EventSourcing.Exceptions;
     using EventSourcing.Handlers;
     using EventSourcing.Persistence;
-    using EventSourcingPoc.Messages.Customers;
     using Messages;
+    using Messages.Customers;
     using Messages.Orders;
     using Messages.Store;
 
@@ -49,7 +47,8 @@ namespace EventSourcingPoc.Application
             }
         }
 
-        public ICommandHandler<TCommand> Resolve<TCommand>() where TCommand : ICommand
+        public ICommandHandler<TCommand> Resolve<TCommand>()
+            where TCommand : ICommand
         {
             var commandType = typeof(TCommand);
 
