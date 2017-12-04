@@ -7,7 +7,7 @@ namespace EventSourcingPoc.EventProcessing
     public abstract class EventHandler<T>
         where T : EventStream, new()
     {
-        public EventHandler(IRepository repository)
+        protected EventHandler(IRepository repository)
         {
             Repository = repository;
         }

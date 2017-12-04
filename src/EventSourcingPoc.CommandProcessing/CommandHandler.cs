@@ -7,7 +7,7 @@ namespace EventSourcingPoc.CommandProcessing
     public abstract class CommandHandler<T>
         where T : EventStream, new()
     {
-        public CommandHandler(IRepository repository)
+        protected CommandHandler(IRepository repository)
         {
             Repository = repository;
         }

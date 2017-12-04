@@ -9,9 +9,9 @@ namespace EventSourcingPoc.Messages.Store
         public decimal Price { get; }
         public AddProductToCart(Guid cartId, Guid productId, decimal price)
         {
-            this.ProductId = productId;
-            this.CartId = cartId;
-            this.Price = price;
+            ProductId = productId;
+            CartId = cartId;
+            Price = price;
         }
     }
 }

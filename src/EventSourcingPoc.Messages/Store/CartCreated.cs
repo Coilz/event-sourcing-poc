@@ -8,8 +8,8 @@ namespace EventSourcingPoc.Messages.Store
         public Guid CustomerId { get; }
         public CartCreated(Guid cartId, Guid customerId)
         {
-            this.CustomerId = customerId;
-            this.CartId = cartId;
+            CustomerId = customerId;
+            CartId = cartId;
         }
     }
 }

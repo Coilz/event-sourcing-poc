@@ -6,7 +6,7 @@ namespace EventSourcingPoc.Messages.Store
     {
         public CartEmptied(Guid cartId)
         {
-            this.CartId = cartId;
+            CartId = cartId;
 
         }
         public Guid CartId { get; }

@@ -1,10 +1,7 @@
-using System;
 using EventSourcingPoc.Domain.Customers;
-using EventSourcingPoc.Domain.Orders;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages.Customers;
-using EventSourcingPoc.Messages.Orders;
 
 namespace EventSourcingPoc.CommandProcessing
 {
@@ -18,19 +15,19 @@ namespace EventSourcingPoc.CommandProcessing
             : base(repository)
         {}
 
-        public void Handle(CreateNewCustomer cmd)
+        public void Handle(CreateNewCustomer command)
         {
-            Repository.Save(Customer.Create(cmd.CustomerId, cmd.Info));
+            Repository.Save(Customer.Create(command.CustomerId, command.Info));
         }
 
-        public void Handle(UpdateCustomer cmd)
+        public void Handle(UpdateCustomer command)
         {
-            Execute(cmd.CustomerId, model => model.Update(cmd.Info));
+            Execute(command.CustomerId, model => model.Update(command.Info));
         }
 
-        public void Handle(RemoveCustomer cmd)
+        public void Handle(RemoveCustomer command)
         {
-            Execute(cmd.CustomerId, model => model.Remove());
+            Execute(command.CustomerId, model => model.Remove());
         }
     }
 }

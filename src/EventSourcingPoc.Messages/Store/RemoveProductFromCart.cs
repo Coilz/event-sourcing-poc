@@ -6,8 +6,8 @@ namespace EventSourcingPoc.Messages.Store
     {
         public RemoveProductFromCart(Guid cartId, Guid productId)
         {
-            this.CartId = cartId;
-            this.ProductId = productId;
+            CartId = cartId;
+            ProductId = productId;
 
         }
         public Guid CartId { get; }
