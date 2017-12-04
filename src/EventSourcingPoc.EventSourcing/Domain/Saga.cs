@@ -12,14 +12,14 @@ namespace EventSourcingPoc.EventSourcing.Domain
             _commands = new List<ICommand>();
         }
 
-        protected void Queue(ICommand command)
+        protected void QueueCommand(ICommand command)
         {
             _commands.Add(command);
         }
 
-        public IEnumerable<ICommand> GetUndispatchedMessages() => _commands.AsReadOnly();
+        public IEnumerable<ICommand> GetUndispatchedCommands() => _commands.AsReadOnly();
 
-        public void ClearUndispatchedMessages()
+        public void ClearUndispatchedCommands()
         {
             _commands = new List<ICommand>();
         }
