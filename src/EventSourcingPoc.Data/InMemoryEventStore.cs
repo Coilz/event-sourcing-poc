@@ -40,10 +40,9 @@ namespace EventSourcingPoc.Data
             if (_store.TryGetValue(eventStoreStream.Id.Value, out var value))
             {
                 var currentEvents = value
-                    .ToList()
                     .Concat(eventStoreStream.Events);
 
-                if (_store.TryUpdate(eventStoreStream.Id.Value, currentEvents, value)) return;
+                if (_store.TryUpdate(eventStoreStream.Id.Value, currentEvents.ToList(), value)) return;
             }
 
             throw new InvalidOperationException("Persisting events failed.");

@@ -7,7 +7,6 @@ using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
 using EventSourcingPoc.Readmodels.Orders;
 using EventSourcingPoc.Readmodels.Store;
-using System;
 
 namespace EventSourcingPoc.Application
 {
@@ -18,30 +17,34 @@ namespace EventSourcingPoc.Application
             var eventBus = EventBus.GetInstance();
 
             var eventStore = InMemoryEventStore.GetInstance();
-            Func<IRepository> repositoryProvider = () => new AggregateRepository(eventStore, eventBus);
+            IRepository AggregateRepositoryProvider() =>
+                new AggregateRepository(eventStore, eventBus);
 
             var shoppingCartStore = InMemoryReadModelStore<ShoppingCartReadModel>.GetInstance();
-            Func<IShoppingCartReadModelRepository> shoppingCartReadModelRepositoryProvider = () =>
+            IShoppingCartReadModelRepository ShoppingCartReadModelRepositoryProvider() => 
                 new ShoppingCartReadModelRepository(shoppingCartStore);
 
             var orderStore = InMemoryReadModelStore<OrderReadModel>.GetInstance();
-            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider = () =>
+            IOrderReadModelRepository OrderReadModelRepositoryProvider() =>
                 new OrderReadModelRepository(orderStore);
 
-            var commandHandlerFactory = new CommandHandlerFactory(repositoryProvider);
+            var commandHandlerFactory = new CommandHandlerFactory(AggregateRepositoryProvider);
             var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
 
+            IRepository SagaRepositoryProvider() =>
+                new SagaRepository(AggregateRepositoryProvider(), commandDispatcher);
+
             var eventHandlerFactory = new EventHandlerFactory(
-                repositoryProvider,
-                shoppingCartReadModelRepositoryProvider,
-                orderReadModelRepositoryProvider,
-                commandDispatcher);
+                AggregateRepositoryProvider,
+                SagaRepositoryProvider,
+                ShoppingCartReadModelRepositoryProvider,
+                OrderReadModelRepositoryProvider);
             var eventDispatcher = new EventDispatcher(eventHandlerFactory);
             var eventProcessor = new EventProcessor(eventBus, eventDispatcher);
 
             return new PretendApplication(
-                shoppingCartReadModelRepositoryProvider(),
-                orderReadModelRepositoryProvider(),
+                ShoppingCartReadModelRepositoryProvider(),
+                OrderReadModelRepositoryProvider(),
                 commandDispatcher);
         }
 

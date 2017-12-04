@@ -7,8 +7,7 @@ namespace EventSourcingPoc.Messages.Shipping
         public Guid OrderId { get; }
         public OrderDelivered(Guid orderId)
         {
-            this.OrderId = orderId;
-
+            OrderId = orderId;
         }
     }
 }

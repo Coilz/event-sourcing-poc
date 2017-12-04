@@ -19,7 +19,12 @@ namespace EventSourcingPoc.ConsoleUI
             }
             catch (Exception e)
             {
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(e.Message);
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine(e);
+                Console.ForegroundColor = color;
             }
 
             finally

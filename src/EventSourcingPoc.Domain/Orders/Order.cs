@@ -8,7 +8,7 @@ namespace EventSourcingPoc.Domain.Orders
     using Messages;
     using Messages.Orders;
 
-    public class Order : Aggregate
+    public class Order : AggregateRoot
     {
         private bool _paidFor;
         private bool _shippingAddressProvided;

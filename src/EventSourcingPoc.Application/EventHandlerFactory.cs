@@ -3,13 +3,13 @@ using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
 using EventSourcingPoc.Messages.Orders;
+using EventSourcingPoc.Messages.Shipping;
 using EventSourcingPoc.Messages.Store;
-using EventSourcingPoc.Readmodels.Store;
 using EventSourcingPoc.Readmodels.Orders;
+using EventSourcingPoc.Readmodels.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EventSourcingPoc.Messages.Shipping;
 
 namespace EventSourcingPoc.Application
 {
@@ -18,24 +18,24 @@ namespace EventSourcingPoc.Application
         private readonly Dictionary<Type, List<Func<IHandler>>> _handlerFactories = new Dictionary<Type, List<Func<IHandler>>>();
 
         public EventHandlerFactory(
-            Func<IRepository> repositoryProvider,
+            Func<IRepository> aggregateRepositoryProvider,
+            Func<IRepository> sagaRepositoryProvider,
             Func<IShoppingCartReadModelRepository> readModelRepositoryProvider,
-            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider,
-            ICommandDispatcher commandDispatcher
+            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider
 )
         {
             RegisterHandlerFactories(
-                repositoryProvider,
+                aggregateRepositoryProvider,
+                sagaRepositoryProvider,
                 readModelRepositoryProvider,
-                orderReadModelRepositoryProvider,
-                commandDispatcher);
+                orderReadModelRepositoryProvider);
         }
 
         private void RegisterHandlerFactories(
-            Func<IRepository> repositoryProvider,
+            Func<IRepository> aggregateRepositoryProvider,
+            Func<IRepository> sagaRepositoryProvider,
             Func<IShoppingCartReadModelRepository> readModelRepositoryProvider,
-            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider,
-            ICommandDispatcher commandDispatcher)
+            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider)
         {
             RegisterHandlerFactoryWithTypes(
                 () => new Readmodels.Store.ShoppingCartEventHandler(readModelRepositoryProvider()),
@@ -46,20 +46,19 @@ namespace EventSourcingPoc.Application
                 typeof(CartCheckedOut));
 
             RegisterHandlerFactoryWithTypes(
-                () => new EventProcessing.ShoppingCartEventHandler(repositoryProvider()),
+                () => new EventProcessing.ShoppingCartEventHandler(aggregateRepositoryProvider()),
                 typeof(CartCheckedOut));
 
             RegisterHandlerFactoryWithTypes(
-                () => new EventProcessing.ShippingEventHandler(repositoryProvider(), commandDispatcher),
+                () => new ShippingEventHandler(sagaRepositoryProvider()),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
                 typeof(ShippingAddressConfirmed),
                 typeof(PaymentConfirmed),
-                typeof(AddressConfirmed),
-                typeof(OrderDelivered));
+                typeof(AddressConfirmed));
 
             RegisterHandlerFactoryWithTypes(
-                () => new Readmodels.Orders.OrderEventHandler(orderReadModelRepositoryProvider()),
+                () => new OrderEventHandler(orderReadModelRepositoryProvider()),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
                 typeof(ShippingAddressConfirmed),
