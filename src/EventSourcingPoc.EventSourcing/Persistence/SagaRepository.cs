@@ -33,12 +33,12 @@ namespace EventSourcingPoc.EventSourcing.Persistence
 
         private void PublishCommands(Saga saga)
         {
-            foreach (var command in saga.GetUndispatchedMessages())
+            foreach (var command in saga.GetUndispatchedCommands())
             {
                 dynamic typeAwareCommand = command; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
                 _commandDispatcher.Send(typeAwareCommand);
             }
-            saga.ClearUndispatchedMessages();
+            saga.ClearUndispatchedCommands();
         }
     }
 }

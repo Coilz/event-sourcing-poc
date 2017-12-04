@@ -97,7 +97,7 @@ namespace EventSourcingPoc.Domain.Shipping
         private void Apply(OrderDelivered evt)
         {
             _status = Status.Complete;
-            Queue(new CompleteOrder(evt.OrderId));
+            QueueCommand(new CompleteOrder(evt.OrderId));
         }
     }
 }
