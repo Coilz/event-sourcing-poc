@@ -7,7 +7,7 @@ In the docker-compose.yml change the ip-adres to your host ipadres
 Run the below commands in
 - customer-consoleUI
 - shopping-consoleUI
-- read models (to be imlpemented)
+- readmodels-consoleUI (to be imlpemented)
 ```
 $ dotnet restore
 $ dotnet publish -c release -o publish
@@ -47,4 +47,9 @@ You can also add it to the compose file if you want
 ### Run shopping-consoleUI:
 ```
 $ docker run --rm -it --network="eventsourcingpoc_default" coilz/web-store-shopping kafka my-topic
+```
+
+### Run readmodels-consoleUI:
+```
+$ docker run --rm -it --network="eventsourcingpoc_default" coilz/web-store-readmodels kafka my-topic
 ```
