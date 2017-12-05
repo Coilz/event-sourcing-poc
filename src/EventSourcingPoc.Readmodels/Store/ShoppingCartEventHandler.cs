@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using EventSourcingPoc.EventSourcing.Handlers;
-using EventSourcingPoc.Messages.Store;
+using EventSourcingPoc.Messages.Shop;
 
 namespace EventSourcingPoc.Readmodels.Store
 {

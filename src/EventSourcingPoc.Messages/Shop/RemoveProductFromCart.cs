@@ -1,6 +1,6 @@
 using System;
 
-namespace EventSourcingPoc.Messages.Store
+namespace EventSourcingPoc.Messages.Shop
 {
     public class RemoveProductFromCart : ICommand
     {

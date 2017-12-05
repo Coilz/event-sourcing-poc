@@ -1,6 +1,6 @@
 using System;
 
-namespace EventSourcingPoc.Domain.Store
+namespace EventSourcingPoc.Domain.Shop
 {
     public class ShoppingCartItem
     {

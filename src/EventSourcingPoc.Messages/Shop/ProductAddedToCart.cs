@@ -1,16 +1,16 @@
 using System;
 
-namespace EventSourcingPoc.Messages.Store
+namespace EventSourcingPoc.Messages.Shop
 {
-    public class AddProductToCart : ICommand
+    public class ProductAddedToCart : IEvent
     {
         public Guid CartId { get; }
         public Guid ProductId { get; }
         public decimal Price { get; }
-        public AddProductToCart(Guid cartId, Guid productId, decimal price)
+        public ProductAddedToCart(Guid cartId, Guid productId, decimal price)
         {
-            ProductId = productId;
             CartId = cartId;
+            ProductId = productId;
             Price = price;
         }
     }

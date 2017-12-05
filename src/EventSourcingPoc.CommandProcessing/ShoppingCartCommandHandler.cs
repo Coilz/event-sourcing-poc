@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using EventSourcingPoc.Domain.Orders;
-using EventSourcingPoc.Domain.Store;
+using EventSourcingPoc.Domain.Shop;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages.Orders;
-using EventSourcingPoc.Messages.Store;
+using EventSourcingPoc.Messages.Shop;
 
 namespace EventSourcingPoc.CommandProcessing
 {

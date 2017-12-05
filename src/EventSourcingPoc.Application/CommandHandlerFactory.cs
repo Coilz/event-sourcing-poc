@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EventSourcingPoc.Messages.Shop;
 
 namespace EventSourcingPoc.Application
 {
@@ -10,7 +11,6 @@ namespace EventSourcingPoc.Application
     using Messages;
     using Messages.Customers;
     using Messages.Orders;
-    using Messages.Store;
 
     public class CommandHandlerFactory : ICommandHandlerFactory
     {

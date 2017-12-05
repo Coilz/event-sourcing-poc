@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EventSourcingPoc.EventSourcing.Domain;
+using EventSourcingPoc.Messages;
+using EventSourcingPoc.Messages.Shop;
 
-namespace EventSourcingPoc.Domain.Store
+namespace EventSourcingPoc.Domain.Shop
 {
-    using EventSourcing.Domain;
-    using Messages;
-    using Messages.Store;
-
     public class ShoppingCart : AggregateRoot
     {
         public static ShoppingCart Create(Guid cartId, Guid customerId)

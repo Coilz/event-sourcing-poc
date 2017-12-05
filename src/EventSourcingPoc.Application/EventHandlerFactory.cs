@@ -4,12 +4,12 @@ using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
 using EventSourcingPoc.Messages.Orders;
 using EventSourcingPoc.Messages.Shipping;
-using EventSourcingPoc.Messages.Store;
 using EventSourcingPoc.Readmodels.Orders;
 using EventSourcingPoc.Readmodels.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EventSourcingPoc.Messages.Shop;
 
 namespace EventSourcingPoc.Application
 {

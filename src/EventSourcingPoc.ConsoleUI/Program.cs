@@ -1,8 +1,8 @@
 ﻿using System;
 using EventSourcingPoc.Application;
-using EventSourcingPoc.Messages.Store;
 using EventSourcingPoc.Messages.Orders;
 using System.Linq;
+using EventSourcingPoc.Messages.Shop;
 using static EventSourcingPoc.Application.Bootstrapper;
 
 namespace EventSourcingPoc.ConsoleUI
