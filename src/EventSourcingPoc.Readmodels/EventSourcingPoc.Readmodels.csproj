@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Messages\EventSourcingPoc.Messages.csproj" />
+    <ProjectReference Include="..\Shopping\EventSourcingPoc.Shopping.Messages\EventSourcingPoc.Shopping.Messages.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

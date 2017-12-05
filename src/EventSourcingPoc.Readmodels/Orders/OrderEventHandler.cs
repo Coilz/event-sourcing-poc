@@ -1,8 +1,8 @@
 using EventSourcingPoc.EventSourcing.Handlers;
-using EventSourcingPoc.Messages.Orders;
 using System;
 using System.Linq;
-using EventSourcingPoc.Messages.Shipping;
+using EventSourcingPoc.Shopping.Messages.Orders;
+using EventSourcingPoc.Shopping.Messages.Shipping;
 
 namespace EventSourcingPoc.Readmodels.Orders
 {

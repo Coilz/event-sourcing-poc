@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EventSourcingPoc.CommandProcessing\EventSourcingPoc.CommandProcessing.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Customer.Domain\EventSourcingPoc.Customer.Domain.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Customer.Messages\EventSourcingPoc.Customer.Messages.csproj" />
+  </ItemGroup>
+
+</Project>
