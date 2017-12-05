@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using EventSourcingPoc.CommandProcessing;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
@@ -16,19 +17,19 @@ namespace EventSourcingPoc.Shopping.CommandProcessing
             : base((IRepository) repository)
         {}
 
-        public void Handle(PayForOrder command)
+        public async Task HandleAsync(PayForOrder command)
         {
-            Execute(command.OrderId, order => order.Pay());
+            await ExecuteAsync(command.OrderId, order => order.Pay());
         }
 
-        public void Handle(ConfirmShippingAddress command)
+        public async Task HandleAsync(ConfirmShippingAddress command)
         {
-            Execute(command.OrderId, order => order.ProvideShippingAddress(command.Address));
+            await ExecuteAsync(command.OrderId, order => order.ProvideShippingAddress(command.Address));
         }
 
-        public void Handle(CompleteOrder command)
+        public async Task HandleAsync(CompleteOrder command)
         {
-            Execute(command.OrderId, order => order.CompleteOrder());
+            await ExecuteAsync(command.OrderId, order => order.CompleteOrder());
         }
     }
 }

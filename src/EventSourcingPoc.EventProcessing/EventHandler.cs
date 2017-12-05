@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using EventSourcingPoc.EventSourcing.Domain;
 using EventSourcingPoc.EventSourcing.Persistence;
 
@@ -14,11 +15,11 @@ namespace EventSourcingPoc.EventProcessing
 
         protected IRepository Repository { get; }
 
-        protected void Execute(Guid id, Action<T> action)
+        protected async Task ExecuteAsync(Guid id, Action<T> action)
         {
-            var eventStream = Repository.GetById<T>(id);
+            var eventStream = await Repository.GetByIdAsync<T>(id);
             action(eventStream);
-            Repository.Save(eventStream);
+            await Repository.SaveAsync(eventStream);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
@@ -20,30 +21,30 @@ namespace EventSourcingPoc.Shopping.EventProcessing
         {
         }
 
-        public void Handle(OrderCreated @event)
+        public async Task HandleAsync(OrderCreated @event)
         {
             var shippingSaga = ShippingSaga.Create(@event.OrderId);
-            Repository.Save(shippingSaga);
+            await Repository.SaveAsync(shippingSaga);
         }
 
-        public void Handle(PaymentReceived @event)
+        public async Task HandleAsync(PaymentReceived @event)
         {
-            Execute(@event.OrderId, shippingSaga => shippingSaga.ConfirmPayment());
+            await ExecuteAsync(@event.OrderId, shippingSaga => shippingSaga.ConfirmPayment());
         }
 
-        public void Handle(ShippingAddressConfirmed @event)
+        public async Task HandleAsync(ShippingAddressConfirmed @event)
         {
-            Execute(@event.OrderId, shippingSaga => shippingSaga.ConfirmAddress());
+            await ExecuteAsync(@event.OrderId, shippingSaga => shippingSaga.ConfirmAddress());
         }
 
-        public void Handle(PaymentConfirmed @event)
+        public async Task HandleAsync(PaymentConfirmed @event)
         {
-            Execute(@event.OrderId, shippingSaga => shippingSaga.CompleteIfPossible());
+            await ExecuteAsync(@event.OrderId, shippingSaga => shippingSaga.CompleteIfPossible());
         }
 
-        public void Handle(AddressConfirmed @event)
+        public async Task HandleAsync(AddressConfirmed @event)
         {
-            Execute(@event.OrderId, shippingSaga => shippingSaga.CompleteIfPossible());
+            await ExecuteAsync(@event.OrderId, shippingSaga => shippingSaga.CompleteIfPossible());
         }
     }
 }

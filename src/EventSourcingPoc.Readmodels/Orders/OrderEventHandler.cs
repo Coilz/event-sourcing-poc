@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using EventSourcingPoc.Shopping.Messages.Orders;
 using EventSourcingPoc.Shopping.Messages.Shipping;
+using System.Threading.Tasks;
 
 namespace EventSourcingPoc.Readmodels.Orders
 {
@@ -21,43 +22,43 @@ namespace EventSourcingPoc.Readmodels.Orders
             _repository = repository;
         }
 
-        public void Handle(OrderCreated @event)
+        public async Task HandleAsync(OrderCreated @event)
         {
             var oderItems = @event.Items.Select(item => new OrderItemReadModel(item.ProductId, item.Price, item.Quantity));
             var model = new OrderReadModel(@event.OrderId, @event.CustomerId, oderItems);
-            _repository.Save(model);
+            await _repository.SaveAsync(model);
         }
 
-        public void Handle(PaymentReceived @event)
+        public async Task HandleAsync(PaymentReceived @event)
         {
-            ExecuteSave(@event.OrderId, model => model.Pay());
+            await ExecuteSaveAsync(@event.OrderId, model => model.Pay());
         }
 
-        public void Handle(ShippingAddressConfirmed @event)
+        public async Task HandleAsync(ShippingAddressConfirmed @event)
         {
-            ExecuteSave(@event.OrderId, model => model.ConfirmShippingAddress());
+            await ExecuteSaveAsync(@event.OrderId, model => model.ConfirmShippingAddress());
         }
 
-        public void Handle(ShippingProcessStarted @event)
+        public async Task HandleAsync(ShippingProcessStarted @event)
         {
-            ExecuteSave(@event.OrderId, model => model.Ship());
+            await ExecuteSaveAsync(@event.OrderId, model => model.Ship());
         }
 
-        public void Handle(OrderDelivered @event)
+        public async Task HandleAsync(OrderDelivered @event)
         {
-            ExecuteSave(@event.OrderId, model => model.Deliver());
+            await ExecuteSaveAsync(@event.OrderId, model => model.Deliver());
         }
 
-        public void Handle(OrderCompleted @event)
+        public async Task HandleAsync(OrderCompleted @event)
         {
-            ExecuteSave(@event.OrderId, model => model.Complete());
+            await ExecuteSaveAsync(@event.OrderId, model => model.Complete());
         }
 
-        private void ExecuteSave(Guid id, Action<OrderReadModel> action)
+        private async Task ExecuteSaveAsync(Guid id, Action<OrderReadModel> action)
         {
-            var model = _repository.Get(id);
+            var model = await _repository.GetAsync(id);
             action(model);
-            _repository.Save(model);
+            await _repository.SaveAsync(model);
         }
     }
 }

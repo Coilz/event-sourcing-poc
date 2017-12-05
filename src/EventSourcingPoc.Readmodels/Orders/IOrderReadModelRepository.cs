@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace EventSourcingPoc.Readmodels.Orders
 {
     public interface IOrderReadModelRepository : IReadModelRepository<OrderReadModel>
     {
-        bool HasOrder(Guid customerId);
+        Task<bool> HasOrderAsync(Guid customerId);
     }
 }

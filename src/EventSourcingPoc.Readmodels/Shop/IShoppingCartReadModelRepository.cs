@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace EventSourcingPoc.Readmodels.Shop
 {
     public interface IShoppingCartReadModelRepository : IReadModelRepository<ShoppingCartReadModel>
     {
-        bool HasCart(Guid customerId);
+        Task<bool> HasCartAsync(Guid customerId);
     }
 }

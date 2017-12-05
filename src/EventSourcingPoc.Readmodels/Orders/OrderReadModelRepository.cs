@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventSourcingPoc.Readmodels.Orders
 {
@@ -10,26 +11,26 @@ namespace EventSourcingPoc.Readmodels.Orders
         {
             _store = store;
         }
-        public OrderReadModel Get(Guid id)
+        public async Task<OrderReadModel> GetAsync(Guid id)
         {
-            return _store.Get(id);
+            return await _store.GetAsync(id);
         }
 
-        public bool HasOrder(Guid customerId)
+        public async Task<bool> HasOrderAsync(Guid customerId)
         {
-            var models = _store.GetAll();
+            var models = await _store.GetAllAsync();
 
             return Enumerable.Any(models, model => model.CustomerId == customerId);
         }
 
-        public void Remove(Guid id)
+        public async Task RemoveAsync(Guid id)
         {
-            _store.Remove(id);
+            await _store.RemoveAsync(id);
         }
 
-        public void Save(OrderReadModel model)
+        public async Task SaveAsync(OrderReadModel model)
         {
-            _store.Save(model);
+            await _store.SaveAsync(model);
         }
     }
 }

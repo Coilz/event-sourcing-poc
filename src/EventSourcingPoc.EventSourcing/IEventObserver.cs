@@ -1,9 +1,11 @@
-﻿using EventSourcingPoc.Messages;
+﻿using System.Threading.Tasks;
+using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.EventSourcing
 {
     public interface IEventObserver
     {
-        void Notify<TEvent>(TEvent evt) where TEvent : IEvent;
+        Task NotifyAsync<TEvent>(TEvent evt)
+            where TEvent : IEvent;
     }
 }

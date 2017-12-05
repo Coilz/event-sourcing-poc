@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using EventSourcingPoc.Messages;
+using System.Threading.Tasks;
 
 namespace EventSourcingPoc.EventSourcing.Persistence
 {
@@ -16,44 +17,44 @@ namespace EventSourcingPoc.EventSourcing.Persistence
             _eventBus = eventBus;
         }
 
-        public T GetById<T>(Guid id)
+        public async Task<T> GetByIdAsync<T>(Guid id)
             where T : EventStream, new()
         {
             var streamItem = new T();
             var streamId = new StreamIdentifier(streamItem.Name, id);
-            var history = _eventStore.GetByStreamId(streamId);
+            var history = await _eventStore.GetByStreamIdAsync(streamId);
             streamItem.LoadFromHistory(history);
 
             return streamItem;
         }
 
-        public void Save(params EventStream[] streamItems)
+        public async Task SaveAsync(params EventStream[] streamItems)
         {
             foreach (var item in streamItems)
             {
-                Save(item);
+                await SaveAsync(item);
             }
         }
 
-        private void Save(EventStream eventStream)
+        private async Task SaveAsync(EventStream eventStream)
         {
             var events = eventStream.GetUncommitedChanges().ToList();
-            StoreEvents(eventStream.StreamIdentifier, events);
-            PublishEvents(events);
+            await StoreEventsAsync(eventStream.StreamIdentifier, events);
+            await PublishEventsAsync(events);
             eventStream.MarkChangesAsCommitted();
         }
 
-        private void StoreEvents(StreamIdentifier id, IEnumerable<IEvent> events)
+        private async Task StoreEventsAsync(StreamIdentifier id, IEnumerable<IEvent> events)
         {
             var eventStoreStream = new EventStoreStream(id, events);
-            _eventStore.Save(eventStoreStream);
+            await _eventStore.SaveAsync(eventStoreStream);
         }
 
-        private void PublishEvents(IEnumerable<IEvent> events)
+        private async Task PublishEventsAsync(IEnumerable<IEvent> events)
         {
             foreach (var newEvent in events)
             {
-                _eventBus.NotifySubscribers(newEvent);
+                await _eventBus.NotifySubscribersAsync(newEvent);
             }
         }
     }

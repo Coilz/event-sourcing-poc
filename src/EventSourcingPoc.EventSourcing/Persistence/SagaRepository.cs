@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EventSourcingPoc.EventSourcing.Domain;
 using EventSourcingPoc.EventSourcing.Handlers;
 
@@ -16,27 +17,27 @@ namespace EventSourcingPoc.EventSourcing.Persistence
             _commandDispatcher = commandDispatcher;
         }
 
-        public T GetById<T>(Guid id)
+        public async Task<T> GetByIdAsync<T>(Guid id)
             where T : EventStream, new()
         {
-            return _repository.GetById<T>(id);
+            return await _repository.GetByIdAsync<T>(id);
         }
 
-        public void Save(params EventStream[] streamItems)
+        public async Task SaveAsync(params EventStream[] streamItems)
         {
-            _repository.Save(streamItems);
+            await _repository.SaveAsync(streamItems);
             foreach (var item in streamItems)
             {
-                PublishCommands((Saga)item);
+                await PublishCommandsAsync((Saga)item);
             }
         }
 
-        private void PublishCommands(Saga saga)
+        private async Task PublishCommandsAsync(Saga saga)
         {
             foreach (var command in saga.GetUndispatchedCommands())
             {
                 dynamic typeAwareCommand = command; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
-                _commandDispatcher.Send(typeAwareCommand);
+                await _commandDispatcher.SendAsync(typeAwareCommand);
             }
             saga.ClearUndispatchedCommands();
         }

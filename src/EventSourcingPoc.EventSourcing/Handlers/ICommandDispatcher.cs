@@ -1,10 +1,11 @@
-﻿using EventSourcingPoc.Messages;
+﻿using System.Threading.Tasks;
+using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.EventSourcing.Handlers
 {
     public interface ICommandDispatcher
     {
-        void Send<TCommand>(TCommand command)
+        Task SendAsync<TCommand>(TCommand command)
             where TCommand : ICommand;
     }
 }

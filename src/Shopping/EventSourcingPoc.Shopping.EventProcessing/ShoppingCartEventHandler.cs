@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Shopping.Domain.Orders;
@@ -18,16 +19,16 @@ namespace EventSourcingPoc.Shopping.EventProcessing
             _repository = repository;
         }
 
-        public void Handle(CartCheckedOut @event)
+        public async Task HandleAsync(CartCheckedOut @event)
         {
-            var cart = _repository.GetById<ShoppingCart>(@event.CartId);
+            var cart = await _repository.GetByIdAsync<ShoppingCart>(@event.CartId);
 
             var orderItems = cart.ShoppingCartItems
                 .Select(item =>
                     new OrderItem(item.ProductId, item.Price, item.Quantity));
 
             var order = Order.Create(@event.CartId, cart.CustomerId, orderItems); // TODO: Does this belong in a saga/process manager?
-            _repository.Save(order);
+            await _repository.SaveAsync(order);
         }
     }
 }

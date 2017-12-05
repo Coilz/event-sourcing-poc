@@ -1,4 +1,5 @@
-﻿using EventSourcingPoc.EventSourcing.Handlers;
+﻿using System.Threading.Tasks;
+using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.CommandProcessing
@@ -11,11 +12,12 @@ namespace EventSourcingPoc.CommandProcessing
         {
             _factory = factory;
         }
-        public void Send<TCommand>(TCommand command)
+
+        public async Task SendAsync<TCommand>(TCommand command)
             where TCommand : ICommand
         {
             var handler = _factory.Resolve<TCommand>();
-            handler.Handle(command);
+            await handler.HandleAsync(command);
         }
     }
 }

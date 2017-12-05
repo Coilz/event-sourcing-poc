@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Shopping.Messages.Shop;
 
@@ -19,15 +20,15 @@ namespace EventSourcingPoc.Readmodels.Shop
             _repository = repository;
         }
 
-        public void Handle(CartCreated @event)
+        public async Task HandleAsync(CartCreated @event)
         {
             var newCart = new ShoppingCartReadModel(@event.CartId, @event.CustomerId);
-            _repository.Save(newCart);
+            await _repository.SaveAsync(newCart);
         }
 
-        public void Handle(ProductAddedToCart @event)
+        public async Task HandleAsync(ProductAddedToCart @event)
         {
-            ExecuteSave(@event.CartId, cart =>
+            await ExecuteSaveAsync(@event.CartId, cart =>
             {
                 var cartItems = cart.Items.ToList();
                 var cartItem = new ShoppingCartItemReadModel(@event.ProductId, @event.Price);
@@ -38,9 +39,9 @@ namespace EventSourcingPoc.Readmodels.Shop
             });
         }
 
-        public void Handle(ProductRemovedFromCart @event)
+        public async Task HandleAsync(ProductRemovedFromCart @event)
         {
-            ExecuteSave(@event.CartId, cart =>
+            await ExecuteSaveAsync(@event.CartId, cart =>
             {
                 var productItems = cart.Items.Where(item => item.ProductId == @event.ProductId);
                 var cartItems = cart.Items.Concat(productItems.Skip(1));
@@ -49,21 +50,21 @@ namespace EventSourcingPoc.Readmodels.Shop
             });
         }
 
-        public void Handle(CartEmptied @event)
+        public async Task HandleAsync(CartEmptied @event)
         {
-            ExecuteSave(@event.CartId, cart => new ShoppingCartReadModel(cart));
+            await ExecuteSaveAsync(@event.CartId, cart => new ShoppingCartReadModel(cart));
         }
 
-        public void Handle(CartCheckedOut @event)
+        public async Task HandleAsync(CartCheckedOut @event)
         {
-            _repository.Remove(@event.CartId);
+            await _repository.RemoveAsync(@event.CartId);
         }
 
-        private void ExecuteSave(Guid id, Func<ShoppingCartReadModel, ShoppingCartReadModel> transformation)
+        private async Task ExecuteSaveAsync(Guid id, Func<ShoppingCartReadModel, ShoppingCartReadModel> transformation)
         {
-            var model = _repository.Get(id);
+            var model = await _repository.GetAsync(id);
             var updatedModel = transformation(model);
-            _repository.Save(updatedModel);
+            await _repository.SaveAsync(updatedModel);
         }
     }
 }

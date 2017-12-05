@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventSourcingPoc.Readmodels.Shop
 {
@@ -10,26 +11,26 @@ namespace EventSourcingPoc.Readmodels.Shop
         {
             _store = store;
         }
-        public ShoppingCartReadModel Get(Guid id)
+        public async Task<ShoppingCartReadModel> GetAsync(Guid id)
         {
-            return _store.Get(id);
+            return await _store.GetAsync(id);
         }
 
-        public bool HasCart(Guid customerId)
+        public async Task<bool> HasCartAsync(Guid customerId)
         {
-            var carts = _store.GetAll();
+            var carts = await _store.GetAllAsync();
 
             return Enumerable.Any(carts, cart => cart.CustomerId == customerId);
         }
 
-        public void Remove(Guid id)
+        public async Task RemoveAsync(Guid id)
         {
-            _store.Remove(id);
+            await _store.RemoveAsync(id);
         }
 
-        public void Save(ShoppingCartReadModel cart)
+        public async Task SaveAsync(ShoppingCartReadModel cart)
         {
-            _store.Save(cart);
+            await _store.SaveAsync(cart);
         }
     }
 }

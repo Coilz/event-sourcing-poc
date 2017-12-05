@@ -1,11 +1,12 @@
 using System;
+using System.Threading.Tasks;
 
 namespace EventSourcingPoc.Readmodels
 {
     public interface IReadModelRepository<T>
     {
-        T Get(Guid id);
-        void Save(T model);
-        void Remove(Guid id);
+        Task<T> GetAsync(Guid id);
+        Task SaveAsync(T model);
+        Task RemoveAsync(Guid id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using EventSourcingPoc.CommandProcessing;
+﻿using System.Threading.Tasks;
+using EventSourcingPoc.CommandProcessing;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Shopping.Domain.Shop;
@@ -17,29 +18,29 @@ namespace EventSourcingPoc.Shopping.CommandProcessing
         public ShoppingCartCommandHandler(IRepository repository)
             : base((IRepository) repository)
         {}
-        public void Handle(CreateNewCart command)
+        public async Task HandleAsync(CreateNewCart command)
         {
-            Repository.Save(ShoppingCart.Create(command.CartId, command.CustomerId));
+            await Repository.SaveAsync(ShoppingCart.Create(command.CartId, command.CustomerId));
         }
 
-        public void Handle(AddProductToCart command)
+        public async Task HandleAsync(AddProductToCart command)
         {
-            Execute(command.CartId, cart => cart.AddProduct(command.ProductId, command.Price));
+            await ExecuteAsync(command.CartId, cart => cart.AddProduct(command.ProductId, command.Price));
         }
 
-        public void Handle(RemoveProductFromCart command)
+        public async Task HandleAsync(RemoveProductFromCart command)
         {
-            Execute(command.CartId, cart => cart.RemoveProduct(command.ProductId));
+            await ExecuteAsync(command.CartId, cart => cart.RemoveProduct(command.ProductId));
         }
 
-        public void Handle(EmptyCart command)
+        public async Task HandleAsync(EmptyCart command)
         {
-            Execute(command.CartId, cart => cart.Empty());
+            await ExecuteAsync(command.CartId, cart => cart.Empty());
         }
 
-        public void Handle(Checkout command)
+        public async Task HandleAsync(Checkout command)
         {
-            Execute(command.CartId, cart => cart.Checkout());
+            await ExecuteAsync(command.CartId, cart => cart.Checkout());
         }
     }
 }

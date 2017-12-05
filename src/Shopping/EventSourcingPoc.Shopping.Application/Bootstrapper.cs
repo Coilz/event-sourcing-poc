@@ -1,4 +1,5 @@
-﻿using EventSourcingPoc.CommandProcessing;
+﻿using System.Threading.Tasks;
+using EventSourcingPoc.CommandProcessing;
 using EventSourcingPoc.Data;
 using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.EventSourcing;
@@ -21,7 +22,7 @@ namespace EventSourcingPoc.Shopping.Application
                 new AggregateRepository(eventStore, eventBus);
 
             var shoppingCartStore = InMemoryReadModelStore<ShoppingCartReadModel>.GetInstance();
-            IShoppingCartReadModelRepository ShoppingCartReadModelRepositoryProvider() => 
+            IShoppingCartReadModelRepository ShoppingCartReadModelRepositoryProvider() =>
                 new ShoppingCartReadModelRepository(shoppingCartStore);
 
             var orderStore = InMemoryReadModelStore<OrderReadModel>.GetInstance();
@@ -65,10 +66,10 @@ namespace EventSourcingPoc.Shopping.Application
             public IShoppingCartReadModelRepository ShoppingCartReadModelRepository { get; }
             public IOrderReadModelRepository OrderReadModelRepository { get; }
 
-            public void Send<TCommand>(TCommand cmd)
+            public async Task SendAsync<TCommand>(TCommand cmd)
                 where TCommand : ICommand
             {
-                _commandDispatcher.Send(cmd);
+                await _commandDispatcher.SendAsync(cmd);
             }
         }
     }

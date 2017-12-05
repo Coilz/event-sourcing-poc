@@ -1,4 +1,5 @@
-﻿using EventSourcingPoc.EventSourcing.Handlers;
+﻿using System.Threading.Tasks;
+using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.EventProcessing
@@ -11,13 +12,13 @@ namespace EventSourcingPoc.EventProcessing
         {
             _factory = factory;
         }
-        public void Send<TEvent>(TEvent evt)
+        public async Task SendAsync<TEvent>(TEvent evt)
             where TEvent : IEvent
         {
             var handlers = _factory.Resolve<TEvent>();
             foreach (var eventHandler in handlers)
             {
-                eventHandler.Handle(evt);
+                await eventHandler.HandleAsync(evt);
             }
         }
     }

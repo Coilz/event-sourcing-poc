@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace EventSourcingPoc.Data
 {
@@ -20,29 +22,30 @@ namespace EventSourcingPoc.Data
 
         private InMemoryReadModelStore() {}
 
-        public IEnumerable<T> GetAll()
+        public Task<IEnumerable<T>> GetAllAsync()
         {
-            return _carts.Values;
+            return Task.FromResult<IEnumerable<T>>(_carts.Values);
         }
 
-        public T Get(Guid id)
+        public Task<T> GetAsync(Guid id)
         {
-            if (_carts.TryGetValue(id, out var value)) return value;
+            if (_carts.TryGetValue(id, out var value)) return Task.FromResult(value);
 
             throw new InvalidOperationException($"Model {id} not found");
         }
 
-        public void Save(T model)
+        public Task SaveAsync(T model)
         {
-            if (_carts.TryAdd(model.Id, model)) return;
-            if (_carts.TryGetValue(model.Id, out var value) && _carts.TryUpdate(model.Id, model, value)) return;
+            if (_carts.TryAdd(model.Id, model)) return Task.FromResult(0);
+            if (_carts.TryGetValue(model.Id, out var value) && _carts.TryUpdate(model.Id, model, value)) return Task.FromResult(0);
 
             throw new InvalidOperationException("Persisting readModel failed.");
         }
 
-        public void Remove(Guid id)
+        public Task RemoveAsync(Guid id)
         {
             _carts.TryRemove(id, out var value);
+            return Task.FromResult(0);
         }
     }
 }

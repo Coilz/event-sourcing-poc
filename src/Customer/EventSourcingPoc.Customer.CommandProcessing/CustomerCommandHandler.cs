@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using EventSourcingPoc.CommandProcessing;
 using EventSourcingPoc.Customer.Messages.Customer;
 using EventSourcingPoc.EventSourcing.Handlers;
@@ -15,19 +16,19 @@ namespace EventSourcingPoc.Customer.CommandProcessing
             : base((IRepository) repository)
         {}
 
-        public void Handle(CreateNewCustomer command)
+        public async Task HandleAsync(CreateNewCustomer command)
         {
-            Repository.Save(Domain.Customers.Customer.Create(command.CustomerId, command.Info));
+            await Repository.SaveAsync(Domain.Customers.Customer.Create(command.CustomerId, command.Info));
         }
 
-        public void Handle(UpdateCustomer command)
+        public async Task HandleAsync(UpdateCustomer command)
         {
-            Execute(command.CustomerId, model => model.Update(command.Info));
+            await ExecuteAsync(command.CustomerId, model => model.Update(command.Info));
         }
 
-        public void Handle(RemoveCustomer command)
+        public async Task HandleAsync(RemoveCustomer command)
         {
-            Execute(command.CustomerId, model => model.Remove());
+            await ExecuteAsync(command.CustomerId, model => model.Remove());
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 
@@ -15,9 +16,9 @@ namespace EventSourcingPoc.EventSourcing
             _unsubscribeAction = eventBus.Subscribe(this);
         }
 
-        public void Notify<TEvent>(TEvent evt) where TEvent : IEvent
+        public async Task NotifyAsync<TEvent>(TEvent evt) where TEvent : IEvent
         {
-            _dispatcher.Send(evt);
+            await _dispatcher.SendAsync(evt);
         }
     }
 }
