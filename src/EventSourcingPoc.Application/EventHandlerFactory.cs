@@ -5,11 +5,12 @@ using EventSourcingPoc.Messages;
 using EventSourcingPoc.Messages.Orders;
 using EventSourcingPoc.Messages.Shipping;
 using EventSourcingPoc.Readmodels.Orders;
-using EventSourcingPoc.Readmodels.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using EventSourcingPoc.Messages.Shop;
+using EventSourcingPoc.Readmodels.Shop;
+using ShoppingCartEventHandler = EventSourcingPoc.Readmodels.Shop.ShoppingCartEventHandler;
 
 namespace EventSourcingPoc.Application
 {
@@ -38,7 +39,7 @@ namespace EventSourcingPoc.Application
             Func<IOrderReadModelRepository> orderReadModelRepositoryProvider)
         {
             RegisterHandlerFactoryWithTypes(
-                () => new Readmodels.Store.ShoppingCartEventHandler(readModelRepositoryProvider()),
+                () => new ShoppingCartEventHandler(readModelRepositoryProvider()),
                 typeof(CartCreated),
                 typeof(ProductAddedToCart),
                 typeof(ProductRemovedFromCart),

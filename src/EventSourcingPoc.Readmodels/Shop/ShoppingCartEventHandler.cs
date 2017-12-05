@@ -3,7 +3,7 @@ using System.Linq;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages.Shop;
 
-namespace EventSourcingPoc.Readmodels.Store
+namespace EventSourcingPoc.Readmodels.Shop
 {
     public class ShoppingCartEventHandler
         : IEventHandler<CartCreated>

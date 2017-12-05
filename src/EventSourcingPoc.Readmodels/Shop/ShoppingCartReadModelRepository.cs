@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace EventSourcingPoc.Readmodels.Store
+namespace EventSourcingPoc.Readmodels.Shop
 {
     public class ShoppingCartReadModelRepository : IShoppingCartReadModelRepository
     {

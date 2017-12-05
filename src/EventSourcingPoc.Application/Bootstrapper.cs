@@ -6,7 +6,7 @@ using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
 using EventSourcingPoc.Readmodels.Orders;
-using EventSourcingPoc.Readmodels.Store;
+using EventSourcingPoc.Readmodels.Shop;
 
 namespace EventSourcingPoc.Application
 {
