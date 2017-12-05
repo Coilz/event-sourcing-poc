@@ -3,6 +3,7 @@ using EventSourcingPoc.Messages;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace EventSourcingPoc.EventProcessing
 {
@@ -26,10 +27,8 @@ namespace EventSourcingPoc.EventProcessing
         public async Task NotifySubscribersAsync(IEvent evt)
         {
             dynamic typeAwareEvent = evt; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
-            foreach (var observer in _eventObservers)
-            {
-                await observer.NotifyAsync(typeAwareEvent);
-            }
+            var notifiers = _eventObservers.Select(observer => (Task)observer.NotifyAsync(typeAwareEvent));
+            await Task.WhenAll(notifiers);
         }
 
         private void Unsubscribe(IEventObserver observer)

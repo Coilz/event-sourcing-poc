@@ -34,11 +34,12 @@ namespace EventSourcingPoc.EventSourcing.Persistence
 
         private async Task PublishCommandsAsync(Saga saga)
         {
-            foreach (var command in saga.GetUndispatchedCommands())
-            {
+            var messages = saga.GetUndispatchedCommands().Select(command => {
                 dynamic typeAwareCommand = command; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
-                await _commandDispatcher.SendAsync(typeAwareCommand);
-            }
+                return (Task)_commandDispatcher.SendAsync(typeAwareCommand);
+            });
+            await Task.WhenAll(messages);
+
             saga.ClearUndispatchedCommands();
         }
     }

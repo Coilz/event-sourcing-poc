@@ -52,10 +52,8 @@ namespace EventSourcingPoc.EventSourcing.Persistence
 
         private async Task PublishEventsAsync(IEnumerable<IEvent> events)
         {
-            foreach (var newEvent in events)
-            {
-                await _eventBus.NotifySubscribersAsync(newEvent);
-            }
+            var notifications = events.Select(@event => _eventBus.NotifySubscribersAsync(@event));
+            await Task.WhenAll(notifications);
         }
     }
 }
