@@ -4,7 +4,6 @@ using System.Collections.Generic;
 namespace EventSourcingPoc.Domain.Shipping
 {
     using EventSourcing.Domain;
-    using EventSourcing.Handlers;
     using Messages;
     using Messages.Orders;
     using Messages.Shipping;
