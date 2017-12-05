@@ -26,7 +26,7 @@ namespace EventSourcingPoc.EventProcessing
                 .Select(item =>
                     new OrderItem(item.ProductId, item.Price, item.Quantity));
 
-            var order = Order.Create(@event.CartId, cart.CustomerId, orderItems);
+            var order = Order.Create(@event.CartId, cart.CustomerId, orderItems); // TODO: Does this belong in a saga/process manager?
             _repository.Save(order);
         }
     }
