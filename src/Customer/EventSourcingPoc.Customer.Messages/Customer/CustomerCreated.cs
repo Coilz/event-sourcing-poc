@@ -5,13 +5,13 @@ namespace EventSourcingPoc.Customer.Messages.Customer
 {
     public class CustomerCreated : IEvent
     {
-        public CustomerCreated(Guid id, CustomerInfo customerInfo)
+        public CustomerCreated(Guid aggregateId, CustomerInfo customerInfo)
         {
-            Id = id;
+            AggregateId = aggregateId;
             CustomerInfo = customerInfo;
         }
 
-        public Guid Id { get; }
+        public Guid AggregateId { get; }
         public CustomerInfo CustomerInfo { get; }
     }
 }

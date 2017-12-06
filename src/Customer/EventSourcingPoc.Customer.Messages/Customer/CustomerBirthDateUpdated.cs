@@ -5,13 +5,13 @@ namespace EventSourcingPoc.Customer.Messages.Customer
 {
     public class CustomerBirthDateUpdated : IEvent
     {
-        public Guid CustomerId { get; }
+        public Guid AggregateId { get; }
         public DateTime BirthDate { get; }
 
-        public CustomerBirthDateUpdated(Guid customerId, DateTime birthDate)
+        public CustomerBirthDateUpdated(Guid aggregateId, DateTime birthDate)
         {
-            this.CustomerId = customerId;
-            this.BirthDate = birthDate;
+            AggregateId = aggregateId;
+            BirthDate = birthDate;
         }
     }
 }

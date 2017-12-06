@@ -5,15 +5,15 @@ namespace EventSourcingPoc.Shopping.Messages.Orders
 {
     public class OrderCreated : IEvent
     {
-        public Guid OrderId { get; }
+        public Guid AggregateId { get; }
         public Guid CustomerId { get; }
         public OrderItem[] Items { get; }
 
-        public OrderCreated(Guid orderId, Guid customerId, params OrderItem[] items)
+        public OrderCreated(Guid aggregateId, Guid customerId, params OrderItem[] items)
         {
             Items = items;
             CustomerId = customerId;
-            OrderId = orderId;
+            AggregateId = aggregateId;
         }
     }
 }

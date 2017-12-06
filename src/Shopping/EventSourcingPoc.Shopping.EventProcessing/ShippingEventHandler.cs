@@ -23,28 +23,28 @@ namespace EventSourcingPoc.Shopping.EventProcessing
 
         public async Task HandleAsync(OrderCreated @event)
         {
-            var shippingSaga = ShippingSaga.Create(@event.OrderId);
+            var shippingSaga = ShippingSaga.Create(@event.AggregateId);
             await Repository.SaveAsync(shippingSaga);
         }
 
         public async Task HandleAsync(PaymentReceived @event)
         {
-            await ExecuteAsync(@event.OrderId, shippingSaga => shippingSaga.ConfirmPayment());
+            await ExecuteAsync(@event.AggregateId, shippingSaga => shippingSaga.ConfirmPayment());
         }
 
         public async Task HandleAsync(ShippingAddressConfirmed @event)
         {
-            await ExecuteAsync(@event.OrderId, shippingSaga => shippingSaga.ConfirmAddress());
+            await ExecuteAsync(@event.AggregateId, shippingSaga => shippingSaga.ConfirmAddress());
         }
 
         public async Task HandleAsync(PaymentConfirmed @event)
         {
-            await ExecuteAsync(@event.OrderId, shippingSaga => shippingSaga.CompleteIfPossible());
+            await ExecuteAsync(@event.AggregateId, shippingSaga => shippingSaga.CompleteIfPossible());
         }
 
         public async Task HandleAsync(AddressConfirmed @event)
         {
-            await ExecuteAsync(@event.OrderId, shippingSaga => shippingSaga.CompleteIfPossible());
+            await ExecuteAsync(@event.AggregateId, shippingSaga => shippingSaga.CompleteIfPossible());
         }
     }
 }

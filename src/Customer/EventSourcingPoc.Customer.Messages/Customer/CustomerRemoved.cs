@@ -5,11 +5,11 @@ namespace EventSourcingPoc.Customer.Messages.Customer
 {
     public class CustomerRemoved : IEvent
     {
-        public CustomerRemoved(Guid id)
+        public CustomerRemoved(Guid aggregateId)
         {
-            Id = id;
+            AggregateId = aggregateId;
         }
 
-        public Guid Id { get; }
+        public Guid AggregateId { get; }
     }
 }

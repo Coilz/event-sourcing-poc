@@ -22,13 +22,13 @@ namespace EventSourcingPoc.Readmodels.Shop
 
         public async Task HandleAsync(CartCreated @event)
         {
-            var newCart = new ShoppingCartReadModel(@event.CartId, @event.CustomerId);
+            var newCart = new ShoppingCartReadModel(@event.AggregateId, @event.CustomerId);
             await _repository.SaveAsync(newCart);
         }
 
         public async Task HandleAsync(ProductAddedToCart @event)
         {
-            await ExecuteSaveAsync(@event.CartId, cart =>
+            await ExecuteSaveAsync(@event.AggregateId, cart =>
             {
                 var cartItems = cart.Items.ToList();
                 var cartItem = new ShoppingCartItemReadModel(@event.ProductId, @event.Price);
@@ -41,7 +41,7 @@ namespace EventSourcingPoc.Readmodels.Shop
 
         public async Task HandleAsync(ProductRemovedFromCart @event)
         {
-            await ExecuteSaveAsync(@event.CartId, cart =>
+            await ExecuteSaveAsync(@event.AggregateId, cart =>
             {
                 var productItems = cart.Items.Where(item => item.ProductId == @event.ProductId);
                 var cartItems = cart.Items.Concat(productItems.Skip(1));
@@ -52,12 +52,12 @@ namespace EventSourcingPoc.Readmodels.Shop
 
         public async Task HandleAsync(CartEmptied @event)
         {
-            await ExecuteSaveAsync(@event.CartId, cart => new ShoppingCartReadModel(cart));
+            await ExecuteSaveAsync(@event.AggregateId, cart => new ShoppingCartReadModel(cart));
         }
 
         public async Task HandleAsync(CartCheckedOut @event)
         {
-            await _repository.RemoveAsync(@event.CartId);
+            await _repository.RemoveAsync(@event.AggregateId);
         }
 
         private async Task ExecuteSaveAsync(Guid id, Func<ShoppingCartReadModel, ShoppingCartReadModel> transformation)

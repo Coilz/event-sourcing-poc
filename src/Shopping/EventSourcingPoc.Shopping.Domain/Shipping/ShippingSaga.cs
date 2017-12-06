@@ -35,21 +35,21 @@ namespace EventSourcingPoc.Shopping.Domain.Shipping
         {
             if (!AwaitingPayment()) return;
 
-            ApplyChanges(new PaymentConfirmed(id));
+            ApplyChanges(new PaymentConfirmed(Id));
         }
 
         public void ConfirmAddress()
         {
             if (!AwaitingAddress()) return;
 
-            ApplyChanges(new AddressConfirmed(id));
+            ApplyChanges(new AddressConfirmed(Id));
         }
 
         public void CompleteIfPossible()
         {
             if (_status != Status.ReadyToComplete) return;
 
-            ApplyChanges(new OrderDelivered(id));
+            ApplyChanges(new OrderDelivered(Id));
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
@@ -75,7 +75,6 @@ namespace EventSourcingPoc.Shopping.Domain.Shipping
 
         private void Apply(ShippingProcessStarted evt)
         {
-            id = evt.OrderId;
         }
 
         private void Apply(PaymentConfirmed evt)
@@ -95,7 +94,7 @@ namespace EventSourcingPoc.Shopping.Domain.Shipping
         private void Apply(OrderDelivered evt)
         {
             _status = Status.Complete;
-            QueueCommand(new CompleteOrder(evt.OrderId));
+            QueueCommand(new CompleteOrder(evt.AggregateId));
         }
     }
 }

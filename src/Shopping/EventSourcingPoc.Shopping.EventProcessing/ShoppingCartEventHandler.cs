@@ -21,13 +21,13 @@ namespace EventSourcingPoc.Shopping.EventProcessing
 
         public async Task HandleAsync(CartCheckedOut @event)
         {
-            var cart = await _repository.GetByIdAsync<ShoppingCart>(@event.CartId);
+            var cart = await _repository.GetByIdAsync<ShoppingCart>(@event.AggregateId);
 
             var orderItems = cart.ShoppingCartItems
                 .Select(item =>
                     new OrderItem(item.ProductId, item.Price, item.Quantity));
 
-            var order = Order.Create(@event.CartId, cart.CustomerId, orderItems); // TODO: Does this belong in a saga/process manager?
+            var order = Order.Create(@event.AggregateId, cart.CustomerId, orderItems); // TODO: Does this belong in a saga/process manager?
             await _repository.SaveAsync(order);
         }
     }

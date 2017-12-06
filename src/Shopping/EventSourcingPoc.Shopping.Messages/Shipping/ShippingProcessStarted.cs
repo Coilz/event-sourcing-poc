@@ -5,10 +5,10 @@ namespace EventSourcingPoc.Shopping.Messages.Shipping
 {
     public class ShippingProcessStarted : IEvent
     {
-        public Guid OrderId { get; }
-        public ShippingProcessStarted(Guid orderId)
+        public Guid AggregateId { get; }
+        public ShippingProcessStarted(Guid aggregateId)
         {
-            this.OrderId = orderId;
+            AggregateId = aggregateId;
         }
     }
 }

@@ -5,12 +5,12 @@ namespace EventSourcingPoc.Customer.Messages.Customer
 {
     public class CustomerNameUpdated : IEvent
     {
-        public Guid EntityId { get; }
+        public Guid AggregateId { get; }
         public string Name { get; }
-        public CustomerNameUpdated(Guid entityId, string name)
+        public CustomerNameUpdated(Guid aggregateId, string name)
         {
-            this.Name = name;
-            this.EntityId = entityId;
+            Name = name;
+            AggregateId = aggregateId;
         }
     }
 }

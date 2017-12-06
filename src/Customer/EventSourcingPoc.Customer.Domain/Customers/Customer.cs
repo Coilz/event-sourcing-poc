@@ -43,7 +43,7 @@ namespace EventSourcingPoc.Customer.Domain.Customers
             if (_removed) throw new CannotModifyRemovedCustomerException();
             if (string.IsNullOrWhiteSpace(name)) throw new EmptyNameException();
 
-            ApplyChanges(new CustomerNameUpdated(id, name));
+            ApplyChanges(new CustomerNameUpdated(Id, name));
         }
 
         public void ChangeEmail(string email)
@@ -51,7 +51,7 @@ namespace EventSourcingPoc.Customer.Domain.Customers
             if (_removed) throw new CannotModifyRemovedCustomerException();
             if (string.IsNullOrWhiteSpace(email)) throw new EmptyEmailException();
 
-            ApplyChanges(new CustomerEmailUpdated(id, email));
+            ApplyChanges(new CustomerEmailUpdated(Id, email));
         }
 
         public void ChangeBirthDate(DateTime birthDate)
@@ -59,12 +59,12 @@ namespace EventSourcingPoc.Customer.Domain.Customers
             if (_removed) throw new CannotModifyRemovedCustomerException();
             if (birthDate.AddYears(18) < DateTime.UtcNow) throw new YoungerThanEighteenException();
 
-            ApplyChanges(new CustomerBirthDateUpdated(id, birthDate));
+            ApplyChanges(new CustomerBirthDateUpdated(Id, birthDate));
         }
 
         public void Remove()
         {
-            ApplyChanges(new CustomerRemoved(id));
+            ApplyChanges(new CustomerRemoved(Id));
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
@@ -81,7 +81,6 @@ namespace EventSourcingPoc.Customer.Domain.Customers
 
         private void Apply(CustomerCreated evt)
         {
-            id = evt.Id;
             _name = evt.CustomerInfo.Name;
             _email = evt.CustomerInfo.Email;
             _birthDate = evt.CustomerInfo.BirthDate;

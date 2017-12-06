@@ -28,21 +28,21 @@ namespace EventSourcingPoc.Shopping.Domain.Orders
         {
             if (_shippingAddressProvided || _completed) return;
 
-            ApplyChanges(new ShippingAddressConfirmed(id, address));
+            ApplyChanges(new ShippingAddressConfirmed(Id, address));
         }
 
         public void Pay()
         {
             if (_paidFor || _completed) return;
 
-            ApplyChanges(new PaymentReceived(id));
+            ApplyChanges(new PaymentReceived(Id));
         }
 
         public void CompleteOrder()
         {
             if (!_paidFor || !_shippingAddressProvided) throw new CannotCompleteOrderException();
 
-            ApplyChanges(new OrderCompleted(id));
+            ApplyChanges(new OrderCompleted(Id));
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
@@ -58,7 +58,6 @@ namespace EventSourcingPoc.Shopping.Domain.Orders
 
         private void Apply(OrderCreated evt)
         {
-            id = evt.OrderId;
         }
 
         private void Apply(ShippingAddressConfirmed evt)

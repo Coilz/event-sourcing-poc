@@ -20,11 +20,11 @@ namespace EventSourcingPoc.EventSourcing.Domain
                     pair => pair.Value));
         }
 
-        protected Guid id { get; set; }
+        protected Guid Id { get; private set; }
 
         public string Name => GetType().Name;
 
-        public StreamIdentifier StreamIdentifier => new StreamIdentifier(Name, id);
+        public StreamIdentifier StreamIdentifier => new StreamIdentifier(Name, Id);
 
         public void LoadFromHistory(IEnumerable<IEvent> history)
         {
@@ -62,6 +62,7 @@ namespace EventSourcingPoc.EventSourcing.Domain
 
         private void Apply(IEvent evt)
         {
+            Id = evt.AggregateId;
             var evtType = evt.GetType();
             if (!_eventAppliers.Value.ContainsKey(evtType)) throw new NoEventApplyMethodRegisteredException(evt, this);
 

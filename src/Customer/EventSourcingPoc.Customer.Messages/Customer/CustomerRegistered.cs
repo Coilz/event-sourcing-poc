@@ -5,17 +5,17 @@ namespace EventSourcingPoc.Customer.Messages.Customer
 {
     public class CustomerRegistered : IEvent
     {
-        public CustomerRegistered(string name, string email, DateTime birthDate)
+        public CustomerRegistered(Guid aggregateId, string name, string email, DateTime birthDate)
         {
-            this.Name = name;
-            this.Email = email;
-            this.BirthDate = birthDate;
-
+            AggregateId = aggregateId;
+            Name = name;
+            Email = email;
+            BirthDate = birthDate;
         }
+
+        public Guid AggregateId { get; }
         public string Name { get; }
-
         public string Email { get; }
-
         public DateTime BirthDate { get; }
     }
 }

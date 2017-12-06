@@ -5,12 +5,12 @@ namespace EventSourcingPoc.Customer.Messages.Customer
 {
     public class CustomerEmailUpdated : IEvent
     {
-        public Guid CustomerId { get; }
+        public Guid AggregateId { get; }
         public string Email { get; }
-        public CustomerEmailUpdated(Guid id, string email)
+        public CustomerEmailUpdated(Guid aggregateId, string email)
         {
             Email = email;
-            CustomerId = id;
+            AggregateId = aggregateId;
         }
     }
 }

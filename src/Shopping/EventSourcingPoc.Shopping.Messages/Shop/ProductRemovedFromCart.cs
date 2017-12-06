@@ -5,13 +5,12 @@ namespace EventSourcingPoc.Shopping.Messages.Shop
 {
     public class ProductRemovedFromCart : IEvent
     {
-        public ProductRemovedFromCart(Guid cartId, Guid productId)
+        public ProductRemovedFromCart(Guid aggregateId, Guid productId)
         {
-            CartId = cartId;
+            AggregateId = aggregateId;
             ProductId = productId;
-
         }
-        public Guid CartId { get; }
+        public Guid AggregateId { get; }
         public Guid ProductId { get; }
     }
 }

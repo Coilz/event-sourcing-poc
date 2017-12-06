@@ -1,10 +1,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CFFDB2A4-CD28-4252-8DF2-1AC78B345286}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		..\docker-compose.yml = ..\docker-compose.yml
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
 	EndProjectSection
@@ -23,35 +24,35 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.CommandPro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shopping", "Shopping", "{706055FA-AF57-484C-8336-AE3FFD486363}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Shopping.Messages", "Shopping\EventSourcingPoc.Shopping.Messages\EventSourcingPoc.Shopping.Messages.csproj", "{16313856-3065-40F4-AA6A-9EFED0E8D2AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Shopping.Messages", "Shopping\EventSourcingPoc.Shopping.Messages\EventSourcingPoc.Shopping.Messages.csproj", "{16313856-3065-40F4-AA6A-9EFED0E8D2AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Shopping.EventProcessing", "Shopping\EventSourcingPoc.Shopping.EventProcessing\EventSourcingPoc.Shopping.EventProcessing.csproj", "{437A5E66-B499-4095-A7AA-BB58E1C48749}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Shopping.EventProcessing", "Shopping\EventSourcingPoc.Shopping.EventProcessing\EventSourcingPoc.Shopping.EventProcessing.csproj", "{437A5E66-B499-4095-A7AA-BB58E1C48749}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Shopping.Application", "Shopping\EventSourcingPoc.Shopping.Application\EventSourcingPoc.Shopping.Application.csproj", "{4AFB36C6-AE9A-4F9C-B2D0-D936C1E5C3FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Shopping.Application", "Shopping\EventSourcingPoc.Shopping.Application\EventSourcingPoc.Shopping.Application.csproj", "{4AFB36C6-AE9A-4F9C-B2D0-D936C1E5C3FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Shopping.CommandProcessing", "Shopping\EventSourcingPoc.Shopping.CommandProcessing\EventSourcingPoc.Shopping.CommandProcessing.csproj", "{3D1EE882-A315-4168-9ACE-AE8AF1E8779A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Shopping.CommandProcessing", "Shopping\EventSourcingPoc.Shopping.CommandProcessing\EventSourcingPoc.Shopping.CommandProcessing.csproj", "{3D1EE882-A315-4168-9ACE-AE8AF1E8779A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Shopping.ConsoleUI", "Shopping\EventSourcingPoc.Shopping.ConsoleUI\EventSourcingPoc.Shopping.ConsoleUI.csproj", "{14BDC8E9-F9EF-4079-9C79-42C2EA2ADBAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Shopping.ConsoleUI", "Shopping\EventSourcingPoc.Shopping.ConsoleUI\EventSourcingPoc.Shopping.ConsoleUI.csproj", "{14BDC8E9-F9EF-4079-9C79-42C2EA2ADBAE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Customer", "Customer", "{35022EC1-BE39-48BF-AAB4-D049779B555E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Customer.Application", "Customer\EventSourcingPoc.Customer.Application\EventSourcingPoc.Customer.Application.csproj", "{95FC2007-E98B-4037-BCBB-3DC40343B7FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Customer.Application", "Customer\EventSourcingPoc.Customer.Application\EventSourcingPoc.Customer.Application.csproj", "{95FC2007-E98B-4037-BCBB-3DC40343B7FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Customer.CommandProcessing", "Customer\EventSourcingPoc.Customer.CommandProcessing\EventSourcingPoc.Customer.CommandProcessing.csproj", "{950A8365-1FC1-4FC8-8D1B-69C4DC93B0FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Customer.CommandProcessing", "Customer\EventSourcingPoc.Customer.CommandProcessing\EventSourcingPoc.Customer.CommandProcessing.csproj", "{950A8365-1FC1-4FC8-8D1B-69C4DC93B0FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Customer.ConsoleUI", "Customer\EventSourcingPoc.Customer.ConsoleUI\EventSourcingPoc.Customer.ConsoleUI.csproj", "{AB38B672-A750-488E-A0D0-89743FE63FBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Customer.ConsoleUI", "Customer\EventSourcingPoc.Customer.ConsoleUI\EventSourcingPoc.Customer.ConsoleUI.csproj", "{AB38B672-A750-488E-A0D0-89743FE63FBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Customer.EventProcessing", "Customer\EventSourcingPoc.Customer.EventProcessing\EventSourcingPoc.Customer.EventProcessing.csproj", "{CE68BC44-86C9-4EB0-BD73-37C89C02C44E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Customer.EventProcessing", "Customer\EventSourcingPoc.Customer.EventProcessing\EventSourcingPoc.Customer.EventProcessing.csproj", "{CE68BC44-86C9-4EB0-BD73-37C89C02C44E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Customer.Messages", "Customer\EventSourcingPoc.Customer.Messages\EventSourcingPoc.Customer.Messages.csproj", "{77CDF090-77E1-416F-9236-00C2A346C1A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Customer.Messages", "Customer\EventSourcingPoc.Customer.Messages\EventSourcingPoc.Customer.Messages.csproj", "{77CDF090-77E1-416F-9236-00C2A346C1A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Customer.Domain", "Customer\EventSourcingPoc.Customer.Domain\EventSourcingPoc.Customer.Domain.csproj", "{C8B5E28D-56AD-4ED2-AC9E-505D4C946380}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Customer.Domain", "Customer\EventSourcingPoc.Customer.Domain\EventSourcingPoc.Customer.Domain.csproj", "{C8B5E28D-56AD-4ED2-AC9E-505D4C946380}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Shopping.Domain", "Shopping\EventSourcingPoc.Shopping.Domain\EventSourcingPoc.Shopping.Domain.csproj", "{79FC9FA4-F206-4FA4-9424-CBA2AD518E77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Shopping.Domain", "Shopping\EventSourcingPoc.Shopping.Domain\EventSourcingPoc.Shopping.Domain.csproj", "{79FC9FA4-F206-4FA4-9424-CBA2AD518E77}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadModel", "ReadModel", "{2FCECBAE-DBC6-465F-97F1-64988D698B28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.ReadModel.ConsoleUI", "ReadModel\EventSourcingPoc.ReadModel.ConsoleUI\EventSourcingPoc.ReadModel.ConsoleUI.csproj", "{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.ReadModel.ConsoleUI", "ReadModel\EventSourcingPoc.ReadModel.ConsoleUI\EventSourcingPoc.ReadModel.ConsoleUI.csproj", "{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -281,16 +282,16 @@ Global
 		{79FC9FA4-F206-4FA4-9424-CBA2AD518E77}.Release|x86.Build.0 = Release|Any CPU
 		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|x64.ActiveCfg = Debug|x64
-		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|x64.Build.0 = Debug|x64
-		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|x86.ActiveCfg = Debug|x86
-		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|x86.Build.0 = Debug|x86
+		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|x64.Build.0 = Debug|Any CPU
+		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Debug|x86.Build.0 = Debug|Any CPU
 		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|x64.ActiveCfg = Release|x64
-		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|x64.Build.0 = Release|x64
-		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|x86.ActiveCfg = Release|x86
-		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|x86.Build.0 = Release|x86
+		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|x64.ActiveCfg = Release|Any CPU
+		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|x64.Build.0 = Release|Any CPU
+		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|x86.ActiveCfg = Release|Any CPU
+		{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
