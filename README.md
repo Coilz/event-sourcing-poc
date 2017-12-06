@@ -53,3 +53,12 @@ $ docker run --rm -it --network="eventsourcingpoc_default" coilz/web-store-shopp
 ```
 $ docker run --rm -it --network="eventsourcingpoc_default" coilz/web-store-readmodels kafka my-topic
 ```
+
+# Todo
+- extract EventSourcingPoc.EventSourcing.Domain to EventSourcingPoc.Domain, so that process has a dependency on domain
+- create a container with real storage
+- Make sure the contexts all have read models
+- create a readmodel for external use (BI)
+- Create kafka consumers and producers for (cross-context) domain events
+- create web api's for various contexts
+- Add required properties for events
