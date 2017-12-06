@@ -5,10 +5,9 @@ namespace EventSourcingPoc.Shopping.Messages.Orders
 {
     public class OrderCompleted : IEvent
     {
-        public Guid AggregateId { get; }
-        public OrderCompleted(Guid aggregateId)
+        public OrderCompleted(Guid aggregateId, int version)
+            : base(aggregateId, version)
         {
-            AggregateId = aggregateId;
         }
     }
 }

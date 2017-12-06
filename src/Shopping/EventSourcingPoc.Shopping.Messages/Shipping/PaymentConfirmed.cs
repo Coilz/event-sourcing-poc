@@ -5,10 +5,9 @@ namespace EventSourcingPoc.Shopping.Messages.Shipping
 {
     public class PaymentConfirmed : IEvent
     {
-        public Guid AggregateId { get; }
-        public PaymentConfirmed(Guid aggregateId)
+        public PaymentConfirmed(Guid aggregateId, int version)
+            : base(aggregateId, version)
         {
-            AggregateId = aggregateId;
         }
     }
 }

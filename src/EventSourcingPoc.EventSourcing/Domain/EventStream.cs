@@ -13,6 +13,7 @@ namespace EventSourcingPoc.EventSourcing.Domain
 
         protected EventStream()
         {
+            Version = -1;
             _changes = new List<IEvent>();
             _eventAppliers = new Lazy<IDictionary<Type, Action<IEvent>>>(() =>
                 EventAppliers.ToDictionary(pair =>
@@ -26,11 +27,16 @@ namespace EventSourcingPoc.EventSourcing.Domain
 
         public StreamIdentifier StreamIdentifier => new StreamIdentifier(Name, Id);
 
+        public int Version { get; private set; }
+
         public void LoadFromHistory(IEnumerable<IEvent> history)
         {
-            foreach(var evt in history)
+            foreach(var evt in history.OrderBy(e => e.Version))
             {
-                Apply(evt);
+                if (evt.Version != Version + 1)
+                    throw new EventsOutOfOrderException(evt.AggregateId, GetType(), Version + 1, evt.Version);
+
+                Replay(evt);
             }
         }
 
@@ -41,6 +47,7 @@ namespace EventSourcingPoc.EventSourcing.Domain
 
         public void MarkChangesAsCommitted()
         {
+            Version = Version + _changes.Count;
             _changes.Clear();
         }
 
@@ -54,10 +61,22 @@ namespace EventSourcingPoc.EventSourcing.Domain
                 x => applier((TEvent)x));
         }
 
-        protected void ApplyChanges(IEvent evt)
+        protected void ApplyChange(IEvent evt)
         {
             Apply(evt);
             _changes.Add(evt);
+        }
+
+        protected void ApplyChange(Func<Guid, int, IEvent> eventCreator)
+        {
+            var evt = eventCreator(Id, Version + _changes.Count + 1);
+            ApplyChange(evt);
+        }
+
+        private void Replay(IEvent evt)
+        {
+            Version++;
+            Apply(evt);
         }
 
         private void Apply(IEvent evt)

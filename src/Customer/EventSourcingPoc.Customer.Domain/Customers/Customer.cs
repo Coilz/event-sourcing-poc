@@ -23,7 +23,7 @@ namespace EventSourcingPoc.Customer.Domain.Customers
         {
             if (customerInfo.BirthDate.AddYears(18) < DateTime.UtcNow) throw new YoungerThanEighteenException();
 
-            ApplyChanges(new CustomerCreated(id, customerInfo));
+            ApplyChange(new CustomerCreated(id, customerInfo));
         }
 
         public void Update(CustomerInfo customerInfo)
@@ -43,7 +43,7 @@ namespace EventSourcingPoc.Customer.Domain.Customers
             if (_removed) throw new CannotModifyRemovedCustomerException();
             if (string.IsNullOrWhiteSpace(name)) throw new EmptyNameException();
 
-            ApplyChanges(new CustomerNameUpdated(Id, name));
+            ApplyChange((id, version) => new CustomerNameUpdated(id, version, name));
         }
 
         public void ChangeEmail(string email)
@@ -51,7 +51,7 @@ namespace EventSourcingPoc.Customer.Domain.Customers
             if (_removed) throw new CannotModifyRemovedCustomerException();
             if (string.IsNullOrWhiteSpace(email)) throw new EmptyEmailException();
 
-            ApplyChanges(new CustomerEmailUpdated(Id, email));
+            ApplyChange((id, version) => new CustomerEmailUpdated(id, version, email));
         }
 
         public void ChangeBirthDate(DateTime birthDate)
@@ -59,12 +59,12 @@ namespace EventSourcingPoc.Customer.Domain.Customers
             if (_removed) throw new CannotModifyRemovedCustomerException();
             if (birthDate.AddYears(18) < DateTime.UtcNow) throw new YoungerThanEighteenException();
 
-            ApplyChanges(new CustomerBirthDateUpdated(Id, birthDate));
+            ApplyChange((id, version) => new CustomerBirthDateUpdated(id, version, birthDate));
         }
 
         public void Remove()
         {
-            ApplyChanges(new CustomerRemoved(Id));
+            ApplyChange((id, version) => new CustomerRemoved(id, version));
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers

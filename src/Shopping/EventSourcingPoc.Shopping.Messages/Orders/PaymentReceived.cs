@@ -5,10 +5,9 @@ namespace EventSourcingPoc.Shopping.Messages.Orders
 {
     public class PaymentReceived : IEvent
     {
-        public Guid AggregateId { get; }
-        public PaymentReceived(Guid aggregateId)
+        public PaymentReceived(Guid aggregateId, int version)
+            : base(aggregateId, version)
         {
-            AggregateId = aggregateId;
         }
     }
 }

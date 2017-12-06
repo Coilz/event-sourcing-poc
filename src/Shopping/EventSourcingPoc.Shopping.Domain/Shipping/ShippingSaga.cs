@@ -28,28 +28,28 @@ namespace EventSourcingPoc.Shopping.Domain.Shipping
         public ShippingSaga() {}
         private ShippingSaga(Guid orderId)
         {
-            ApplyChanges(new ShippingProcessStarted(orderId));
+            ApplyChange(new ShippingProcessStarted(orderId));
         }
 
         public void ConfirmPayment()
         {
             if (!AwaitingPayment()) return;
 
-            ApplyChanges(new PaymentConfirmed(Id));
+            ApplyChange((id, version) => new PaymentConfirmed(id, version));
         }
 
         public void ConfirmAddress()
         {
             if (!AwaitingAddress()) return;
 
-            ApplyChanges(new AddressConfirmed(Id));
+            ApplyChange((id, version) => new AddressConfirmed(id, version));
         }
 
         public void CompleteIfPossible()
         {
             if (_status != Status.ReadyToComplete) return;
 
-            ApplyChanges(new OrderDelivered(Id));
+            ApplyChange((id, version) => new OrderDelivered(id, version));
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers

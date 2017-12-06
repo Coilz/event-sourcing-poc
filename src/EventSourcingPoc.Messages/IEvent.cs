@@ -2,14 +2,20 @@ using System;
 
 namespace EventSourcingPoc.Messages
 {
-    public interface IEvent
+    public abstract class IEvent
     {
-        Guid AggregateId { get; }
+        protected IEvent(Guid aggregateId, int version)
+        {
+            AggregateId = aggregateId;
+            Version = version;
+        }
+
+        public Guid AggregateId { get; }
+        public int Version { get; }
+
         /*
-         Guid AggregateId {get;}
          DateTime TimeStamp {get;}
          Guid UserId {get;}
-         int Version {get;}
          Guid CorrelationId {get;}
          */
     }

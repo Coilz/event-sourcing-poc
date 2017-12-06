@@ -21,28 +21,28 @@ namespace EventSourcingPoc.Shopping.Domain.Orders
         public Order() { }
         private Order(Guid id, Guid customerId, IEnumerable<OrderItem> items)
         {
-            ApplyChanges(new OrderCreated(id, customerId, items.ToArray()));
+            ApplyChange(new OrderCreated(id, customerId, items.ToArray()));
         }
 
         public void ProvideShippingAddress(Address address)
         {
             if (_shippingAddressProvided || _completed) return;
 
-            ApplyChanges(new ShippingAddressConfirmed(Id, address));
+            ApplyChange((id, version) => new ShippingAddressConfirmed(id, version, address));
         }
 
         public void Pay()
         {
             if (_paidFor || _completed) return;
 
-            ApplyChanges(new PaymentReceived(Id));
+            ApplyChange((id, version) => new PaymentReceived(id, version));
         }
 
         public void CompleteOrder()
         {
             if (!_paidFor || !_shippingAddressProvided) throw new CannotCompleteOrderException();
 
-            ApplyChanges(new OrderCompleted(Id));
+            ApplyChange((id, version) => new OrderCompleted(id, version));
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers

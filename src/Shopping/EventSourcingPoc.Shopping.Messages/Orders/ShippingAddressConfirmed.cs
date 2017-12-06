@@ -5,12 +5,11 @@ namespace EventSourcingPoc.Shopping.Messages.Orders
 {
     public class ShippingAddressConfirmed : IEvent
     {
-        public Guid AggregateId { get; }
         public Address Address { get; }
-        public ShippingAddressConfirmed(Guid aggregateId, Address address)
+        public ShippingAddressConfirmed(Guid aggregateId, int version, Address address)
+            : base(aggregateId, version)
         {
             Address = address;
-            AggregateId = aggregateId;
         }
     }
 }

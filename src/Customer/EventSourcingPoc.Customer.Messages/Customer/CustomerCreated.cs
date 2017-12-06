@@ -6,12 +6,11 @@ namespace EventSourcingPoc.Customer.Messages.Customer
     public class CustomerCreated : IEvent
     {
         public CustomerCreated(Guid aggregateId, CustomerInfo customerInfo)
+            : base(aggregateId, 0)
         {
-            AggregateId = aggregateId;
             CustomerInfo = customerInfo;
         }
 
-        public Guid AggregateId { get; }
         public CustomerInfo CustomerInfo { get; }
     }
 }

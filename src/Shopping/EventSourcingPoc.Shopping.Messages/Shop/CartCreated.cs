@@ -5,12 +5,11 @@ namespace EventSourcingPoc.Shopping.Messages.Shop
 {
     public class CartCreated : IEvent
     {
-        public Guid AggregateId { get; }
         public Guid CustomerId { get; }
         public CartCreated(Guid aggregateId, Guid customerId)
+            : base(aggregateId, 0)
         {
             CustomerId = customerId;
-            AggregateId = aggregateId;
         }
     }
 }

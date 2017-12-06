@@ -21,7 +21,7 @@ namespace EventSourcingPoc.Shopping.Domain.Shop
         public ShoppingCart() {}
         private ShoppingCart(Guid cartId, Guid customerId)
         {
-            ApplyChanges(new CartCreated(cartId, customerId));
+            ApplyChange(new CartCreated(cartId, customerId));
         }
 
         public Guid CustomerId => _customerId;
@@ -31,28 +31,28 @@ namespace EventSourcingPoc.Shopping.Domain.Shop
         {
             if (_checkedOut) throw new CartAlreadyCheckedOutException();
 
-            ApplyChanges(new ProductAddedToCart(Id, productId, price));
+            ApplyChange((id, version) => new ProductAddedToCart(id, version, productId, price));
         }
 
         public void RemoveProduct(Guid productId)
         {
             if (_checkedOut) throw new CartAlreadyCheckedOutException();
 
-            ApplyChanges(new ProductRemovedFromCart(Id, productId));
+            ApplyChange((id, version) => new ProductRemovedFromCart(id, version, productId));
         }
 
         public void Empty()
         {
             if (_checkedOut) throw new CartAlreadyCheckedOutException();
 
-            ApplyChanges(new CartEmptied(Id));
+            ApplyChange((id, version) => new CartEmptied(id, version));
         }
 
         public void Checkout()
         {
             if (_shoppingCartItems.Count == 0) throw new CannotCheckoutEmptyCartException();
 
-            ApplyChanges(new CartCheckedOut(Id));
+            ApplyChange((id, version) => new CartCheckedOut(id, version));
         }
 
         protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
