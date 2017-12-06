@@ -3,7 +3,7 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Shopping.Messages.Shop
 {
-    public class ProductAddedToCart : IEvent
+    public class ProductAddedToCart : Event
     {
         public Guid ProductId { get; }
         public decimal Price { get; }

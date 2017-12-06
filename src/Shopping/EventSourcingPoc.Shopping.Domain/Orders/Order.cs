@@ -45,7 +45,7 @@ namespace EventSourcingPoc.Shopping.Domain.Orders
             ApplyChange((id, version) => new OrderCompleted(id, version));
         }
 
-        protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
+        protected override IEnumerable<KeyValuePair<Type, Action<Event>>> EventAppliers
         {
             get
             {

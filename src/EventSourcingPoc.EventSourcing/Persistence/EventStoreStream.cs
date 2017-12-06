@@ -7,13 +7,13 @@ namespace EventSourcingPoc.EventSourcing.Persistence
 {
     public class EventStoreStream
     {
-        public EventStoreStream(StreamIdentifier identifier, IEnumerable<IEvent> events)
+        public EventStoreStream(StreamIdentifier identifier, IEnumerable<Event> events)
         {
             Id = identifier;
             Events = events.ToList();
         }
 
-        public IEnumerable<IEvent> Events { get; }
+        public IEnumerable<Event> Events { get; }
         public StreamIdentifier Id { get; }
     }
 }

@@ -44,13 +44,13 @@ namespace EventSourcingPoc.EventSourcing.Persistence
             eventStream.MarkChangesAsCommitted();
         }
 
-        private async Task StoreEventsAsync(StreamIdentifier id, IEnumerable<IEvent> events)
+        private async Task StoreEventsAsync(StreamIdentifier id, IEnumerable<Event> events)
         {
             var eventStoreStream = new EventStoreStream(id, events);
             await _eventStore.SaveAsync(eventStoreStream);
         }
 
-        private async Task PublishEventsAsync(IEnumerable<IEvent> events)
+        private async Task PublishEventsAsync(IEnumerable<Event> events)
         {
             var notifications = events.Select(@event => _eventBus.NotifySubscribersAsync(@event));
             await Task.WhenAll(notifications);

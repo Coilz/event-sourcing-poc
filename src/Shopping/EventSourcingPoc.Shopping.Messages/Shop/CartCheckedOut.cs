@@ -3,7 +3,7 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Shopping.Messages.Shop
 {
-    public class CartCheckedOut : IEvent
+    public class CartCheckedOut : Event
     {
         public CartCheckedOut(Guid aggregateId, int version)
             : base(aggregateId, version)

@@ -55,7 +55,7 @@ namespace EventSourcingPoc.Shopping.Domain.Shop
             ApplyChange((id, version) => new CartCheckedOut(id, version));
         }
 
-        protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
+        protected override IEnumerable<KeyValuePair<Type, Action<Event>>> EventAppliers
         {
             get
             {

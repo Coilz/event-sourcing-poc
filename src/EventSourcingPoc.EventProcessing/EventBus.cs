@@ -24,7 +24,7 @@ namespace EventSourcingPoc.EventProcessing
             return () => Unsubscribe(observer);
         }
 
-        public async Task NotifySubscribersAsync(IEvent evt)
+        public async Task NotifySubscribersAsync(Event evt)
         {
             dynamic typeAwareEvent = evt; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
             var notifiers = _eventObservers.Select(observer => (Task)observer.NotifyAsync(typeAwareEvent));

@@ -3,10 +3,10 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Customer.Messages.Customer
 {
-    public class CustomerCreated : IEvent
+    public class CustomerCreated : Event
     {
         public CustomerCreated(Guid aggregateId, CustomerInfo customerInfo)
-            : base(aggregateId, 0)
+            : base(aggregateId)
         {
             CustomerInfo = customerInfo;
         }

@@ -7,6 +7,6 @@ namespace EventSourcingPoc.EventProcessing
     public interface IEventHandlerFactory
     {
         IEnumerable<IEventHandler<TEvent>> Resolve<TEvent>()
-            where TEvent : IEvent;
+            where TEvent : Event;
     }
 }

@@ -52,7 +52,7 @@ namespace EventSourcingPoc.Shopping.Domain.Shipping
             ApplyChange((id, version) => new OrderDelivered(id, version));
         }
 
-        protected override IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers
+        protected override IEnumerable<KeyValuePair<Type, Action<Event>>> EventAppliers
         {
             get
             {

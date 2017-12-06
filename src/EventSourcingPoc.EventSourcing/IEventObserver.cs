@@ -6,6 +6,6 @@ namespace EventSourcingPoc.EventSourcing
     public interface IEventObserver
     {
         Task NotifyAsync<TEvent>(TEvent evt)
-            where TEvent : IEvent;
+            where TEvent : Event;
     }
 }

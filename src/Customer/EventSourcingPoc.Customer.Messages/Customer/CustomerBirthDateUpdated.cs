@@ -3,7 +3,7 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Customer.Messages.Customer
 {
-    public class CustomerBirthDateUpdated : IEvent
+    public class CustomerBirthDateUpdated : Event
     {
         public DateTime BirthDate { get; }
 

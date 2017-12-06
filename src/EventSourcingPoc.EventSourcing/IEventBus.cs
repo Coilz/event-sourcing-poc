@@ -7,6 +7,6 @@ namespace EventSourcingPoc.EventSourcing
     public interface IEventBus
     {
         Action Subscribe(IEventObserver observer);
-        Task NotifySubscribersAsync(IEvent evt);
+        Task NotifySubscribersAsync(Event evt);
     }
 }

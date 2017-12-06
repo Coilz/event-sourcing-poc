@@ -82,7 +82,7 @@ namespace EventSourcingPoc.Shopping.Application
         }
 
         public IEnumerable<IEventHandler<TEvent>> Resolve<TEvent>()
-            where TEvent : IEvent
+            where TEvent : Event
         {
             var eventType = typeof(TEvent);
             if (_handlerFactories.ContainsKey(eventType))

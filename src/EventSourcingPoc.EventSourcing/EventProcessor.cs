@@ -16,7 +16,7 @@ namespace EventSourcingPoc.EventSourcing
             _unsubscribeAction = eventBus.Subscribe(this);
         }
 
-        public async Task NotifyAsync<TEvent>(TEvent evt) where TEvent : IEvent
+        public async Task NotifyAsync<TEvent>(TEvent evt) where TEvent : Event
         {
             await _dispatcher.SendAsync(evt);
         }

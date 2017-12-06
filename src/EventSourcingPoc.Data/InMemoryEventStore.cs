@@ -14,7 +14,7 @@ namespace EventSourcingPoc.Data
     public class InMemoryEventStore : IEventStore
     {
         private static IEventStore _instance;
-        private readonly ConcurrentDictionary<string, IEnumerable<IEvent>> _store = new ConcurrentDictionary<string, IEnumerable<IEvent>>();
+        private readonly ConcurrentDictionary<string, IEnumerable<Event>> _store = new ConcurrentDictionary<string, IEnumerable<Event>>();
 
         public static IEventStore GetInstance()
         {
@@ -25,7 +25,7 @@ namespace EventSourcingPoc.Data
         {
         }
 
-        public Task<IEnumerable<IEvent>> GetByStreamIdAsync(StreamIdentifier streamId)
+        public Task<IEnumerable<Event>> GetByStreamIdAsync(StreamIdentifier streamId)
         {
             if (_store.TryGetValue(streamId.Value, out var value))
             {

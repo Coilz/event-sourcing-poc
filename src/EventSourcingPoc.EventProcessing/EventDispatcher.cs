@@ -14,7 +14,7 @@ namespace EventSourcingPoc.EventProcessing
             _factory = factory;
         }
         public async Task SendAsync<TEvent>(TEvent evt)
-            where TEvent : IEvent
+            where TEvent : Event
         {
             var eventHandlers = _factory.Resolve<TEvent>();
             var handles = eventHandlers.Select(eventHandler => eventHandler.HandleAsync(evt));

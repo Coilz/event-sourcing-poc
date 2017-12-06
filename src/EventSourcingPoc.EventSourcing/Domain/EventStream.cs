@@ -8,80 +8,76 @@ namespace EventSourcingPoc.EventSourcing.Domain
 {
     public abstract class EventStream
     {
-        private readonly List<IEvent> _changes;
-        private readonly Lazy<IDictionary<Type, Action<IEvent>>> _eventAppliers;
+        private Guid _id;
+        private int _version = -1;
+        private readonly List<Event> _changes = new List<Event>();
+        private readonly Lazy<IDictionary<Type, Action<Event>>> _eventAppliers;
 
         protected EventStream()
         {
-            Version = -1;
-            _changes = new List<IEvent>();
-            _eventAppliers = new Lazy<IDictionary<Type, Action<IEvent>>>(() =>
+            _eventAppliers = new Lazy<IDictionary<Type, Action<Event>>>(() =>
                 EventAppliers.ToDictionary(pair =>
                     pair.Key,
                     pair => pair.Value));
         }
 
-        protected Guid Id { get; private set; }
-
         public string Name => GetType().Name;
 
-        public StreamIdentifier StreamIdentifier => new StreamIdentifier(Name, Id);
+        public StreamIdentifier StreamIdentifier => new StreamIdentifier(Name, _id);
 
-        public int Version { get; private set; }
-
-        public void LoadFromHistory(IEnumerable<IEvent> history)
+        public void LoadFromHistory(IEnumerable<Event> history)
         {
             foreach(var evt in history.OrderBy(e => e.Version))
             {
-                if (evt.Version != Version + 1)
-                    throw new EventsOutOfOrderException(evt.AggregateId, GetType(), Version + 1, evt.Version);
+                if (evt.Version != _version + 1)
+                    throw new EventsOutOfOrderException(evt.AggregateId, GetType(), _version + 1, evt.Version);
 
                 Replay(evt);
             }
         }
 
-        public IEnumerable<IEvent> GetUncommitedChanges()
+        public IEnumerable<Event> GetUncommitedChanges()
         {
             return _changes.AsReadOnly();
         }
 
         public void MarkChangesAsCommitted()
         {
-            Version = Version + _changes.Count;
+            _version = _version + _changes.Count;
             _changes.Clear();
         }
 
-        protected abstract IEnumerable<KeyValuePair<Type, Action<IEvent>>> EventAppliers { get; }
+        protected abstract IEnumerable<KeyValuePair<Type, Action<Event>>> EventAppliers { get; }
 
-        protected static KeyValuePair<Type, Action<IEvent>> CreateApplier<TEvent>(Action<TEvent> applier)
-            where TEvent : IEvent
+        protected static KeyValuePair<Type, Action<Event>> CreateApplier<TEvent>(Action<TEvent> applier)
+            where TEvent : Event
         {
-            return new KeyValuePair<Type, Action<IEvent>>(
+            return new KeyValuePair<Type, Action<Event>>(
                 typeof(TEvent),
                 x => applier((TEvent)x));
         }
 
-        protected void ApplyChange(IEvent evt)
+        protected void ApplyChange(Event evt)
         {
             Apply(evt);
             _changes.Add(evt);
         }
 
-        protected void ApplyChange(Func<Guid, int, IEvent> eventCreator)
+        protected void ApplyChange(Func<Guid, int, Event> eventCreator)
         {
-            var evt = eventCreator(Id, Version + _changes.Count + 1);
+            var evt = eventCreator(_id, _version + _changes.Count + 1);
             ApplyChange(evt);
         }
 
-        private void Replay(IEvent evt)
+        private void Replay(Event evt)
         {
-            Version++;
+            _version++;
             Apply(evt);
         }
 
-        private void Apply(IEvent evt)
+        private void Apply(Event evt)
         {
-            Id = evt.AggregateId;
+            _id = evt.AggregateId;
             var evtType = evt.GetType();
             if (!_eventAppliers.Value.ContainsKey(evtType)) throw new NoEventApplyMethodRegisteredException(evt, this);
 

@@ -3,7 +3,7 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Customer.Messages.Customer
 {
-    public class CustomerNameUpdated : IEvent
+    public class CustomerNameUpdated : Event
     {
         public string Name { get; }
 

@@ -7,7 +7,7 @@ namespace EventSourcingPoc.EventSourcing.Persistence
 {
     public interface IEventStore
     {
-        Task<IEnumerable<IEvent>> GetByStreamIdAsync(StreamIdentifier streamId);
+        Task<IEnumerable<Event>> GetByStreamIdAsync(StreamIdentifier streamId);
         Task SaveAsync(EventStoreStream eventStoreStream);
         Task SaveAsync(IEnumerable<EventStoreStream> eventStoreStreams);
     }
