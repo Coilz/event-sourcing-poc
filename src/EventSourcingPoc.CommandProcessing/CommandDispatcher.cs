@@ -6,9 +6,9 @@ namespace EventSourcingPoc.CommandProcessing
 {
     public class CommandDispatcher : ICommandDispatcher
     {
-        private readonly ICommandHandlerFactory _factory;
+        private readonly CommandHandlerFactory _factory;
 
-        public CommandDispatcher(ICommandHandlerFactory factory)
+        public CommandDispatcher(CommandHandlerFactory factory)
         {
             _factory = factory;
         }
@@ -16,7 +16,7 @@ namespace EventSourcingPoc.CommandProcessing
         public async Task SendAsync<TCommand>(TCommand command)
             where TCommand : ICommand
         {
-            var handler = _factory.Resolve<TCommand>();
+            var handler = _factory.ResolveHandler<TCommand>();
             await handler.HandleAsync(command);
         }
     }

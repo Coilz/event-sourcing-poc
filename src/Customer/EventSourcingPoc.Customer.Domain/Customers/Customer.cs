@@ -28,14 +28,9 @@ namespace EventSourcingPoc.Customer.Domain.Customers
 
         public void Update(CustomerInfo customerInfo)
         {
-            if (customerInfo.Name != _name)
-                ChangeName(customerInfo.Name);
-
-            if (customerInfo.Email != _email)
-                ChangeEmail(customerInfo.Email);
-
-            if (customerInfo.BirthDate != _birthDate)
-                ChangeBirthDate(customerInfo.BirthDate);
+            ChangeName(customerInfo.Name);
+            ChangeEmail(customerInfo.Email);
+            ChangeBirthDate(customerInfo.BirthDate);
         }
 
         public void ChangeName(string name)
@@ -43,7 +38,8 @@ namespace EventSourcingPoc.Customer.Domain.Customers
             if (_removed) throw new CannotModifyRemovedCustomerException();
             if (string.IsNullOrWhiteSpace(name)) throw new EmptyNameException();
 
-            ApplyChange((id, version) => new CustomerNameUpdated(id, version, name));
+            if (name != _name)
+                ApplyChange((id, version) => new CustomerNameUpdated(id, version, name));
         }
 
         public void ChangeEmail(string email)
@@ -51,7 +47,8 @@ namespace EventSourcingPoc.Customer.Domain.Customers
             if (_removed) throw new CannotModifyRemovedCustomerException();
             if (string.IsNullOrWhiteSpace(email)) throw new EmptyEmailException();
 
-            ApplyChange((id, version) => new CustomerEmailUpdated(id, version, email));
+            if (email != _email)
+                ApplyChange((id, version) => new CustomerEmailUpdated(id, version, email));
         }
 
         public void ChangeBirthDate(DateTime birthDate)
@@ -59,7 +56,8 @@ namespace EventSourcingPoc.Customer.Domain.Customers
             if (_removed) throw new CannotModifyRemovedCustomerException();
             if (birthDate.AddYears(18) < DateTime.UtcNow) throw new YoungerThanEighteenException();
 
-            ApplyChange((id, version) => new CustomerBirthDateUpdated(id, version, birthDate));
+            if (birthDate != _birthDate)
+                ApplyChange((id, version) => new CustomerBirthDateUpdated(id, version, birthDate));
         }
 
         public void Remove()

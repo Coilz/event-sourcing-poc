@@ -1,6 +1,24 @@
 version: '2'
 
 services:
+  customer:
+    image: coilz/web-store-customer
+    depends_on:
+      - zookeeper
+      - kafka
+
+  shopping:
+    image: coilz/web-store-shopping
+    depends_on:
+      - zookeeper
+      - kafka
+
+  readmodels:
+    image: coilz/web-store-readmodels
+    depends_on:
+      - zookeeper
+      - kafka
+
   zookeeper:
     image: wurstmeister/zookeeper
     ports:

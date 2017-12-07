@@ -29,7 +29,7 @@ namespace EventSourcingPoc.Shopping.Application
             IOrderReadModelRepository OrderReadModelRepositoryProvider() =>
                 new OrderReadModelRepository(orderStore);
 
-            var commandHandlerFactory = new CommandHandlerFactory(AggregateRepositoryProvider);
+            var commandHandlerFactory = CommandHandlerFactoryRegistration.NewCommandHandlerFactory(AggregateRepositoryProvider);
             var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
 
             IRepository SagaRepositoryProvider() =>
