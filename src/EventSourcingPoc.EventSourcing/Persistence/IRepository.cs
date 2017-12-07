@@ -9,6 +9,6 @@ namespace EventSourcingPoc.EventSourcing.Persistence
         Task<T> GetByIdAsync<T>(Guid id)
             where T : EventStream, new();
 
-        Task SaveAsync(params EventStream[] streamItems);
+        Task SaveAsync(EventStream streamItems);
     }
 }

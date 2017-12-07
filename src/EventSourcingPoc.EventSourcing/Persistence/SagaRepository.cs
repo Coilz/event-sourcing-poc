@@ -23,13 +23,10 @@ namespace EventSourcingPoc.EventSourcing.Persistence
             return await _repository.GetByIdAsync<T>(id);
         }
 
-        public async Task SaveAsync(params EventStream[] streamItems)
+        public async Task SaveAsync(EventStream streamItem)
         {
-            await _repository.SaveAsync(streamItems);
-            foreach (var item in streamItems)
-            {
-                await PublishCommandsAsync((Saga)item);
-            }
+            await _repository.SaveAsync(streamItem);
+            await PublishCommandsAsync((Saga)streamItem);
         }
 
         private async Task PublishCommandsAsync(Saga saga)

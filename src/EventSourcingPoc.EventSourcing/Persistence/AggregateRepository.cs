@@ -28,15 +28,7 @@ namespace EventSourcingPoc.EventSourcing.Persistence
             return streamItem;
         }
 
-        public async Task SaveAsync(params EventStream[] streamItems)
-        {
-            foreach (var item in streamItems)
-            {
-                await SaveAsync(item);
-            }
-        }
-
-        private async Task SaveAsync(EventStream eventStream)
+        public async Task SaveAsync(EventStream eventStream)
         {
             var events = eventStream.GetUncommitedChanges().ToList();
             await StoreEventsAsync(eventStream.StreamIdentifier, events);
