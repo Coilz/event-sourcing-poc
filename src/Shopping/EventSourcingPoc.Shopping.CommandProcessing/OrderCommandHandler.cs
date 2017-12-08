@@ -14,7 +14,7 @@ namespace EventSourcingPoc.Shopping.CommandProcessing
         , ICommandHandler<CompleteOrder>
     {
         public OrderCommandHandler(IRepository repository)
-            : base((IRepository) repository)
+            : base(repository)
         {}
 
         public async Task HandleAsync(PayForOrder command)

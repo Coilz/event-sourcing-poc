@@ -16,7 +16,7 @@ namespace EventSourcingPoc.EventProcessing
         }
 
         private readonly List<IEventObserver> _eventObservers = new List<IEventObserver>();
-        private EventBus() {}
+        public EventBus() {}
 
         public Action Subscribe(IEventObserver observer)
         {

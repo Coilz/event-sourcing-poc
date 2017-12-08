@@ -21,7 +21,7 @@ namespace EventSourcingPoc.Data
             return _instance ?? (_instance = new InMemoryEventStore());
         }
 
-        private InMemoryEventStore()
+        public InMemoryEventStore()
         {
         }
 
