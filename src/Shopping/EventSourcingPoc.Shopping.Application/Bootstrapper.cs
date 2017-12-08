@@ -35,7 +35,7 @@ namespace EventSourcingPoc.Shopping.Application
             IRepository SagaRepositoryProvider() =>
                 new SagaRepository(AggregateRepositoryProvider(), commandDispatcher);
 
-            var eventHandlerFactory = new EventHandlerFactory(
+            var eventHandlerFactory = EventHandlerFactoryRegistration.NewEventHandlerFactory(
                 AggregateRepositoryProvider,
                 SagaRepositoryProvider,
                 ShoppingCartReadModelRepositoryProvider,

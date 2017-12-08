@@ -15,31 +15,17 @@ using ShoppingCartEventHandler = EventSourcingPoc.Readmodels.Shop.ShoppingCartEv
 
 namespace EventSourcingPoc.Shopping.Application
 {
-    public class EventHandlerFactory : IEventHandlerFactory
+    public static class EventHandlerFactoryRegistration
     {
-        private readonly Dictionary<Type, List<Func<IHandler>>> _handlerFactories = new Dictionary<Type, List<Func<IHandler>>>();
-
-        public EventHandlerFactory(
-            Func<IRepository> aggregateRepositoryProvider,
-            Func<IRepository> sagaRepositoryProvider,
-            Func<IShoppingCartReadModelRepository> readModelRepositoryProvider,
-            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider
-)
-        {
-            RegisterHandlerFactories(
-                aggregateRepositoryProvider,
-                sagaRepositoryProvider,
-                readModelRepositoryProvider,
-                orderReadModelRepositoryProvider);
-        }
-
-        private void RegisterHandlerFactories(
+        public static EventHandlerFactory NewEventHandlerFactory(
             Func<IRepository> aggregateRepositoryProvider,
             Func<IRepository> sagaRepositoryProvider,
             Func<IShoppingCartReadModelRepository> readModelRepositoryProvider,
             Func<IOrderReadModelRepository> orderReadModelRepositoryProvider)
         {
-            RegisterHandlerFactoryWithTypes(
+            var eventHandlerFactory = new EventHandlerFactory();
+
+            eventHandlerFactory.RegisterFactory(
                 () => new ShoppingCartEventHandler(readModelRepositoryProvider()),
                 typeof(CartCreated),
                 typeof(ProductAddedToCart),
@@ -47,11 +33,11 @@ namespace EventSourcingPoc.Shopping.Application
                 typeof(CartEmptied),
                 typeof(CartCheckedOut));
 
-            RegisterHandlerFactoryWithTypes(
+            eventHandlerFactory.RegisterFactory(
                 () => new EventProcessing.ShoppingCartEventHandler(aggregateRepositoryProvider()),
                 typeof(CartCheckedOut));
 
-            RegisterHandlerFactoryWithTypes(
+            eventHandlerFactory.RegisterFactory(
                 () => new ShippingEventHandler(sagaRepositoryProvider()),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
@@ -59,7 +45,7 @@ namespace EventSourcingPoc.Shopping.Application
                 typeof(PaymentConfirmed),
                 typeof(AddressConfirmed));
 
-            RegisterHandlerFactoryWithTypes(
+            eventHandlerFactory.RegisterFactory(
                 () => new OrderEventHandler(orderReadModelRepositoryProvider()),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
@@ -67,31 +53,8 @@ namespace EventSourcingPoc.Shopping.Application
                 typeof(ShippingProcessStarted),
                 typeof(OrderDelivered),
                 typeof(OrderCompleted));
-        }
 
-        private void RegisterHandlerFactoryWithTypes(Func<IHandler> handler, params Type[] types)
-        {
-            foreach (var type in types)
-            {
-                var handlers = new List<Func<IHandler>> { handler };
-                if (_handlerFactories.ContainsKey(type))
-                    handlers.AddRange(_handlerFactories[type]);
-
-                _handlerFactories[type] = handlers;
-            }
-        }
-
-        public IEnumerable<IEventHandler<TEvent>> Resolve<TEvent>()
-            where TEvent : Event
-        {
-            var eventType = typeof(TEvent);
-            if (_handlerFactories.ContainsKey(eventType))
-            {
-                return _handlerFactories[eventType]
-                    .Select(handler => (IEventHandler<TEvent>)handler());
-            }
-
-            return Enumerable.Empty<IEventHandler<TEvent>>();
+            return eventHandlerFactory;
         }
     }
 }

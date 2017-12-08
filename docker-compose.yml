@@ -4,20 +4,35 @@ services:
   customer:
     image: coilz/web-store-customer
     depends_on:
+      - db
       - zookeeper
       - kafka
+    environment:
+      DB_CONNECTION: postgres://db:5432
 
   shopping:
     image: coilz/web-store-shopping
     depends_on:
+      - db
       - zookeeper
       - kafka
+    environment:
+      DB_CONNECTION: postgres://db:5432
 
   readmodels:
     image: coilz/web-store-readmodels
     depends_on:
+      - db
       - zookeeper
       - kafka
+    environment:
+      DB_CONNECTION: postgres://db:5432
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
 
   zookeeper:
     image: wurstmeister/zookeeper
