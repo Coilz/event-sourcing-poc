@@ -9,12 +9,14 @@ using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Readmodels;
 using EventSourcingPoc.Readmodels.Orders;
 using EventSourcingPoc.Readmodels.Shop;
+using EventSourcingPoc.Shopping.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using static EventSourcingPoc.Shopping.Application.Bootstrapper;
 
 namespace EventSourcingPoc.Shopping.WebApi
 {
@@ -31,17 +33,7 @@ namespace EventSourcingPoc.Shopping.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
-            services.AddSingleton<IEventStore, InMemoryEventStore>();
-            services.AddSingleton<IReadModelStore<ShoppingCartReadModel>, InMemoryReadModelStore<ShoppingCartReadModel>>();
-            services.AddSingleton<IReadModelStore<OrderReadModel>, InMemoryReadModelStore<OrderReadModel>>();
-
-            services.AddScoped<IShoppingCartReadModelRepository, ShoppingCartReadModelRepository>();
-            services.AddScoped<IOrderReadModelRepository, OrderReadModelRepository>();
-
-            services.AddSingleton<IEventBus, EventBus>();
-            services.AddScoped<IRepository, AggregateRepository>();
-            services.RegisterCommandHandlers();
+            services.AddSingleton(Bootstrap());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

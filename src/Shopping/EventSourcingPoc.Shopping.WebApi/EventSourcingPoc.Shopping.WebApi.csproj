@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\EventSourcingPoc.Data\EventSourcingPoc.Data.csproj" />
     <ProjectReference Include="..\..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Shopping.Application\EventSourcingPoc.Shopping.Application.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Shopping.CommandProcessing\EventSourcingPoc.Shopping.CommandProcessing.csproj" />
   </ItemGroup>
 

@@ -1,100 +1,64 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 using EventSourcingPoc.Shopping.Messages.Shop;
 using EventSourcingPoc.Shopping.WebApi.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static EventSourcingPoc.Shopping.Application.Bootstrapper;
 
 namespace EventSourcingPoc.Shopping.WebApi.Controllers
 {
+    [Route("api")]
     [Produces("application/json")]
-    public abstract class ShoppingCartController<TCommand> : Controller
-        where TCommand : ICommand
+    public class ShoppingCartController : Controller
     {
-        protected readonly ICommandHandler<TCommand> commandHandler;
+        private readonly PretendApplication _app;
 
-        public ShoppingCartController(ICommandHandler<TCommand> commandHandler)
+        public ShoppingCartController(PretendApplication app)
         {
-            this.commandHandler = commandHandler;
-        }
-    }
-
-    [Route(template: "api/Customer/{customerId}/ShoppingCart")]
-    public class CreateNewCartController : ShoppingCartController<CreateNewCart>
-    {
-        public CreateNewCartController(ICommandHandler<CreateNewCart> commandHandler)
-            : base(commandHandler)
-        {
+            _app = app;
         }
 
+        [Route(template: "Customer/{customerId}/ShoppingCart")]
+        [HttpGet]
+        public async Task<bool> HasCartAsync(Guid customerId)
+        {
+            return await _app.ShoppingCartReadModelRepository.HasCartAsync(customerId);
+        }
+
+        [Route(template: "Customer/{customerId}/ShoppingCart")]
         [HttpPost]
-        public async Task PostAsync(Guid customerId)
+        public async Task CreateNewCart(Guid customerId)
         {
-            await commandHandler.HandleAsync(new CreateNewCart(Guid.NewGuid(), customerId));
-        }
-    }
-
-    [Route(template: "api/ShoppingCart/{cartId}/Product/{productId}")]
-    public class AddProductToCartController : ShoppingCartController<AddProductToCart>
-    {
-        public AddProductToCartController(ICommandHandler<AddProductToCart> commandHandler)
-            : base(commandHandler)
-        {
+            await _app.SendAsync(new CreateNewCart(Guid.NewGuid(), customerId));
         }
 
+        [Route(template: "ShoppingCart/{cartId}/Product/{productId}")]
         [HttpPost]
-        public async Task PostAsync(Guid cartId, Guid productId, AddProductToCartDTO dto)
+        public async Task AddProductToCart(Guid cartId, Guid productId, AddProductToCartDTO dto)
         {
-            await commandHandler.HandleAsync(new AddProductToCart(cartId, productId, dto.Price));
-        }
-    }
-
-    [Route(template: "api/ShoppingCart/{cartId}/Product/{productId}")]
-    public class RemoveProductFromCartController : ShoppingCartController<RemoveProductFromCart>
-    {
-        public RemoveProductFromCartController(ICommandHandler<RemoveProductFromCart> commandHandler)
-            : base(commandHandler)
-        {
+            await _app.SendAsync(new AddProductToCart(cartId, productId, dto.Price));
         }
 
+        [Route(template: "ShoppingCart/{cartId}/Product/{productId}")]
         [HttpDelete]
-        public async Task DeleteAsync(Guid cartId, Guid productId)
+        public async Task RemoveProductFromCart(Guid cartId, Guid productId)
         {
-            await commandHandler.HandleAsync(new RemoveProductFromCart(cartId, productId));
-        }
-    }
-
-    [Route(template: "api/ShoppingCart/{cartId}/Product")]
-    public class EmptyCartController : ShoppingCartController<EmptyCart>
-    {
-        public EmptyCartController(ICommandHandler<EmptyCart> commandHandler)
-            : base(commandHandler)
-        {
+            await _app.SendAsync(new RemoveProductFromCart(cartId, productId));
         }
 
+        [Route(template: "ShoppingCart/{cartId}/Product")]
         [HttpDelete]
-        public async Task DeleteAsync(Guid cartId)
+        public async Task EmptyCart(Guid cartId)
         {
-            await commandHandler.HandleAsync(new EmptyCart(cartId));
-        }
-    }
-
-    [Route(template: "api/ShoppingCart/{cartId}/Checkout")]
-    public class CheckoutController : ShoppingCartController<Checkout>
-    {
-        public CheckoutController(ICommandHandler<Checkout> commandHandler)
-            : base(commandHandler)
-        {
+            await _app.SendAsync(new EmptyCart(cartId));
         }
 
+        [Route(template: "ShoppingCart/{cartId}/Checkout")]
         [HttpPut]
-        public async Task PutAsync(Guid cartId)
+        public async Task Checkout(Guid cartId)
         {
-            await commandHandler.HandleAsync(new Checkout(cartId));
+            await _app.SendAsync(new Checkout(cartId));
         }
     }
 }
