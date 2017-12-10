@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CFFDB2A4-CD28-4252-8DF2-1AC78B345286}"
 	ProjectSection(SolutionItems) = preProject
@@ -54,11 +54,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadModel", "ReadModel", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.ReadModel.ConsoleUI", "ReadModel\EventSourcingPoc.ReadModel.ConsoleUI\EventSourcingPoc.ReadModel.ConsoleUI.csproj", "{6DDC1DDC-8B34-4E26-BD47-C9EC4A47294E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.ReadModel.WebApi", "ReadModel\EventSourcingPoc.ReadModel.WebApi\EventSourcingPoc.ReadModel.WebApi.csproj", "{B98EF47F-D275-49B0-A95D-836B6582833E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.ReadModel.WebApi", "ReadModel\EventSourcingPoc.ReadModel.WebApi\EventSourcingPoc.ReadModel.WebApi.csproj", "{B98EF47F-D275-49B0-A95D-836B6582833E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Customer.WebApi", "Customer\EventSourcingPoc.Customer.WebApi\EventSourcingPoc.Customer.WebApi.csproj", "{DFE4B51A-3276-4BED-B011-BFF04EF961F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Customer.WebApi", "Customer\EventSourcingPoc.Customer.WebApi\EventSourcingPoc.Customer.WebApi.csproj", "{DFE4B51A-3276-4BED-B011-BFF04EF961F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Shopping.WebApi", "Shopping\EventSourcingPoc.Shopping.WebApi\EventSourcingPoc.Shopping.WebApi.csproj", "{CDF0B7E4-A208-4E3B-BEB5-D47A86829D8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcingPoc.Shopping.WebApi", "Shopping\EventSourcingPoc.Shopping.WebApi\EventSourcingPoc.Shopping.WebApi.csproj", "{CDF0B7E4-A208-4E3B-BEB5-D47A86829D8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcingPoc.Kafka", "EventSourcingPoc.Kafka\EventSourcingPoc.Kafka.csproj", "{4656A226-EEE8-43EC-BA13-52C2029050BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -334,6 +336,18 @@ Global
 		{CDF0B7E4-A208-4E3B-BEB5-D47A86829D8E}.Release|x64.Build.0 = Release|Any CPU
 		{CDF0B7E4-A208-4E3B-BEB5-D47A86829D8E}.Release|x86.ActiveCfg = Release|Any CPU
 		{CDF0B7E4-A208-4E3B-BEB5-D47A86829D8E}.Release|x86.Build.0 = Release|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Debug|x64.Build.0 = Debug|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Debug|x86.Build.0 = Debug|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Release|x64.ActiveCfg = Release|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Release|x64.Build.0 = Release|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Release|x86.ActiveCfg = Release|Any CPU
+		{4656A226-EEE8-43EC-BA13-52C2029050BA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
