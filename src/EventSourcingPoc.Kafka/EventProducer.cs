@@ -5,30 +5,31 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace EventSourcingPoc.Kafka
 {
     public class EventProducer : IDisposable
     {
-        private Producer<string, Event> _producer;
-        private string _topicName;
+        private Producer<string, string> _producer;
 
-        public EventProducer()
+        public EventProducer(EventProducerOptions options)
         {
-            string brokerList = "the first broker;the next broker";
-            _topicName = "my special topic";
+            _producer = new Producer<string, string>(
+                options.ConstructConfig(),
+                new StringSerializer(Encoding.UTF8),
+                new StringSerializer(Encoding.UTF8));
 
-            var config = new Dictionary<string, object> { { "bootstrap.servers", brokerList } };
-
-            _producer = new Producer<string, Event>(config, new StringSerializer(Encoding.UTF8), null); // TODO: create an EventSerializer
             _producer.OnError += Producer_OnError;
             _producer.OnStatistics += Producer_OnStatistics;
             _producer.OnLog += Producer_OnLog;
         }
 
-        public async Task Produce(Event @event)
+        public async Task ProduceAsync<T>(T @event)
+            where T : Event
         {
-            var deliveryReport = await _producer.ProduceAsync(_topicName, null, @event);
+            string json = JsonConvert.SerializeObject(@event);
+            var deliveryReport = await _producer.ProduceAsync(typeof(T).Name, @event.AggregateId.ToString(), json);
             // TODO: log result stuff here
         }
 

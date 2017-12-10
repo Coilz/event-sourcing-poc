@@ -12,28 +12,28 @@ namespace EventSourcingPoc.Kafka
     public class EventConsumer : IDisposable
     {
         private const int Timeout = 100;
-        private readonly IEventDispatcher _eventDispatcher;
-        private Consumer<string, Event> _consumer;
-        private string _brokerList;
-        private List<string> _topics;
+        private readonly IMessageHandler _messageHandler;
+        private Consumer<string, string> _consumer;
 
-        public EventConsumer(IEventDispatcher eventDispatcher)
+        public EventConsumer(IMessageHandler messageHandler, EventConsumerOptions options)
         {
-            _topics = new List<string> { "firstTopic", "secondTopic" };
+            _messageHandler = messageHandler;
 
-            var config = ConstructConfig(_brokerList, false);
-            _consumer = new Consumer<string, Event>(config, new StringDeserializer(Encoding.UTF8), null); // TODO: Create an Event serializer
-            _consumer.OnConsumeError += Consumer_OnConsumeError;
-            _consumer.OnError += Consumer_OnError;
-            _consumer.OnLog += Consumer_OnLog;
-            _consumer.OnMessage += Consumer_OnMessage;
-            _consumer.OnOffsetsCommitted += Consumer_OnOffsetsCommitted;
-            _consumer.OnPartitionEOF += Consumer_OnPartitionEOF;
-            _consumer.OnPartitionsAssigned += Consumer_OnPartitionsAssigned;
-            _consumer.OnPartitionsRevoked += Consumer_OnPartitionsRevoked;
+            _consumer = new Consumer<string, string>(
+                options.ConstructConfig(),
+                new StringDeserializer(Encoding.UTF8),
+                new StringDeserializer(Encoding.UTF8));
+
+            _consumer.OnMessage += _messageHandler.OnMessage;
+
             _consumer.OnStatistics += Consumer_OnStatistics;
-
-            _eventDispatcher = eventDispatcher;
+            _consumer.OnPartitionsRevoked += Consumer_OnPartitionsRevoked;
+            _consumer.OnPartitionsAssigned += Consumer_OnPartitionsAssigned;
+            _consumer.OnPartitionEOF += Consumer_OnPartitionEOF;
+            _consumer.OnOffsetsCommitted += Consumer_OnOffsetsCommitted;
+            _consumer.OnLog += Consumer_OnLog;
+            _consumer.OnError += Consumer_OnError;
+            _consumer.OnConsumeError += Consumer_OnConsumeError;
         }
 
         public bool Consuming { get; private set; }
@@ -43,19 +43,11 @@ namespace EventSourcingPoc.Kafka
             if (Consuming) return;
 
             Consuming = true;
-            _consumer.Subscribe(_topics);
+            _consumer.Subscribe(_messageHandler.Topics);
 
             while (Consuming)
             {
-                if (!_consumer.Consume(out Message<string, Event> message, TimeSpan.FromMilliseconds(Timeout)))
-                {
-                    continue;
-                }
-
-                if (message.Offset % 5 == 0)
-                {
-                    var committedOffsets = _consumer.CommitAsync(message).Result;
-                }
+                _consumer.Poll(TimeSpan.FromMilliseconds(Timeout));
             }
         }
 
@@ -94,11 +86,6 @@ namespace EventSourcingPoc.Kafka
             // TODO: log stuff here
         }
 
-        private void Consumer_OnMessage(object sender, Message<string, Event> e)
-        {
-            _eventDispatcher.SendAsync(e.Value);
-        }
-
         private void Consumer_OnLog(object sender, LogMessage e)
         {
             // TODO: log stuff here
@@ -113,21 +100,6 @@ namespace EventSourcingPoc.Kafka
         {
             // TODO: log stuff here
         }
-
-        private static Dictionary<string, object> ConstructConfig(string brokerList, bool enableAutoCommit) =>
-            new Dictionary<string, object>
-            {
-                { "group.id", "advanced-csharp-consumer" },
-                { "enable.auto.commit", enableAutoCommit },
-                { "auto.commit.interval.ms", 5000 },
-                { "statistics.interval.ms", 60000 },
-                { "bootstrap.servers", brokerList },
-                { "default.topic.config", new Dictionary<string, object>()
-                    {
-                        { "auto.offset.reset", "smallest" }
-                    }
-                }
-            };
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
