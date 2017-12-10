@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Serialization;
+using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Messages;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,12 @@ namespace EventSourcingPoc.Kafka
     public class EventConsumer : IDisposable
     {
         private const int Timeout = 100;
+        private readonly IEventDispatcher _eventDispatcher;
         private Consumer<string, Event> _consumer;
         private string _brokerList;
         private List<string> _topics;
 
-        public EventConsumer()
+        public EventConsumer(IEventDispatcher eventDispatcher)
         {
             _topics = new List<string> { "firstTopic", "secondTopic" };
 
@@ -30,6 +32,8 @@ namespace EventSourcingPoc.Kafka
             _consumer.OnPartitionsAssigned += Consumer_OnPartitionsAssigned;
             _consumer.OnPartitionsRevoked += Consumer_OnPartitionsRevoked;
             _consumer.OnStatistics += Consumer_OnStatistics;
+
+            _eventDispatcher = eventDispatcher;
         }
 
         public bool Consuming { get; private set; }
@@ -92,7 +96,7 @@ namespace EventSourcingPoc.Kafka
 
         private void Consumer_OnMessage(object sender, Message<string, Event> e)
         {
-            // TODO: handle the message
+            _eventDispatcher.SendAsync(e.Value);
         }
 
         private void Consumer_OnLog(object sender, LogMessage e)

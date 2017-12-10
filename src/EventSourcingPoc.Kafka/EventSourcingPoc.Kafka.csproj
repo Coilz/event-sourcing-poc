@@ -6,9 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="0.11.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Messages\EventSourcingPoc.Messages.csproj" />
   </ItemGroup>
 
