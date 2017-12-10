@@ -2,7 +2,9 @@ version: '2'
 
 services:
   customer:
-    image: coilz/web-store-customer
+    image: coilz/web-store-customer-api
+    ports:
+      - "5001:5000"
     depends_on:
       - db
       - zookeeper
@@ -11,7 +13,7 @@ services:
       DB_CONNECTION: postgres://db:5432
 
   shopping:
-    image: coilz/web-store-shopping
+    image: coilz/web-store-shopping-api
     ports:
       - "5000:5000"
     depends_on:
@@ -22,7 +24,9 @@ services:
       DB_CONNECTION: postgres://db:5432
 
   readmodels:
-    image: coilz/web-store-readmodels
+    image: coilz/web-store-readmodels-api
+    ports:
+      - "5002:5000"
     depends_on:
       - db
       - zookeeper
