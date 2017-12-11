@@ -5,12 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\EventSourcingPoc.EventProcessing\EventSourcingPoc.EventProcessing.csproj" />
     <ProjectReference Include="..\..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
-    <ProjectReference Include="..\..\EventSourcingPoc.Kafka\EventSourcingPoc.Kafka.csproj" />
     <ProjectReference Include="..\..\EventSourcingPoc.Messages\EventSourcingPoc.Messages.csproj" />
-    <ProjectReference Include="..\EventSourcingPoc.Shopping.CommandProcessing\EventSourcingPoc.Shopping.CommandProcessing.csproj" />
-    <ProjectReference Include="..\EventSourcingPoc.Shopping.Data\EventSourcingPoc.Shopping.Data.csproj" />
-    <ProjectReference Include="..\EventSourcingPoc.Shopping.EventProcessing\EventSourcingPoc.Shopping.EventProcessing.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Shopping.Readmodels\EventSourcingPoc.Shopping.Readmodels.csproj" />
   </ItemGroup>
 
