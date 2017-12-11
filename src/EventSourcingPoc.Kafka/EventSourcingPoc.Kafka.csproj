@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EventSourcingPoc.EventProcessing\EventSourcingPoc.EventProcessing.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
     <ProjectReference Include="..\EventSourcingPoc.Messages\EventSourcingPoc.Messages.csproj" />
   </ItemGroup>

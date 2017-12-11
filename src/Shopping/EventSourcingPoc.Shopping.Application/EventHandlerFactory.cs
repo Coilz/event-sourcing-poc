@@ -21,7 +21,8 @@ namespace EventSourcingPoc.Shopping.Application
             Func<IRepository> aggregateRepositoryProvider,
             Func<IRepository> sagaRepositoryProvider,
             Func<IShoppingCartReadModelRepository> readModelRepositoryProvider,
-            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider)
+            Func<IOrderReadModelRepository> orderReadModelRepositoryProvider,
+            Func<IContextEventProducer> contextEventProducerProvider)
         {
             var eventHandlerFactory = new EventHandlerFactory();
 
@@ -36,6 +37,10 @@ namespace EventSourcingPoc.Shopping.Application
             eventHandlerFactory.RegisterFactory(
                 () => new EventProcessing.ShoppingCartEventHandler(aggregateRepositoryProvider()),
                 typeof(CartCheckedOut));
+
+            eventHandlerFactory.RegisterFactory(
+                () => new EventProcessing.ContextEventHandler(contextEventProducerProvider()),
+                typeof(ShippingProcessStarted));
 
             eventHandlerFactory.RegisterFactory(
                 () => new ShippingEventHandler(sagaRepositoryProvider()),

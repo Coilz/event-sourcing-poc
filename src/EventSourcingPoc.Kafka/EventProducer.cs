@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using EventSourcingPoc.EventProcessing;
 
 namespace EventSourcingPoc.Kafka
 {
-    public class EventProducer : IDisposable
+    public class EventProducer : IContextEventProducer
     {
         private Producer<string, string> _producer;
 
