@@ -1,0 +1,15 @@
+using System;
+using EventSourcingPoc.Messages;
+
+namespace EventSourcingPoc.Logistics.Messages.Orders
+{
+    public class ShippingAddressConfirmed : Event
+    {
+        public Address Address { get; }
+        public ShippingAddressConfirmed(Guid aggregateId, int version, Address address)
+            : base(aggregateId, version)
+        {
+            Address = address;
+        }
+    }
+}

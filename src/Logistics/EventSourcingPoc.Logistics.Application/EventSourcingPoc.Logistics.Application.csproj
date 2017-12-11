@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EventSourcingPoc.EventSourcing\EventSourcingPoc.EventSourcing.csproj" />
+    <ProjectReference Include="..\..\EventSourcingPoc.Kafka\EventSourcingPoc.Kafka.csproj" />
+    <ProjectReference Include="..\..\EventSourcingPoc.Messages\EventSourcingPoc.Messages.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Logistics.CommandProcessing\EventSourcingPoc.Logistics.CommandProcessing.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Logistics.Data\EventSourcingPoc.Logistics.Data.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Logistics.EventProcessing\EventSourcingPoc.Logistics.EventProcessing.csproj" />
+    <ProjectReference Include="..\EventSourcingPoc.Logistics.Readmodels\EventSourcingPoc.Logistics.Readmodels.csproj" />
+  </ItemGroup>
+
+</Project>
