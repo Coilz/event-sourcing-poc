@@ -8,18 +8,18 @@ namespace EventSourcingPoc.Logistics.WebApi.Controllers
 {
     [Route("api")]
     [Produces("application/json")]
-    public class LogisticsCartController : Controller
+    public class ShipmentController : Controller
     {
         private readonly PretendApplication _app;
 
-        public LogisticsCartController(PretendApplication app)
+        public ShipmentController(PretendApplication app)
         {
             _app = app;
         }
 
-        [Route(template: "Customer/{customerId}/Shipments")]
+        [Route(template: "Customer/{customerId}/Shipment")]
         [HttpGet]
-        public async Task<IEnumerable<Guid>> GetShioments(Guid customerId)
+        public async Task<IEnumerable<Guid>> Shipment(Guid customerId)
         {
             return await _app.ShipmentReadModelRepository.GetShipmentsAsync(customerId);
         }

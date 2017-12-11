@@ -20,15 +20,15 @@ namespace EventSourcingPoc.Shopping.Domain.Shipping
 
         private Status _status = Status.Started;
 
-        public static ShippingSaga Create(Guid orderId)
+        public static ShippingSaga Create(Guid orderId, Guid customerId, OrderItem[] orderItems)
         {
-            return new ShippingSaga(orderId);
+            return new ShippingSaga(orderId, customerId, orderItems);
         }
 
         public ShippingSaga() {}
-        private ShippingSaga(Guid orderId)
+        private ShippingSaga(Guid orderId, Guid customerId, OrderItem[] orderItems)
         {
-            ApplyChange(new ShippingProcessStarted(orderId));
+            ApplyChange(new ShippingProcessStarted(orderId, customerId, orderItems));
         }
 
         public void ConfirmPayment()

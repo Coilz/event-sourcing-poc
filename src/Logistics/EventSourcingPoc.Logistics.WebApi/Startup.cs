@@ -19,7 +19,10 @@ namespace EventSourcingPoc.Logistics.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton(Bootstrap());
+
+            var app = Bootstrap();
+            app.EventConsumer.Start();
+            services.AddSingleton(app);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

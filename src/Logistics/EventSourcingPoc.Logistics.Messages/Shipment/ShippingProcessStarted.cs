@@ -1,12 +1,12 @@
 using System;
+using EventSourcingPoc.Logistics.Messages.Shipping;
 using EventSourcingPoc.Messages;
-using EventSourcingPoc.Shopping.Messages.Orders;
 
-namespace EventSourcingPoc.Shopping.Messages.Shipping
+namespace EventSourcingPoc.Logistics.Messages.Shipment
 {
     public class ShippingProcessStarted : Event
     {
-        public ShippingProcessStarted(Guid aggregateId, Guid customerId, OrderItem[] items)
+        public ShippingProcessStarted(Guid aggregateId, Guid customerId, ShipmentItem[] items)
             : base(aggregateId)
         {
             CustomerId = customerId;
@@ -14,6 +14,6 @@ namespace EventSourcingPoc.Shopping.Messages.Shipping
         }
 
         public Guid CustomerId { get; }
-        public OrderItem[] Items { get; }
+        public ShipmentItem[] Items { get; }
     }
 }

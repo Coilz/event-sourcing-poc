@@ -23,7 +23,7 @@ namespace EventSourcingPoc.Shopping.EventProcessing
 
         public async Task HandleAsync(OrderCreated @event)
         {
-            var shippingSaga = ShippingSaga.Create(@event.AggregateId);
+            var shippingSaga = ShippingSaga.Create(@event.AggregateId, @event.CustomerId, @event.Items);
             await Repository.SaveAsync(shippingSaga);
         }
 
