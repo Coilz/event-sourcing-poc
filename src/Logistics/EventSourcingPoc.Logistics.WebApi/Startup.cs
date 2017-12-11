@@ -1,21 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EventSourcingPoc.Data;
-using EventSourcingPoc.EventProcessing;
-using EventSourcingPoc.EventSourcing;
-using EventSourcingPoc.EventSourcing.Persistence;
-using EventSourcingPoc.Readmodels;
-using EventSourcingPoc.Readmodels.Orders;
-using EventSourcingPoc.Readmodels.Shop;
-using EventSourcingPoc.Logistics.Application;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using static EventSourcingPoc.Logistics.Application.Bootstrapper;
 
 namespace EventSourcingPoc.Logistics.WebApi

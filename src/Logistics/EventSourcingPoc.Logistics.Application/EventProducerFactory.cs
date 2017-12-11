@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.Kafka;
 

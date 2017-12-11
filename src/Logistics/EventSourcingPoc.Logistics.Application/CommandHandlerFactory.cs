@@ -2,8 +2,7 @@
 using EventSourcingPoc.CommandProcessing;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Logistics.CommandProcessing;
-using EventSourcingPoc.Logistics.Messages.Orders;
-using EventSourcingPoc.Logistics.Messages.Shop;
+using EventSourcingPoc.Logistics.Messages.Shipment;
 
 namespace EventSourcingPoc.Logistics.Application
 {
@@ -13,18 +12,10 @@ namespace EventSourcingPoc.Logistics.Application
         {
             var commandHandlerFactor = new CommandHandlerFactory();
             commandHandlerFactor.RegisterFactory(
-                () => new LogisticsCartCommandHandler(repositoryProvider()),
-                typeof(CreateNewCart),
-                typeof(AddProductToCart),
-                typeof(RemoveProductFromCart),
-                typeof(EmptyCart),
-                typeof(Checkout));
-
-            commandHandlerFactor.RegisterFactory(
-                () => new OrderCommandHandler(repositoryProvider()),
-                typeof(PayForOrder),
-                typeof(ConfirmShippingAddress),
-                typeof(CompleteOrder));
+                () => new ShipmentCommandHandler(repositoryProvider()),
+                typeof(CreateShipment),
+                typeof(StartShipment),
+                typeof(DeliverShipment));
 
                 return commandHandlerFactor;
         }

@@ -6,8 +6,7 @@ using EventSourcingPoc.EventSourcing;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
-using EventSourcingPoc.Readmodels.Orders;
-using EventSourcingPoc.Readmodels.Shop;
+using EventSourcingPoc.Readmodels.Shipping;
 
 namespace EventSourcingPoc.Logistics.Application
 {
@@ -21,35 +20,25 @@ namespace EventSourcingPoc.Logistics.Application
             IRepository AggregateRepositoryProvider() =>
                 new AggregateRepository(eventStore, eventBus);
 
-            var shoppingCartStore = InMemoryReadModelStore<LogisticsCartReadModel>.GetInstance();
-            ILogisticsCartReadModelRepository LogisticsCartReadModelRepositoryProvider() =>
-                new LogisticsCartReadModelRepository(shoppingCartStore);
-
-            var orderStore = InMemoryReadModelStore<OrderReadModel>.GetInstance();
-            IOrderReadModelRepository OrderReadModelRepositoryProvider() =>
-                new OrderReadModelRepository(orderStore);
+            var shipmentStore = InMemoryReadModelStore<ShipmentReadModel>.GetInstance();
+            IShipmentReadModelRepository ShipmentReadModelRepositoryProvider() =>
+                new ShipmentReadModelRepository(shipmentStore);
 
             var commandHandlerFactory = CommandHandlerFactoryRegistration.NewCommandHandlerFactory(AggregateRepositoryProvider);
             var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
-
-            IRepository SagaRepositoryProvider() =>
-                new SagaRepository(AggregateRepositoryProvider(), commandDispatcher);
 
             IContextEventProducer ContextEventProducer() =>
                 EventProducerFactory.GetEventProducer();
 
             var eventHandlerFactory = EventHandlerFactoryRegistration.NewEventHandlerFactory(
                 AggregateRepositoryProvider,
-                SagaRepositoryProvider,
-                LogisticsCartReadModelRepositoryProvider,
-                OrderReadModelRepositoryProvider,
+                ShipmentReadModelRepositoryProvider,
                 ContextEventProducer);
             var eventDispatcher = new EventDispatcher(eventHandlerFactory);
             var eventProcessor = new EventProcessor(eventBus, eventDispatcher);
 
             return new PretendApplication(
-                LogisticsCartReadModelRepositoryProvider(),
-                OrderReadModelRepositoryProvider(),
+                ShipmentReadModelRepositoryProvider(),
                 commandDispatcher);
         }
 
@@ -58,17 +47,14 @@ namespace EventSourcingPoc.Logistics.Application
             private readonly ICommandDispatcher _commandDispatcher;
 
             public PretendApplication(
-                ILogisticsCartReadModelRepository shoppingCartReadModelRepository,
-                IOrderReadModelRepository orderReadModelRepository,
+                IShipmentReadModelRepository shipmentReadModelRepository,
                 ICommandDispatcher commandDispatcher)
             {
-                LogisticsCartReadModelRepository = shoppingCartReadModelRepository;
-                OrderReadModelRepository = orderReadModelRepository;
+                ShipmentReadModelRepository = shipmentReadModelRepository;
                 _commandDispatcher = commandDispatcher;
             }
 
-            public ILogisticsCartReadModelRepository LogisticsCartReadModelRepository { get; }
-            public IOrderReadModelRepository OrderReadModelRepository { get; }
+            public IShipmentReadModelRepository ShipmentReadModelRepository { get; }
 
             public async Task SendAsync<TCommand>(TCommand cmd)
                 where TCommand : ICommand

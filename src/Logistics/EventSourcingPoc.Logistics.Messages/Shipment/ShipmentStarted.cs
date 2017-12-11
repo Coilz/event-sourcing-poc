@@ -3,9 +3,9 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Logistics.Messages.Shipping
 {
-    public class AddressConfirmed : Event
+    public class ShipmentStarted : Event
     {
-        public AddressConfirmed(Guid aggregateId, int version)
+        public ShipmentStarted(Guid aggregateId, int version)
             : base(aggregateId, version)
         {
         }

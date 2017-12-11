@@ -1,15 +1,12 @@
 using System.Threading.Tasks;
 using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.EventSourcing.Handlers;
-using EventSourcingPoc.EventSourcing.Persistence;
-using EventSourcingPoc.Logistics.Domain.Shipping;
-using EventSourcingPoc.Logistics.Messages.Orders;
 using EventSourcingPoc.Logistics.Messages.Shipping;
 
 namespace EventSourcingPoc.Logistics.EventProcessing
 {
     public class ContextEventHandler
-        : IEventHandler<ShippingProcessStarted>
+        : IEventHandler<ShipmentDelivered>
     {
         private readonly IContextEventProducer _eventProducer;
         public ContextEventHandler(IContextEventProducer eventProducer)
@@ -17,7 +14,7 @@ namespace EventSourcingPoc.Logistics.EventProcessing
             _eventProducer = eventProducer;
         }
 
-        public async Task HandleAsync(ShippingProcessStarted @event)
+        public async Task HandleAsync(ShipmentDelivered @event)
         {
             await _eventProducer.ProduceAsync(@event);
         }
