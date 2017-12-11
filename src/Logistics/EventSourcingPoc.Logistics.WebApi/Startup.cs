@@ -21,7 +21,7 @@ namespace EventSourcingPoc.Logistics.WebApi
             services.AddMvc();
 
             var app = Bootstrap();
-            app.EventConsumer.Start();
+            // app.EventConsumer.Start();
             services.AddSingleton(app);
         }
 

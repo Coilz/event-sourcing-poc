@@ -2,11 +2,13 @@ using EventSourcingPoc.EventSourcing.Handlers;
 using System;
 using EventSourcingPoc.Logistics.Messages.Shipping;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace EventSourcingPoc.Readmodels.Shipping
 {
     public class ShipmentEventHandler
-        : IEventHandler<ShipmentStarted>
+        : IEventHandler<ShipmentCreated>
+        , IEventHandler<ShipmentStarted>
         , IEventHandler<ShipmentDelivered>
     {
         private readonly IShipmentReadModelRepository _repository;
@@ -14,6 +16,16 @@ namespace EventSourcingPoc.Readmodels.Shipping
         public ShipmentEventHandler(IShipmentReadModelRepository repository)
         {
             _repository = repository;
+        }
+
+        public async Task HandleAsync(ShipmentCreated @event)
+        {
+            var items = @event.ShippingItems
+                .Select(item =>
+                    new ShipmentItemReadModel(item.ProductId, item.Quantity));
+
+            var newModel = new ShipmentReadModel(@event.AggregateId, @event.CustomerId, items);
+            await _repository.SaveAsync(newModel);
         }
 
         public async Task HandleAsync(ShipmentStarted @event)

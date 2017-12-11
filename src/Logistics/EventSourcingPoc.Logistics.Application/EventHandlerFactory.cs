@@ -17,6 +17,12 @@ namespace EventSourcingPoc.Logistics.Application
             var eventHandlerFactory = new EventHandlerFactory();
 
             eventHandlerFactory.RegisterFactory(
+                () => new Readmodels.Shipping.ShipmentEventHandler(readModelRepositoryProvider()),
+                typeof(ShipmentCreated),
+                typeof(ShipmentStarted),
+                typeof(ShipmentDelivered));
+
+            eventHandlerFactory.RegisterFactory(
                 () => new ContextEventHandler(contextEventProducerProvider()),
                 typeof(ShipmentDelivered));
 
