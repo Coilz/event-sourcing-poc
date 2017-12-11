@@ -12,6 +12,7 @@ services:
       - kafka
     environment:
       DB_CONNECTION: postgres://db:5432
+      ASPNETCORE_ENVIRONMENT: Development
 
   shopping:
     image: coilz/web-store-shopping-api
@@ -23,6 +24,7 @@ services:
       - kafka
     environment:
       DB_CONNECTION: postgres://db:5432
+      ASPNETCORE_ENVIRONMENT: Development
 
   readmodels:
     image: coilz/web-store-readmodels-api
@@ -34,6 +36,7 @@ services:
       - kafka
     environment:
       DB_CONNECTION: postgres://db:5432
+      ASPNETCORE_ENVIRONMENT: Development
 
   logistics:
     image: coilz/web-store-logistics-api
@@ -45,6 +48,7 @@ services:
       - kafka
     environment:
       DB_CONNECTION: postgres://db:5432
+      ASPNETCORE_ENVIRONMENT: Development
 
   db:
     image: postgres

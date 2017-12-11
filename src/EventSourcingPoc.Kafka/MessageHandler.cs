@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Confluent.Kafka;
 using EventSourcingPoc.EventSourcing.Handlers;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace EventSourcingPoc.Kafka
@@ -10,21 +11,27 @@ namespace EventSourcingPoc.Kafka
     {
         private readonly IEventDispatcher _eventDispatcher;
         private readonly IDictionary<string, Type> _messageTypes;
+        private readonly ILogger _logger;
 
-        public MessageHandler(IEventDispatcher eventDispatcher, IDictionary<string, Type> messageTypes)
+        public MessageHandler(IEventDispatcher eventDispatcher, IDictionary<string, Type> messageTypes, ILogger logger)
         {
             _eventDispatcher = eventDispatcher;
             _messageTypes = messageTypes;
+            _logger = logger;
         }
 
         public IEnumerable<string> Topics => _messageTypes.Keys;
 
         public void OnMessage(object sender, Message<string, string> e)
         {
+            _logger.LogInformation($"Handling topic: {e.Topic}, message: {e.Value}");
             var messageType = _messageTypes[e.Topic];
-            dynamic @event = JsonConvert.DeserializeObject(e.Value, messageType);
+            var evt = JsonConvert.DeserializeObject(e.Value, messageType);
 
-            dynamic typeAwareEvent = @event; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
+            _logger.LogInformation($"Handling topic: {e.Topic}, type: {evt.GetType()}");
+
+            dynamic typeAwareEvent = evt; //this cast is required to pass the correct Type to the Notify Method. Otherwise IEvent is used as the Type
+            _logger.LogInformation($"Handling topic: {e.Topic}, typeAware: {typeAwareEvent.GetType()}");
             _eventDispatcher.SendAsync(typeAwareEvent);
         }
     }

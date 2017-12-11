@@ -4,18 +4,19 @@ using EventSourcingPoc.EventProcessing;
 using EventSourcingPoc.EventSourcing.Handlers;
 using EventSourcingPoc.Kafka;
 using EventSourcingPoc.Logistics.Messages.Shipment;
+using Microsoft.Extensions.Logging;
 
 namespace EventSourcingPoc.Logistics.Application
 {
     static class EventConsumerFactory
     {
         private static EventConsumer _instance;
-        public static EventConsumer GetEventConsumer(IEventDispatcher eventDispatcher)
+        public static EventConsumer GetEventConsumer(IEventDispatcher eventDispatcher, ILogger logger)
         {
-            return _instance ?? (_instance = CreateEventConsumer(eventDispatcher));
+            return _instance ?? (_instance = CreateEventConsumer(eventDispatcher, logger));
         }
 
-        private static EventConsumer CreateEventConsumer(IEventDispatcher eventDispatcher)
+        private static EventConsumer CreateEventConsumer(IEventDispatcher eventDispatcher, ILogger logger)
         {
             // TODO: get this from appsettings or so
             var options = new EventConsumerOptions
@@ -26,16 +27,17 @@ namespace EventSourcingPoc.Logistics.Application
                 GroupId = "logistics.context",
                 StatisticsIntervalMilliseconds = 5000
             };
-            return new EventConsumer(CreateMessageHandler(eventDispatcher), options);
+            return new EventConsumer(CreateMessageHandler(eventDispatcher, logger), options);
         }
 
 
-        private static IMessageHandler CreateMessageHandler(IEventDispatcher eventDispatcher)
+        private static IMessageHandler CreateMessageHandler(IEventDispatcher eventDispatcher, ILogger logger)
         {
             return new MessageHandler(eventDispatcher, new Dictionary<string, Type>
                 {
                     {typeof(ShippingProcessStarted).Name, typeof(ShippingProcessStarted)}
-                });
+                },
+                logger);
         }
     }
 }

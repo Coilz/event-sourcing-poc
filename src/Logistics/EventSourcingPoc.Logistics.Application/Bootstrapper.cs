@@ -9,12 +9,13 @@ using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Kafka;
 using EventSourcingPoc.Messages;
 using EventSourcingPoc.Readmodels.Shipping;
+using Microsoft.Extensions.Logging;
 
 namespace EventSourcingPoc.Logistics.Application
 {
     public class Bootstrapper
     {
-        public static PretendApplication Bootstrap()
+        public static PretendApplication Bootstrap(ILogger logger)
         {
             var eventBus = EventBus.GetInstance();
 
@@ -39,7 +40,7 @@ namespace EventSourcingPoc.Logistics.Application
             var eventDispatcher = new EventDispatcher(eventHandlerFactory);
             var eventProcessor = new EventProcessor(eventBus, eventDispatcher);
 
-            var eventConsumer = EventConsumerFactory.GetEventConsumer(eventDispatcher);
+            var eventConsumer = EventConsumerFactory.GetEventConsumer(eventDispatcher, logger);
 
             return new PretendApplication(
                 ShipmentReadModelRepositoryProvider(),

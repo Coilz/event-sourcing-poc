@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using static EventSourcingPoc.Logistics.Application.Bootstrapper;
 
 namespace EventSourcingPoc.Logistics.WebApi
@@ -20,9 +21,10 @@ namespace EventSourcingPoc.Logistics.WebApi
         {
             services.AddMvc();
 
-            var app = Bootstrap();
-            // app.EventConsumer.Start();
-            services.AddSingleton(app);
+            services.AddSingleton(provider => {
+                var logger = provider.GetService<ILogger>();
+                return Bootstrap(logger);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
