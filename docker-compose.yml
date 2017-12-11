@@ -1,6 +1,7 @@
 version: '2'
 
 services:
+
   customer:
     image: coilz/web-store-customer-api
     ports:
@@ -27,6 +28,17 @@ services:
     image: coilz/web-store-readmodels-api
     ports:
       - "5002:5000"
+    depends_on:
+      - db
+      - zookeeper
+      - kafka
+    environment:
+      DB_CONNECTION: postgres://db:5432
+
+  logistics:
+    image: coilz/web-store-logistics-api
+    ports:
+      - "5003:5000"
     depends_on:
       - db
       - zookeeper
