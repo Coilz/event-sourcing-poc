@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,7 +21,14 @@ namespace EventSourcingPoc.Readmodels.Shop
         {
             var carts = await _store.GetAllAsync();
 
-            return Enumerable.Any(carts, cart => cart.CustomerId == customerId);
+            return carts.Any(cart => cart.CustomerId == customerId);
+        }
+
+        public async Task<IEnumerable<Guid>> GetCartsAsync(Guid customerId)
+        {
+            var carts = await _store.GetAllAsync();
+
+            return carts.Select(cart => cart.Id);
         }
 
         public async Task RemoveAsync(Guid id)

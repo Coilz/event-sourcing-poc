@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventSourcingPoc.Messages;
 using EventSourcingPoc.Shopping.Messages.Shop;
@@ -21,9 +22,9 @@ namespace EventSourcingPoc.Shopping.WebApi.Controllers
 
         [Route(template: "Customer/{customerId}/ShoppingCart")]
         [HttpGet]
-        public async Task<bool> HasCartAsync(Guid customerId)
+        public async Task<IEnumerable<Guid>> GetCarts(Guid customerId)
         {
-            return await _app.ShoppingCartReadModelRepository.HasCartAsync(customerId);
+            return await _app.ShoppingCartReadModelRepository.GetCartsAsync(customerId);
         }
 
         [Route(template: "Customer/{customerId}/ShoppingCart")]
