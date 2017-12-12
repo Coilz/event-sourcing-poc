@@ -44,17 +44,17 @@ namespace EventSourcingPoc.Kafka
 
         private void Producer_OnError(object sender, Error e)
         {
-            _logger.LogError($"Produced error reason: {e.Reason}");
+            _logger.LogError($"Producer error, reason: {e.Reason}, {e}");
         }
 
         private void Producer_OnLog(object sender, LogMessage e)
         {
-            _logger.LogInformation($"Produced log message: {e.Message}");
+            _logger.LogInformation($"Producer log, message: {e.Message}, {e}");
         }
 
         private void Producer_OnStatistics(object sender, string e)
         {
-            _logger.LogInformation($"Produced statistics: {e}");
+            _logger.LogInformation($"Producer statistics: {e}");
         }
 
         #region IDisposable Support

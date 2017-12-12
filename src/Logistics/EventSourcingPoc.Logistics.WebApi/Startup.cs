@@ -24,13 +24,15 @@ namespace EventSourcingPoc.Logistics.WebApi
         {
             services.AddMvc();
 
-            services.AddSingleton(provider => {
-                var logger = _loggerFactory.CreateLogger("Logistics.WebApi");
-                var app = Bootstrap(logger);
-                app.EventConsumer.Start();
+            services.AddSingleton(CreateApplication());
+        }
 
-                return app;
-            });
+        private PretendApplication CreateApplication()
+        {
+            var logger = _loggerFactory.CreateLogger("Logistics.WebApi");
+            var app = Bootstrap(logger);
+            app.EventConsumer.Start();
+            return app;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
