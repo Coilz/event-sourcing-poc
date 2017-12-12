@@ -23,11 +23,11 @@ namespace EventSourcingPoc.Logistics.Application
             {
                 Brokers = new string[] {"kafka"},
                 AutoCommit = true,
-                CommitIntervalMilliseconds = 1000,
-                GroupId = "logistics.context",
-                StatisticsIntervalMilliseconds = 5000
+                CommitIntervalMilliseconds = 5000,
+                GroupId = "logistics-context",
+                StatisticsIntervalMilliseconds = 60000
             };
-            return new EventConsumer(CreateMessageHandler(eventDispatcher, logger), options);
+            return new EventConsumer(CreateMessageHandler(eventDispatcher, logger), options, logger);
         }
 
 

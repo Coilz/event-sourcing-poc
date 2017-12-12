@@ -4,6 +4,7 @@ using EventSourcingPoc.Logistics.EventProcessing;
 using EventSourcingPoc.Logistics.Messages.Shipping;
 using EventSourcingPoc.Readmodels.Shipping;
 using System;
+using EventSourcingPoc.Logistics.Messages.Shipment;
 
 namespace EventSourcingPoc.Logistics.Application
 {
@@ -15,6 +16,10 @@ namespace EventSourcingPoc.Logistics.Application
             Func<IContextEventProducer> contextEventProducerProvider)
         {
             var eventHandlerFactory = new EventHandlerFactory();
+
+            eventHandlerFactory.RegisterFactory(
+                () => new EventProcessing.ShipmentEventHandler(aggregateRepositoryProvider()),
+                typeof(ShippingProcessStarted));
 
             eventHandlerFactory.RegisterFactory(
                 () => new Readmodels.Shipping.ShipmentEventHandler(readModelRepositoryProvider()),

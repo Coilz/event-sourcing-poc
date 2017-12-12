@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace EventSourcingPoc.Kafka
 {
@@ -14,10 +15,12 @@ namespace EventSourcingPoc.Kafka
         private const int Timeout = 1000;
         private readonly IMessageHandler _messageHandler;
         private Consumer<string, string> _consumer;
+        private readonly ILogger _logger;
 
-        public EventConsumer(IMessageHandler messageHandler, EventConsumerOptions options)
+        public EventConsumer(IMessageHandler messageHandler, EventConsumerOptions options, ILogger logger)
         {
             _messageHandler = messageHandler;
+            _logger = logger;
 
             _consumer = new Consumer<string, string>(
                 options.ConstructConfig(),
@@ -44,6 +47,7 @@ namespace EventSourcingPoc.Kafka
 
             Consuming = true;
             _consumer.Subscribe(_messageHandler.Topics);
+            _logger.LogInformation($"Subscribed to: [{string.Join(", ", _consumer.Subscription)}]");
 
             Task.Run(() => {
                 while (Consuming)
@@ -65,42 +69,56 @@ namespace EventSourcingPoc.Kafka
 
         private void Consumer_OnStatistics(object sender, string e)
         {
-            // TODO: log stuff here
+            _logger.LogInformation($"Consumer statistics: {e}");
         }
 
         private void Consumer_OnPartitionsRevoked(object sender, List<TopicPartition> e)
         {
-            // TODO: log stuff here
+            foreach (var topicPartition in e)
+            {
+                _logger.LogInformation($"Consumer partitions revoked, topic: {topicPartition.Topic}, {topicPartition}");
+            }
+            _consumer.Unassign();
         }
 
         private void Consumer_OnPartitionsAssigned(object sender, List<TopicPartition> e)
         {
-            // TODO: log stuff here
+            foreach (var topicPartition in e)
+            {
+                _logger.LogInformation($"Consumer partitions assigned, topic: {topicPartition.Topic}, {topicPartition}");
+            }
+            _consumer.Assign(e);
         }
 
         private void Consumer_OnPartitionEOF(object sender, TopicPartitionOffset e)
         {
-            // TODO: log stuff here
+            _logger.LogInformation($"Consumer PartitionEOF, topic: {e.Topic}, {e}");
         }
 
         private void Consumer_OnOffsetsCommitted(object sender, CommittedOffsets e)
         {
-            // TODO: log stuff here
+            _logger.LogInformation($"Consumer offsets [{string.Join(", ", e.Offsets)}]");
+
+            if (e.Error)
+            {
+                _logger.LogInformation($"Consumer failed to commit offsets: {e.Error}");
+            }
+            _logger.LogInformation($"Consumer successfully committed offsets: [{string.Join(", ", e.Offsets)}]");
         }
 
         private void Consumer_OnLog(object sender, LogMessage e)
         {
-            // TODO: log stuff here
+            _logger.LogInformation($"Consumer log, message: {e.Message}, {e}");
         }
 
         private void Consumer_OnError(object sender, Error e)
         {
-            // TODO: log stuff here
+            _logger.LogError($"Consumer error, reason: {e.Reason}, {e}");
         }
 
         private void Consumer_OnConsumeError(object sender, Message e)
         {
-            // TODO: log stuff here
+            _logger.LogError($"Consumer error, topic: {e.Topic}, {e}");
         }
 
         #region IDisposable Support

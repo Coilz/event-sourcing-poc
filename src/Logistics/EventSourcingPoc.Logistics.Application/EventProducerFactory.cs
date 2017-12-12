@@ -16,9 +16,11 @@ namespace EventSourcingPoc.Logistics.Application
 
         private static IContextEventProducer CreateEventProducer(ILogger logger)
         {
+            // TODO: get this from appsettings or so
             var options = new EventProducerOptions
             {
-                Brokers = new string[] {"kafka"} // TODO: get this from appsettings or so
+                Brokers = new string[] {"kafka"},
+                StatisticsIntervalMilliseconds = 60000
             };
 
             return new EventProducer(options, new Dictionary<Type, string>(), logger);
