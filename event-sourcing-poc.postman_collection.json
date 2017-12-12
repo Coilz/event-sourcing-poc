@@ -1,0 +1,177 @@
+{
+	"info": {
+		"name": "event-sourcing-poc",
+		"_postman_id": "1a4287ce-ff41-23e1-b618-b91cd6ac65f4",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "post Customer-ShoppingCart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5901/api/Customer/ab9274d1-3ad7-4d87-9b23-b84890fdc455/ShoppingCart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5901",
+					"path": [
+						"api",
+						"Customer",
+						"ab9274d1-3ad7-4d87-9b23-b84890fdc455",
+						"ShoppingCart"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get Customer-ShoppingCarts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5901/api/Customer/ab9274d1-3ad7-4d87-9b23-b84890fdc455/ShoppingCart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5901",
+					"path": [
+						"api",
+						"Customer",
+						"ab9274d1-3ad7-4d87-9b23-b84890fdc455",
+						"ShoppingCart"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "post ShoppingCart-Product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5901/api/ShoppingCart/9a964690-b6c8-4afb-905f-772b671792d8/Product/baa89751-3874-4c66-99e3-59992119873c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5901",
+					"path": [
+						"api",
+						"ShoppingCart",
+						"9a964690-b6c8-4afb-905f-772b671792d8",
+						"Product",
+						"baa89751-3874-4c66-99e3-59992119873c"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "put ShoppingCart-Checkout",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5901/api/ShoppingCart/9a964690-b6c8-4afb-905f-772b671792d8/Checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5901",
+					"path": [
+						"api",
+						"ShoppingCart",
+						"9a964690-b6c8-4afb-905f-772b671792d8",
+						"Checkout"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get Customer-Shipments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5903/api/Customer/ab9274d1-3ad7-4d87-9b23-b84890fdc455/Shipment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5903",
+					"path": [
+						"api",
+						"Customer",
+						"ab9274d1-3ad7-4d87-9b23-b84890fdc455",
+						"Shipment"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "post EventConsumer-Start",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5903/api/EventConsumer/Start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5903",
+					"path": [
+						"api",
+						"EventConsumer",
+						"Start"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "post EventConsumer-Stop",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5903/api/EventConsumer/Stop",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5903",
+					"path": [
+						"api",
+						"EventConsumer",
+						"Stop"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
