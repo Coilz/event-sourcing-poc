@@ -8,12 +8,13 @@ using EventSourcingPoc.EventSourcing.Persistence;
 using EventSourcingPoc.Messages;
 using EventSourcingPoc.Readmodels.Orders;
 using EventSourcingPoc.Readmodels.Shop;
+using Microsoft.Extensions.Logging;
 
 namespace EventSourcingPoc.Shopping.Application
 {
     public class Bootstrapper
     {
-        public static PretendApplication Bootstrap()
+        public static PretendApplication Bootstrap(ILogger logger)
         {
             var eventBus = EventBus.GetInstance();
 
@@ -36,7 +37,7 @@ namespace EventSourcingPoc.Shopping.Application
                 new SagaRepository(AggregateRepositoryProvider(), commandDispatcher);
 
             IContextEventProducer ContextEventProducer() =>
-                EventProducerFactory.GetEventProducer();
+                EventProducerFactory.GetEventProducer(logger);
 
             var eventHandlerFactory = EventHandlerFactoryRegistration.NewEventHandlerFactory(
                 AggregateRepositoryProvider,

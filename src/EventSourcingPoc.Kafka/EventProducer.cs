@@ -7,15 +7,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using EventSourcingPoc.EventProcessing;
+using Microsoft.Extensions.Logging;
 
 namespace EventSourcingPoc.Kafka
 {
     public class EventProducer : IContextEventProducer
     {
+        private readonly IDictionary<Type, string> _messageTopics;
         private Producer<string, string> _producer;
+        private readonly ILogger _logger;
 
-        public EventProducer(EventProducerOptions options)
+        public EventProducer(EventProducerOptions options, IDictionary<Type, string> messageTopics, ILogger logger)
         {
+            _messageTopics = messageTopics;
+            _logger = logger;
+
             _producer = new Producer<string, string>(
                 options.ConstructConfig(),
                 new StringSerializer(Encoding.UTF8),
@@ -30,23 +36,25 @@ namespace EventSourcingPoc.Kafka
             where T : Event
         {
             string json = JsonConvert.SerializeObject(@event);
-            var deliveryReport = await _producer.ProduceAsync(typeof(T).Name, @event.AggregateId.ToString(), json);
-            // TODO: log result stuff here
+            var topic = _messageTopics[typeof(T)];
+            var deliveryReport = await _producer.ProduceAsync(topic, @event.AggregateId.ToString(), json);
+
+            _logger.LogInformation($"Produced event on topic: {deliveryReport.Topic}, value {deliveryReport.Value}");
         }
 
         private void Producer_OnError(object sender, Error e)
         {
-            // TODO: log stuff here
+            _logger.LogError($"Produced error reason: {e.Reason}");
         }
 
         private void Producer_OnLog(object sender, LogMessage e)
         {
-            // TODO: log stuff here
+            _logger.LogInformation($"Produced log message: {e.Message}");
         }
 
         private void Producer_OnStatistics(object sender, string e)
         {
-            // TODO: log stuff here
+            _logger.LogInformation($"Produced statistics: {e}");
         }
 
         #region IDisposable Support

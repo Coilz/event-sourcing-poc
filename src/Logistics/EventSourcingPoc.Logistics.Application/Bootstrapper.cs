@@ -31,7 +31,7 @@ namespace EventSourcingPoc.Logistics.Application
             var commandDispatcher = new CommandDispatcher(commandHandlerFactory);
 
             IContextEventProducer ContextEventProducer() =>
-                EventProducerFactory.GetEventProducer();
+                EventProducerFactory.GetEventProducer(logger);
 
             var eventHandlerFactory = EventHandlerFactoryRegistration.NewEventHandlerFactory(
                 AggregateRepositoryProvider,

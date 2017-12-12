@@ -11,7 +11,7 @@ namespace EventSourcingPoc.Kafka
 {
     public class EventConsumer : IDisposable
     {
-        private const int Timeout = 100;
+        private const int Timeout = 1000;
         private readonly IMessageHandler _messageHandler;
         private Consumer<string, string> _consumer;
 
@@ -45,10 +45,12 @@ namespace EventSourcingPoc.Kafka
             Consuming = true;
             _consumer.Subscribe(_messageHandler.Topics);
 
-            while (Consuming)
-            {
-                _consumer.Poll(TimeSpan.FromMilliseconds(Timeout));
-            }
+            Task.Run(() => {
+                while (Consuming)
+                {
+                    _consumer.Poll(TimeSpan.FromMilliseconds(Timeout));
+                }
+            });
         }
 
         public void Stop()

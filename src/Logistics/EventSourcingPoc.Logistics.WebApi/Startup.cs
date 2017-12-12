@@ -9,9 +9,12 @@ namespace EventSourcingPoc.Logistics.WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILoggerFactory _loggerFactory;
+
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             Configuration = configuration;
+            _loggerFactory = loggerFactory;
         }
 
         public IConfiguration Configuration { get; }
@@ -22,8 +25,11 @@ namespace EventSourcingPoc.Logistics.WebApi
             services.AddMvc();
 
             services.AddSingleton(provider => {
-                var logger = provider.GetService<ILogger>();
-                return Bootstrap(logger);
+                var logger = _loggerFactory.CreateLogger("Logistics.WebApi");
+                var app = Bootstrap(logger);
+                app.EventConsumer.Start();
+
+                return app;
             });
         }
 

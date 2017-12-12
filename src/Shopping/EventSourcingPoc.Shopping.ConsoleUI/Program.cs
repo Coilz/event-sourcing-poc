@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EventSourcingPoc.Shopping.Application;
 using EventSourcingPoc.Shopping.Messages.Orders;
 using EventSourcingPoc.Shopping.Messages.Shop;
+using Microsoft.Extensions.Logging;
 
 namespace EventSourcingPoc.Shopping.ConsoleUI
 {
@@ -13,7 +14,8 @@ namespace EventSourcingPoc.Shopping.ConsoleUI
         {
             try
             {
-                var app = Bootstrapper.Bootstrap();
+                ILogger logger = new Microsoft.Extensions.Logging.LoggerFactory().CreateLogger("Shopping.ConsoleUI");
+                var app = Bootstrapper.Bootstrap(logger);
                 var program = new Program(app);
                 program.StartAsync().GetAwaiter().GetResult();;
             }

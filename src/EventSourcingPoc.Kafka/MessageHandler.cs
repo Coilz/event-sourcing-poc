@@ -25,6 +25,7 @@ namespace EventSourcingPoc.Kafka
         public void OnMessage(object sender, Message<string, string> e)
         {
             _logger.LogInformation($"Handling topic: {e.Topic}, message: {e.Value}");
+
             var messageType = _messageTypes[e.Topic];
             var evt = JsonConvert.DeserializeObject(e.Value, messageType);
 

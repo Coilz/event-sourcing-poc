@@ -35,7 +35,7 @@ namespace EventSourcingPoc.Logistics.Application
         {
             return new MessageHandler(eventDispatcher, new Dictionary<string, Type>
                 {
-                    {typeof(ShippingProcessStarted).Name, typeof(ShippingProcessStarted)}
+                    {"shipping-started", typeof(ShippingProcessStarted)}
                 },
                 logger);
         }

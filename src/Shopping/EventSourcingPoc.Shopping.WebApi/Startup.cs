@@ -22,8 +22,10 @@ namespace EventSourcingPoc.Shopping.WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILoggerFactory _loggerFactory;
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
+            _loggerFactory = loggerFactory;
             Configuration = configuration;
         }
 
@@ -33,7 +35,12 @@ namespace EventSourcingPoc.Shopping.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton(Bootstrap());
+
+            services.AddSingleton(provider =>
+            {
+                var logger = _loggerFactory.CreateLogger("Shopping.WebApi");
+                return Bootstrap(logger);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
