@@ -11,7 +11,6 @@ using EventSourcingPoc.Shopping.EventProcessing;
 using EventSourcingPoc.Shopping.Messages.Orders;
 using EventSourcingPoc.Shopping.Messages.Shipping;
 using EventSourcingPoc.Shopping.Messages.Shop;
-using ShoppingCartEventHandler = EventSourcingPoc.Readmodels.Shop.ShoppingCartEventHandler;
 
 namespace EventSourcingPoc.Shopping.Application
 {
@@ -35,18 +34,14 @@ namespace EventSourcingPoc.Shopping.Application
                 typeof(CartCheckedOut));
 
             eventHandlerFactory.RegisterFactory(
-                () => new EventProcessing.ShoppingCartEventHandler(aggregateRepositoryProvider()),
-                typeof(CartCheckedOut));
-
-            eventHandlerFactory.RegisterFactory(
                 () => new EventProcessing.ContextEventHandler(contextEventProducerProvider()),
-                typeof(ShippingProcessStarted));
+                typeof(CompletedForShipping));
 
             eventHandlerFactory.RegisterFactory(
                 () => new ShippingEventHandler(sagaRepositoryProvider()),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
-                typeof(ShippingAddressConfirmed),
+                typeof(ShippingAddressProvided),
                 typeof(PaymentConfirmed),
                 typeof(AddressConfirmed));
 
@@ -54,8 +49,8 @@ namespace EventSourcingPoc.Shopping.Application
                 () => new OrderEventHandler(orderReadModelRepositoryProvider()),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
-                typeof(ShippingAddressConfirmed),
-                typeof(ShippingProcessStarted),
+                typeof(ShippingAddressProvided),
+                typeof(OrderShipped),
                 typeof(OrderDelivered),
                 typeof(OrderCompleted));
 

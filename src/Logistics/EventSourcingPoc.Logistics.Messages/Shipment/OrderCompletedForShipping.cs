@@ -4,9 +4,9 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Logistics.Messages.Shipment
 {
-    public class ShippingProcessStarted : Event
+    public class OrderCompletedForShipping : Event
     {
-        public ShippingProcessStarted(Guid aggregateId, Guid customerId, ShipmentItem[] items)
+        public OrderCompletedForShipping(Guid aggregateId, Guid customerId, ShipmentItem[] items)
             : base(aggregateId)
         {
             CustomerId = customerId;

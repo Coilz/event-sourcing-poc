@@ -9,14 +9,14 @@ namespace EventSourcingPoc.Logistics.EventProcessing
 {
     public class ShipmentEventHandler
         : EventHandler<Shipment>
-        , IEventHandler<ShippingProcessStarted>
+        , IEventHandler<OrderCompletedForShipping>
    {
         public ShipmentEventHandler(IRepository repository)
             : base(repository)
         {
         }
 
-        public async Task HandleAsync(ShippingProcessStarted @event)
+        public async Task HandleAsync(OrderCompletedForShipping @event)
         {
             var shipment = Shipment.Create(@event.AggregateId, @event.CustomerId, @event.Items);
             await Repository.SaveAsync(shipment);

@@ -9,6 +9,7 @@ namespace EventSourcingPoc.Readmodels.Orders
         {
             None = 0,
             Created,
+            PartiallyComplete,
             Complete,
             Shipped,
             Delivered,
@@ -26,7 +27,7 @@ namespace EventSourcingPoc.Readmodels.Orders
         public Guid CustomerId { get; }
         public IEnumerable<OrderItemReadModel> Items { get; }
         public bool Payed { get; private set; }
-        public bool ShippingAddressConfirmed { get; private set; }
+        public bool ShippingAddressProvided { get; private set; }
         public bool Shipped { get; private set; }
         public bool Delivered { get; private set; }
         public bool Completed { get; private set; }
@@ -37,18 +38,20 @@ namespace EventSourcingPoc.Readmodels.Orders
                 ? OrderStatus.Delivered
                 : Shipped
                     ? OrderStatus.Shipped
-                    : Payed && ShippingAddressConfirmed
+                    : Payed && ShippingAddressProvided
                         ? OrderStatus.Complete
-                        : OrderStatus.Created;
+                        : Payed || ShippingAddressProvided
+                            ? OrderStatus.PartiallyComplete
+                            : OrderStatus.Created;
 
         public void Pay()
         {
             Payed = true;
         }
 
-        public void ConfirmShippingAddress()
+        public void ProvideShippingAddress()
         {
-            ShippingAddressConfirmed = true;
+            ShippingAddressProvided = true;
         }
 
         public void Ship()

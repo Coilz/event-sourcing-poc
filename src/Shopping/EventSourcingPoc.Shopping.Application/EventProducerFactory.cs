@@ -28,7 +28,7 @@ namespace EventSourcingPoc.Shopping.Application
         {
             return new Dictionary<Type, string>
             {
-                {typeof(ShippingProcessStarted), "shipping-started"}
+                {typeof(CompletedForShipping), "order-completed"}
             };
         }
     }

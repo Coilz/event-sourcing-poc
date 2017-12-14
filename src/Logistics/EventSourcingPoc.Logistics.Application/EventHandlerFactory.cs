@@ -19,7 +19,7 @@ namespace EventSourcingPoc.Logistics.Application
 
             eventHandlerFactory.RegisterFactory(
                 () => new EventProcessing.ShipmentEventHandler(aggregateRepositoryProvider()),
-                typeof(ShippingProcessStarted));
+                typeof(OrderCompletedForShipping));
 
             eventHandlerFactory.RegisterFactory(
                 () => new Readmodels.Shipping.ShipmentEventHandler(readModelRepositoryProvider()),

@@ -9,7 +9,7 @@ using EventSourcingPoc.Shopping.Messages.Shipping;
 namespace EventSourcingPoc.Shopping.EventProcessing
 {
     public class ContextEventHandler
-        : IEventHandler<ShippingProcessStarted>
+        : IEventHandler<CompletedForShipping>
     {
         private readonly IContextEventProducer _eventProducer;
         public ContextEventHandler(IContextEventProducer eventProducer)
@@ -17,7 +17,7 @@ namespace EventSourcingPoc.Shopping.EventProcessing
             _eventProducer = eventProducer;
         }
 
-        public async Task HandleAsync(ShippingProcessStarted @event)
+        public async Task HandleAsync(CompletedForShipping @event)
         {
             await _eventProducer.ProduceAsync(@event);
         }

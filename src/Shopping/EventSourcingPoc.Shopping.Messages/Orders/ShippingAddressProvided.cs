@@ -3,10 +3,10 @@ using EventSourcingPoc.Messages;
 
 namespace EventSourcingPoc.Shopping.Messages.Orders
 {
-    public class ShippingAddressConfirmed : Event
+    public class ShippingAddressProvided : Event
     {
         public Address Address { get; }
-        public ShippingAddressConfirmed(Guid aggregateId, int version, Address address)
+        public ShippingAddressProvided(Guid aggregateId, int version, Address address)
             : base(aggregateId, version)
         {
             Address = address;

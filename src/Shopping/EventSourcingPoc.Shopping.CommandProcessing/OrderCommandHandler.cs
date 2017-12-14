@@ -9,6 +9,7 @@ namespace EventSourcingPoc.Shopping.CommandProcessing
 {
     public class OrderCommandHandler
         : CommandHandler<Order>
+        , ICommandHandler<PlaceOrder>
         , ICommandHandler<PayForOrder>
         , ICommandHandler<ConfirmShippingAddress>
         , ICommandHandler<CompleteOrder>
@@ -16,6 +17,12 @@ namespace EventSourcingPoc.Shopping.CommandProcessing
         public OrderCommandHandler(IRepository repository)
             : base(repository)
         {}
+
+        public async Task HandleAsync(PlaceOrder command)
+        {
+            var order = Order.Create(command.OrderId, command.CustomerId, command.OrderItems);
+            await Repository.SaveAsync(order);
+        }
 
         public async Task HandleAsync(PayForOrder command)
         {

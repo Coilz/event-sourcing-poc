@@ -28,7 +28,7 @@ namespace EventSourcingPoc.Shopping.Domain.Orders
         {
             if (_shippingAddressProvided || _completed) return;
 
-            ApplyChange((id, version) => new ShippingAddressConfirmed(id, version, address));
+            ApplyChange((id, version) => new ShippingAddressProvided(id, version, address));
         }
 
         public void Pay()
@@ -51,7 +51,7 @@ namespace EventSourcingPoc.Shopping.Domain.Orders
             {
                 yield return CreateApplier<OrderCreated>(Apply);
                 yield return CreateApplier<PaymentReceived>(Apply);
-                yield return CreateApplier<ShippingAddressConfirmed>(Apply);
+                yield return CreateApplier<ShippingAddressProvided>(Apply);
                 yield return CreateApplier<OrderCompleted>(Apply);
             }
         }
@@ -60,7 +60,7 @@ namespace EventSourcingPoc.Shopping.Domain.Orders
         {
         }
 
-        private void Apply(ShippingAddressConfirmed evt)
+        private void Apply(ShippingAddressProvided evt)
         {
             _shippingAddressProvided = true;
         }

@@ -11,8 +11,8 @@ namespace EventSourcingPoc.Shopping.Messages.Orders
         public OrderCreated(Guid aggregateId, Guid customerId, params OrderItem[] items)
             : base(aggregateId)
         {
-            Items = items;
             CustomerId = customerId;
+            Items = items;
         }
     }
 }

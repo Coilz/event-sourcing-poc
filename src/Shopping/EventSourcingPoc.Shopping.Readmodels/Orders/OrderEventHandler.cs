@@ -10,8 +10,8 @@ namespace EventSourcingPoc.Readmodels.Orders
     public class OrderEventHandler
         : IEventHandler<OrderCreated>
         , IEventHandler<PaymentReceived>
-        , IEventHandler<ShippingAddressConfirmed>
-        , IEventHandler<ShippingProcessStarted>
+        , IEventHandler<ShippingAddressProvided>
+        , IEventHandler<OrderShipped>
         , IEventHandler<OrderDelivered>
         , IEventHandler<OrderCompleted>
     {
@@ -34,12 +34,17 @@ namespace EventSourcingPoc.Readmodels.Orders
             await ExecuteSaveAsync(@event.AggregateId, model => model.Pay());
         }
 
-        public async Task HandleAsync(ShippingAddressConfirmed @event)
+        public async Task HandleAsync(ShippingAddressProvided @event)
         {
-            await ExecuteSaveAsync(@event.AggregateId, model => model.ConfirmShippingAddress());
+            await ExecuteSaveAsync(@event.AggregateId, model => model.ProvideShippingAddress());
         }
 
-        public async Task HandleAsync(ShippingProcessStarted @event)
+        public async Task HandleAsync(OrderCompleted @event)
+        {
+            await ExecuteSaveAsync(@event.AggregateId, model => model.Complete());
+        }
+
+        public async Task HandleAsync(OrderShipped @event)
         {
             await ExecuteSaveAsync(@event.AggregateId, model => model.Ship());
         }
@@ -47,11 +52,6 @@ namespace EventSourcingPoc.Readmodels.Orders
         public async Task HandleAsync(OrderDelivered @event)
         {
             await ExecuteSaveAsync(@event.AggregateId, model => model.Deliver());
-        }
-
-        public async Task HandleAsync(OrderCompleted @event)
-        {
-            await ExecuteSaveAsync(@event.AggregateId, model => model.Complete());
         }
 
         private async Task ExecuteSaveAsync(Guid id, Action<OrderReadModel> action)
