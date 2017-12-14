@@ -34,32 +34,32 @@ namespace EventSourcingPoc.Shopping.WebApi.Controllers
             await _app.SendAsync(new CreateNewCart(Guid.NewGuid(), customerId));
         }
 
-        [Route(template: "ShoppingCart/{cartId}/Product/{productId}")]
+        [Route(template: "ShoppingCart/{id}/Product/{productId}")]
         [HttpPost]
-        public async Task AddProductToCart(Guid cartId, Guid productId, AddProductToCartDTO dto)
+        public async Task AddProductToCart(Guid id, Guid productId, [FromBody] AddProductToCartDTO dto)
         {
-            await _app.SendAsync(new AddProductToCart(cartId, productId, dto.Price));
+            await _app.SendAsync(new AddProductToCart(id, productId, dto.Price));
         }
 
-        [Route(template: "ShoppingCart/{cartId}/Product/{productId}")]
+        [Route(template: "ShoppingCart/{id}/Product/{productId}")]
         [HttpDelete]
-        public async Task RemoveProductFromCart(Guid cartId, Guid productId)
+        public async Task RemoveProductFromCart(Guid id, Guid productId)
         {
-            await _app.SendAsync(new RemoveProductFromCart(cartId, productId));
+            await _app.SendAsync(new RemoveProductFromCart(id, productId));
         }
 
-        [Route(template: "ShoppingCart/{cartId}/Product")]
+        [Route(template: "ShoppingCart/{id}/Product")]
         [HttpDelete]
-        public async Task EmptyCart(Guid cartId)
+        public async Task EmptyCart(Guid id)
         {
-            await _app.SendAsync(new EmptyCart(cartId));
+            await _app.SendAsync(new EmptyCart(id));
         }
 
-        [Route(template: "ShoppingCart/{cartId}/Checkout")]
+        [Route(template: "ShoppingCart/{id}/Checkout")]
         [HttpPut]
-        public async Task Checkout(Guid cartId)
+        public async Task Checkout(Guid id)
         {
-            await _app.SendAsync(new Checkout(cartId));
+            await _app.SendAsync(new Checkout(id));
         }
     }
 }

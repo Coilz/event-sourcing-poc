@@ -48,7 +48,7 @@ namespace EventSourcingPoc.Shopping.Domain.Shipping
 
         public void ConfirmOrder(Guid customerId, IEnumerable<OrderItem> items)
         {
-            if (_status != Status.None) return;
+            if (_status != Status.Started) return;
 
             ApplyChange((id, version) => new OrderConfirmed(id, version, customerId, items));
         }

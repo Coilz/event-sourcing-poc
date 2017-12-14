@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,7 +21,16 @@ namespace EventSourcingPoc.Readmodels.Orders
         {
             var models = await _store.GetAllAsync();
 
-            return Enumerable.Any(models, model => model.CustomerId == customerId);
+            return models.Any(model => model.CustomerId == customerId);
+        }
+
+        public async Task<IEnumerable<Guid>> GetOrdersAsync(Guid customerId)
+        {
+            var models = await _store.GetAllAsync();
+
+            return models
+                .Where(model => model.CustomerId == customerId)
+                .Select(model => model.Id);
         }
 
         public async Task RemoveAsync(Guid id)

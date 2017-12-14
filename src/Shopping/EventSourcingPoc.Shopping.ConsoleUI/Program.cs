@@ -105,7 +105,7 @@ namespace EventSourcingPoc.Shopping.ConsoleUI
 
         async Task ConfirmShippingAddress(Guid orderId)
         {
-            await _app.SendAsync(new ConfirmShippingAddress(orderId, new Address("My Home")));
+            await _app.SendAsync(new ProvideShippingAddress(orderId, new Address("My Home")));
             Console.WriteLine($"Confirm shipping order {orderId}.");
         }
 

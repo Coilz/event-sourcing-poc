@@ -39,6 +39,7 @@ namespace EventSourcingPoc.Shopping.Application
 
             eventHandlerFactory.RegisterFactory(
                 () => new ShippingEventHandler(sagaRepositoryProvider()),
+                typeof(CartCheckedOut),
                 typeof(OrderCreated),
                 typeof(PaymentReceived),
                 typeof(ShippingAddressProvided),

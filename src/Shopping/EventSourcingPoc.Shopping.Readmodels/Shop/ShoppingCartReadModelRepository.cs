@@ -19,16 +19,18 @@ namespace EventSourcingPoc.Readmodels.Shop
 
         public async Task<bool> HasCartAsync(Guid customerId)
         {
-            var carts = await _store.GetAllAsync();
+            var models = await _store.GetAllAsync();
 
-            return carts.Any(cart => cart.CustomerId == customerId);
+            return models.Any(model => model.CustomerId == customerId);
         }
 
         public async Task<IEnumerable<Guid>> GetCartsAsync(Guid customerId)
         {
-            var carts = await _store.GetAllAsync();
+            var models = await _store.GetAllAsync();
 
-            return carts.Select(cart => cart.Id);
+            return models
+                .Where(model => model.CustomerId == customerId)
+                .Select(model => model.Id);
         }
 
         public async Task RemoveAsync(Guid id)

@@ -11,7 +11,7 @@ namespace EventSourcingPoc.Shopping.CommandProcessing
         : CommandHandler<Order>
         , ICommandHandler<PlaceOrder>
         , ICommandHandler<PayForOrder>
-        , ICommandHandler<ConfirmShippingAddress>
+        , ICommandHandler<ProvideShippingAddress>
         , ICommandHandler<CompleteOrder>
     {
         public OrderCommandHandler(IRepository repository)
@@ -29,7 +29,7 @@ namespace EventSourcingPoc.Shopping.CommandProcessing
             await ExecuteAsync(command.OrderId, order => order.Pay());
         }
 
-        public async Task HandleAsync(ConfirmShippingAddress command)
+        public async Task HandleAsync(ProvideShippingAddress command)
         {
             await ExecuteAsync(command.OrderId, order => order.ProvideShippingAddress(command.Address));
         }

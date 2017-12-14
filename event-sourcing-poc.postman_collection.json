@@ -58,10 +58,18 @@
 			"name": "post ShoppingCart-Product",
 			"request": {
 				"method": "POST",
-				"header": [],
-				"body": {},
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"Price\":4.95,\"Quantity\":2}"
+				},
 				"url": {
-					"raw": "http://localhost:5901/api/ShoppingCart/9a964690-b6c8-4afb-905f-772b671792d8/Product/baa89751-3874-4c66-99e3-59992119873c",
+					"raw": "http://localhost:5901/api/ShoppingCart/cae5718b-0032-4ae5-b882-c5f4132babac/Product/baa89751-3874-4c66-99e3-59992119873c",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -70,7 +78,7 @@
 					"path": [
 						"api",
 						"ShoppingCart",
-						"9a964690-b6c8-4afb-905f-772b671792d8",
+						"cae5718b-0032-4ae5-b882-c5f4132babac",
 						"Product",
 						"baa89751-3874-4c66-99e3-59992119873c"
 					]
@@ -86,7 +94,7 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:5901/api/ShoppingCart/9a964690-b6c8-4afb-905f-772b671792d8/Checkout",
+					"raw": "http://localhost:5901/api/ShoppingCart/cae5718b-0032-4ae5-b882-c5f4132babac/Checkout",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -95,8 +103,111 @@
 					"path": [
 						"api",
 						"ShoppingCart",
-						"9a964690-b6c8-4afb-905f-772b671792d8",
+						"cae5718b-0032-4ae5-b882-c5f4132babac",
 						"Checkout"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get Customer-Orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5901/api/Customer/ab9274d1-3ad7-4d87-9b23-b84890fdc455/Order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5901",
+					"path": [
+						"api",
+						"Customer",
+						"ab9274d1-3ad7-4d87-9b23-b84890fdc455",
+						"Order"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get Order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5901/api/Order/f42feb22-50f2-4c5e-8568-4c191a0db7e5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5901",
+					"path": [
+						"api",
+						"Order",
+						"f42feb22-50f2-4c5e-8568-4c191a0db7e5"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "pay Order",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:5901/api/Order/f42feb22-50f2-4c5e-8568-4c191a0db7e5/Pay",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5901",
+					"path": [
+						"api",
+						"Order",
+						"f42feb22-50f2-4c5e-8568-4c191a0db7e5",
+						"Pay"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "put Order ShippingAddress",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"address\":\"Street 7\"}"
+				},
+				"url": {
+					"raw": "http://localhost:5901/api/Order/f42feb22-50f2-4c5e-8568-4c191a0db7e5/ShippingAddress",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5901",
+					"path": [
+						"api",
+						"Order",
+						"f42feb22-50f2-4c5e-8568-4c191a0db7e5",
+						"ShippingAddress"
 					]
 				},
 				"description": ""
@@ -110,7 +221,7 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:5903/api/Customer/ab9274d1-3ad7-4d87-9b23-b84890fdc455/Shipment",
+					"raw": "http://localhost:5903/api/Customer/f42feb22-50f2-4c5e-8568-4c191a0db7e5/Shipment",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -119,7 +230,7 @@
 					"path": [
 						"api",
 						"Customer",
-						"ab9274d1-3ad7-4d87-9b23-b84890fdc455",
+						"f42feb22-50f2-4c5e-8568-4c191a0db7e5",
 						"Shipment"
 					]
 				},

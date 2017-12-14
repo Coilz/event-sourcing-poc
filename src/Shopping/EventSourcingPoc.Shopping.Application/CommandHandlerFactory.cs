@@ -22,8 +22,9 @@ namespace EventSourcingPoc.Shopping.Application
 
             commandHandlerFactor.RegisterFactory(
                 () => new OrderCommandHandler(repositoryProvider()),
+                typeof(PlaceOrder),
                 typeof(PayForOrder),
-                typeof(ConfirmShippingAddress),
+                typeof(ProvideShippingAddress),
                 typeof(CompleteOrder));
 
                 return commandHandlerFactor;

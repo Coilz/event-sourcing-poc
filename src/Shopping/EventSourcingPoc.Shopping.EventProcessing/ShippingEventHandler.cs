@@ -14,6 +14,7 @@ namespace EventSourcingPoc.Shopping.EventProcessing
 {
     public class ShippingEventHandler
         : EventSourcingPoc.EventProcessing.EventHandler<ShippingSaga>
+        , IEventHandler<CartCheckedOut>
         , IEventHandler<OrderCreated>
         , IEventHandler<PaymentReceived>
         , IEventHandler<ShippingAddressProvided>
